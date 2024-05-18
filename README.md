@@ -63,14 +63,17 @@ bashCopy code npm install next-auth
 pages/index.tsx - Home Page
 
 typescriptCopy code
+
 import { GetServerSideProps } from 'next';
-import { getSession } from 'next-auth/react'; import { useRouter } from 'next/router'; co
-nst Home = () => { const router = useRouter(); return ( <div> <h1>Welcome to
+import { getSession } from 'next-auth/react'; import { useRouter } from 'next/router';
+
+const Home = () => { const router = useRouter(); return ( <div> <h1>Welcome to
 TaxPoynt</h1> <button onClick={() => router.push('/dashboard')}>Go to Dashbo
 ard</button> </div> ); }; export const getServerSideProps: GetServerSideProp
 s = async (context) => { const session = await getSession(context); if (!ses
 sion) { return { redirect: { destination: '/auth/login', permanent: false,
 }, }; } return { props: { session }, }; }; export default Home;
+
 pages/auth/login.tsx - Login Page
 ​
 typescriptCopy code import { signIn } from 'next-auth/react'; import { useRo
@@ -79,6 +82,7 @@ const handleLogin = async () => { await signIn('credentials', { redirect: fa
 lse, callbackUrl: `${window.location.origin}/dashboard`, }); router.push('/d
 ashboard'); }; return ( <div> <h1>Login</h1> <button onClick={handleLogin}>S
 ign in with Credentials</button> </div> ); }; export default Login;
+
 pages/dashboard.tsx - Dashboard Page
 
 typescriptCopy code import { GetServerSideProps } from 'next'; import { getS
@@ -89,12 +93,14 @@ components for tax summaries, filing status, and deadlines */} </div> </div>
 => { const session = await getSession(context); if (!session) { return { red
 irect: { destination: '/auth/login', permanent: false, }, }; } return { prop
 s: { session }, }; }; export default Dashboard;
+
 4. Create Components
 components/DataCollection.tsx - Data Collection Component
 ​
 typescriptCopy code import React from 'react'; const DataCollection = () =>
 { return ( <div> <h2>Data Collection</h2> {/* Form or inputs for gathering t
 ax-related information */} </div> ); }; export default DataCollection;
+
 components/ReviewCalculation.tsx - Review and Calculation Component
 
 typescriptCopy code import React from 'react'; const ReviewCalculation = ()
@@ -102,6 +108,7 @@ typescriptCopy code import React from 'react'; const ReviewCalculation = ()
 data and performing tax calculations */} </div> ); }; export default ReviewC
 alculation;
 5. Implement Authentication with next-auth
+
 pages/api/auth/[...nextauth].ts
 ​
 typescriptCopy code import NextAuth from 'next-auth'; import CredentialsProv
@@ -122,6 +129,7 @@ n({ session, token }) { session.user.id = token.id; return session; }, },
 • FormCompletion.tsx : For auto-filling tax forms.
 • ReviewSubmit.tsx : For final review and submission of tax forms.
 • Support.tsx : For providing customer support and FAQs.
+
 Example: pages/review.tsx
 ​
 typescriptCopy code import { GetServerSideProps } from 'next'; import { getS
@@ -142,11 +150,14 @@ Finally, deploy your Next.js application to a platform like Vercel.
 By following these steps, you will have a foundational implementation of the TaxPoynt
 application that integrates Horizon's robust tools and user-friendly interface with the specialized
 functionalities needed for tax management.
+
 Complete the addition code
+
 Certainly! Let's complete the code for the TaxPoynt application by adding the remaining pages
 and components, including the Review, Calculations, Form Completion, Review and Submit,
 and Support pages.
 Additional Pages and Components
+
 pages/review.tsx - Review Page
 
 typescriptCopy code import { GetServerSideProps } from 'next'; import { getS
@@ -156,11 +167,13 @@ ta /> </div> ); }; export const getServerSideProps: GetServerSideProps = asy
 nc (context) => { const session = await getSession(context); if (!session) {
 return { redirect: { destination: '/auth/login', permanent: false, }, }; } r
 eturn { props: { session }, }; }; export default Review;
+
 components/ReviewData.tsx
 ​
 typescriptCopy code import React from 'react'; const ReviewData = () => { re
 turn ( <div> <h2>Review Your Tax Data</h2> {/* Add logic to review tax data
 */} </div> ); }; export default ReviewData;
+
 pages/calculations.tsx - Calculations Page
 
 typescriptCopy code import { GetServerSideProps } from 'next'; import { getS
@@ -171,6 +184,7 @@ ServerSideProps = async (context) => { const session = await getSession(cont
 ext); if (!session) { return { redirect: { destination: '/auth/login', perma
 nent: false, }, }; } return { props: { session }, }; }; export default Calcu
 lationsPage;
+
 components/Calculations.tsx
 ​
 typescriptCopy code import React from 'react'; const Calculations = () => {
@@ -178,17 +192,144 @@ return ( <div> <h2>Real-Time Tax Calculations</h2> {/* Add logic for real-ti
 me tax calculations */} </div> ); }; export default Calculations;
 pages/form-completion.tsx - Form Completion Page
 
-typescriptCopy code import { GetServerSideProps } from 'next'; import { getS
-ession } from 'next-auth/react'; import FormCompletion from '../components/F
-ormCompletion'; const FormCompletionPage = () => { return ( <div> <h1>Form C
-ompletion</h1> <FormCompletion /> </div> ); }; export const getServerSidePro
-ps: GetServerSideProps = async (context) => { const session = await getSessi
-on(context); if (!session) { return { redirect: { destination: '/auth/logi
-n', permanent: false, }, }; } return { props: { session }, }; }; export defa
-ult FormCompletionPage;
+typescriptCopy code
+import { GetServerSideProps } from 'next';
+import { getSession } from 'next-auth/react';
+import FormCompletion from '../components/FormCompletion';
+const FormCompletionPage = () => { return ( <div> <h1>Form C
+ompletion</h1> <FormCompletion /> </div> ); };
+
+export const getServerSideProps: GetServerSideProps = async (context) => {
+    const session = await getSession(context);
+    if (!session) { return { redirect: { destination: '/auth/login', permanent: false, }, }; }
+    return { props: { session }, }; };
+    export default FormCompletionPage;
+
 components/FormCompletion.tsx
 ​
-typescriptCopy code import React from 'react'; const FormCompletion = () =>
-{ return ( <div> <h2>Auto-Fill Tax Forms</h2> {/* Add logic for auto-filling
-tax forms based on user data */} </div> ); }; export default FormCompletion;
+typescriptCopy code
+import React from 'react';
+const FormCompletion = () => {
+    return ( <div> <h2>Auto-Fill Tax Forms</h2> {/* Add logic for auto-filling tax forms based on user data */} </div> ); }; export default FormCompletion;
+
 pages/review-submit.tsx - Review and Submit Page
+
+typescriptCopy code
+import { GetServerSideProps } from 'next';
+import { getSession } from 'next-auth/react';
+import ReviewSubmit from '../components/ReviewSubmit';
+
+const ReviewSubmitPage = () => {
+    return ( <div> <h1>Review and Submit</h1> <ReviewSubmit /> </div> );
+};
+
+export const getServerSideProps: GetServerSideProps = async (context) => {
+    const session = await getSession(context);
+    if (!session) { return { redirect: { destination: '/auth/login', permanent: false, }, }; }
+    return { props: { session }, };
+};
+export default ReviewSubmitPage;
+
+components/ReviewSubmit.tsx
+​
+typescriptCopy code
+import React from 'react';
+
+const ReviewSubmit = () => {
+return (
+    <div> <h2>Final Review and Submit</h2>
+        {/* Add logic for final review and secure submission of tax forms */}
+    </div> ); };
+export default ReviewSubmit;
+
+pages/support.tsx - Support Page
+
+typescriptCopy code
+import { GetServerSideProps } from 'next';
+import { getSession } from 'next-auth/react';
+import Support from '../components/Support';
+
+const SupportPage = () => {
+    return (
+        <div>
+            <h1>Support</h1> <Support />
+        </div>
+    );
+};
+
+export const getServerSideProps: GetServerSideProps = async (context) => {
+    const session = await getSession(context); if (!session) {
+        return { redirect: { destination: '/auth/login', permanent: false, },
+    };
+    } return { props: { session }, };
+}; export default SupportPage;
+
+components/Support.tsx
+​
+typescriptCopy code
+
+import React from 'react';
+
+const Support = () => {
+    return (
+        <div> <h2>Customer Support and FAQs</h2>
+            {/* Add logic for providing customer support and FAQs */}
+        </div>
+    );
+};
+
+export default Support;
+
+Implement Styling
+Use CSS or a styling framework like Tailwind CSS for the UI.
+Here's an example of how to set up Tailwind CSS: bash; Copy code
+npm install -D tailwindcss postcss autoprefixer
+npx tailwindcss init -p
+tailwind.config.js
+​
+javascript - Copy code
+/** @type {import('tailwindcss').Config} */
+module.exports = { content: [ './pages/**/*.{js,ts,jsx,tsx}', './components/**/*.{js,ts, jsx,tsx}', ], theme: { extend: {}, }, plugins: [], };
+styles/globals.css
+​
+cssCopy code @tailwind base; @tailwind components; @tailwind utilities;
+Configure Notifications
+You can use a library like react-toastify for notifications:
+​
+bash - Copy code
+npm install react-toastify
+
+components/Notifications.tsx
+​
+typescriptCopy code
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
+const Notifications = () => { 
+    return <ToastContainer />; 
+};
+
+export const notify = (message: string) => toast(message);
+export default Notifications;
+
+Add Notifications to _app.tsx
+
+pages/_app.tsx
+​
+typescriptCopy code
+import '../styles/globals.css';
+import type { AppProps } from 'next/app';
+import { SessionProvider } from 'next-auth/react';
+import Notifications from '../components/Notifications';
+
+function MyApp({ Component, pageProps: { session, ...pageProps } }: AppProps) {
+    return (
+        <SessionProvider session={session}>
+        <Notifications />
+        <Component {...pageProps} /> </SessionProvider>
+    );
+}
+export default MyApp;
+
+Deployment
+Finally, deploy your Next.js application to a platform like Vercel:
