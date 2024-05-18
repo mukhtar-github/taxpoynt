@@ -1,4 +1,4 @@
-import React from 'react'
+import { formatAmount } from '@/lib/utils'
 
 const TotalBalanceBox = ({ agencies = [],totalFilings, totalTaxLiability
 }: TotlaBalanceBoxProps) => {
