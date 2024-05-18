@@ -1,4 +1,6 @@
-import { formatAmount } from '@/lib/utils'
+"use client"
+
+import AnimatedCounter from './AnimatedCounter'
 
 const TotalBalanceBox = ({ agencies = [],totalFilings, totalTaxLiability
 }: TotlaBalanceBoxProps) => {
@@ -17,9 +19,9 @@ const TotalBalanceBox = ({ agencies = [],totalFilings, totalTaxLiability
                     Total Tax Liability
                 </p>
 
-                <p className='total-balance-amount flex-center gap-2'>
-                    {formatAmount(totalTaxLiability)}
-                </p>
+                <div className='total-balance-amount flex-center gap-2'>
+                    <AnimatedCounter amount={totalTaxLiability} />
+                </div>
             </div>
         </div>
     </section>
