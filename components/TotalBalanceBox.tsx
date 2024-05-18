@@ -1,5 +1,3 @@
-"use client"
-
 import AnimatedCounter from './AnimatedCounter'
 
 const TotalBalanceBox = ({ agencies = [],totalFilings, totalTaxLiability
