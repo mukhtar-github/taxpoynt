@@ -9,17 +9,17 @@ export const sidebarLinks = [
   },
   {
     imgURL: "/icons/tax-management.svg",
-    route: "/my-banks",
+    route: "/tax-management",
     label: "Tax Management",
   },
   {
     imgURL: "/icons/transactions.svg",
-    route: "/transaction-history",
+    route: "/transactions",
     label: "Transactions",
   },
   {
     imgURL: "/icons/documents.svg",
-    route: "/payment-transfer",
+    route: "/documents",
     label: "Documents",
   },
 ];
