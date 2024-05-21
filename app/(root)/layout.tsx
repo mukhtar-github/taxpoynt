@@ -19,7 +19,7 @@ export default function RootLayout({
         <div className="flex size-full flex-col">
           <div className="root-layout">
             <Image
-              alt='menu icon' 
+              alt='logo' 
               src='/icons/logo-fav.svg' 
               width={30}
               height={30}
