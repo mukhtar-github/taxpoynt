@@ -14,7 +14,7 @@ const Sidebar = ({ user }: SiderbarProps) => {
   return (
     <section className='sidebar'>
         <nav className='flex flex-col gap-4'>
-            <Link href='/' className='mb-12 cursor-pointer items-center gap-2'>
+            <Link href='/' className='mb-12 cursor-pointer items-center flex gap-2'>
                 <Image 
                     alt='Taxpoynt Logo' 
                     src='/icons/logo-fav.svg' 
@@ -43,7 +43,11 @@ const Sidebar = ({ user }: SiderbarProps) => {
                     </Link>
                 )} 
             )}
+
+            USER
         </nav>
+
+        FOOTER
     </section>
   )
 }
