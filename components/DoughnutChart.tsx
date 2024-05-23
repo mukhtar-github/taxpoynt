@@ -5,7 +5,7 @@ import { Doughnut } from "react-chartjs-2";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
-const DoughnutChart = ({ agencies }: DoughnutChartProps) => {
+const DoughnutChart = ({ taxTypes }: DoughnutChartProps) => {
   const data = {
     labels: ['Income', 'Expenses', 'Tax Liability'],
     datasets: [

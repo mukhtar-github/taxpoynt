@@ -20,7 +20,7 @@ const Home = () => {
 
           <TotalBalanceBox
             taxTypes={[]}
-            totalAgencies={1}
+            totalReturns={1}
             totalTaxLiability={1250.35}
           />
         </header>

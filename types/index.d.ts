@@ -211,7 +211,7 @@ declare interface BankTabItemProps {
 declare interface TotalBalanceBoxProps {
   taxTypes: TaxType[];
   // agencies: Agency[];
-  totalAgencies: number;
+  totalReturns: number;
   // totalFilings: number;
   totalTaxLiability: number;
 }
@@ -260,7 +260,7 @@ declare interface CategoryProps {
 // }
 
 declare interface DoughnutChartProps {
-  agencies: Agency[];
+  taxTypes: TaxType[];
 }
 
 declare interface PaymentTransferFormProps {
