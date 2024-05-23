@@ -209,8 +209,10 @@ declare interface BankTabItemProps {
 // }
 
 declare interface TotalBalanceBoxProps {
-  agencies: Agency[];
-  totalFilings: number;
+  taxTypes: TaxType[];
+  // agencies: Agency[];
+  totalAgencies: number;
+  // totalFilings: number;
   totalTaxLiability: number;
 }
 
@@ -221,7 +223,8 @@ declare interface FooterProps {
 declare interface RightSidebarProps {
   user: User;
   transactions: Transaction[];
-  banks: Bank[] & Account[];
+  taxReturns: Agency[] & TaxType[];
+  // banks: Bank[] & Account[];
 }
 
 declare interface SiderbarProps {
