@@ -14,7 +14,7 @@ const Home = () => {
             type='greeting'
             title='Welcome'
             user= {loggedIn?.firstName || 'Guest'}
-            subtext='Access and effectively manage your tax filings for better financial outcomes.'
+            subtext='Access and effectively manage your tax returns for better financial outcomes.'
           />
 
           <TotalBalanceBox
