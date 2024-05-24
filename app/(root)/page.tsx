@@ -3,7 +3,9 @@ import TotalBalanceBox from '@/components/TotalBalanceBox'
 import RightSidebar from '@/components/RightSidebar'
 
 const loggedIn = {
-  firstName: 'Mukhtar'
+  firstName: 'Mukhtar',
+  lastName: 'Garba',
+  email: 'contact@taxpoynt.com'
 }
 
 const Home = () => {
