@@ -36,6 +36,20 @@ const RightSidebar = ({ user, transactions, taxReturns }: RightSidebarProps) => 
                     </h2>
                 </Link>
             </div>
+
+            {taxReturns?.length > 0 && (
+                <div className="relative flex flex-1 flex-col items-center justify-center gap-5">
+                    <div className='relative z-10'>
+                        Tax Return 1
+                    </div>
+                    {taxReturns[1] && (
+                        <div className='absolute right-0 top-8 z-0 w-[90%]'>
+                            Tax Return 2
+                        </div>
+                    )}
+                </div>
+            )}
+
         </section>
     </aside>
   )
