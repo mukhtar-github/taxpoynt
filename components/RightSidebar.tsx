@@ -33,7 +33,7 @@ const RightSidebar = ({ user, transactions, taxReturns }: RightSidebarProps) => 
                         alt='plus'
                     />
                     <h2 className='text-14 font-semibold text-grey-600'>
-                        Add Tax
+                        Add Tax Return
                     </h2>
                 </Link>
             </div>
@@ -43,7 +43,7 @@ const RightSidebar = ({ user, transactions, taxReturns }: RightSidebarProps) => 
                     <div className='relative z-10'>
                     <TaxReturnCard
                         key={taxReturns[0].$id}
-                        taxType={taxReturns[0]}
+                        taxReturn={taxReturns[0]}
                         userName={`${user.firstName} ${user.lastName}`}
                         showBalance={false}
                     />
@@ -52,7 +52,7 @@ const RightSidebar = ({ user, transactions, taxReturns }: RightSidebarProps) => 
                         <div className='absolute right-0 top-8 z-0 w-[90%]'>
                             <TaxReturnCard
                                 key={taxReturns[1].$id}
-                                taxType={taxReturns[1]}
+                                taxReturn={taxReturns[1]}
                                 userName={`${user.firstName} ${user.lastName}`}
                                 showBalance={false}
                             />

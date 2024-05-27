@@ -138,7 +138,7 @@ declare type NewDwollaCustomerParams = {
 
 declare interface CreditCardProps {
   // account: Account;
-  taxType: TaxType;
+  taxReturn: TaxReturn;
   userName: string;
   showBalance?: boolean;
 }
@@ -224,7 +224,7 @@ declare interface FooterProps {
 declare interface RightSidebarProps {
   user: User;
   transactions: Transaction[];
-  taxReturns: Agency[] & TaxType[];
+  taxReturns: Agency[] & TaxReturn[];
   // banks: Bank[] & Account[];
 }
 
