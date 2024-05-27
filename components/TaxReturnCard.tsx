@@ -13,10 +13,23 @@ const TaxReturnCard = ({ taxReturn, userName, showBalance = true }: CreditCardPr
                         {/* {taxReturn.type} - {taxReturn.year} */}
                     </h1>
                     <p className='font-ibm-plex-serif font-black text-white'>
-                    {formatAmount(taxReturn.amount)}
+                    {formatAmount(taxReturn.currentBalance)}
                     {/* Due Date: {taxReturn.dueDate} */}
                     </p>               
                 </div>
+                <article className='flex flex-col gap-2'>
+                  <div className='flex justify-between'>
+                    <h1 className='text-12 text-semibold text-white'>
+                      {userName}
+                    </h1>
+                    <h2 className='text-12 text-semibold text-white'>
+                      **/**
+                    </h2>
+                  </div>
+                  <p className='text-14 fond-semibold tracking-[1.1px] text-white'>
+                    **** **** ****
+                  </p>
+                </article>
             </div>
         </Link>
     </div>
