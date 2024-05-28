@@ -8,9 +8,9 @@ export const sidebarLinks = [
     // label: "Home",
   },
   {
-    imgURL: "/icons/tax-management.svg",
-    route: "/tax-management",
-    label: "Tax Management",
+    imgURL: "/icons/tax-returns.svg",
+    route: "/tax-returns",
+    label: "My Tax Returns",
   },
   {
     imgURL: "/icons/transactions.svg",
