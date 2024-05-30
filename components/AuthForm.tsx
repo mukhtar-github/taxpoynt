@@ -7,21 +7,11 @@ import { z } from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { Button } from "@/components/ui/button"
-import {
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form"
-import { Input } from "@/components/ui/input"
+import { Form } from "@/components/ui/form"
+import CustomInput from './CustomInput'
 
 const formSchema = z.object({
-    username: z.string().min(2, {
-      message: "Username must be at least 2 characters.",
-    }),
+    email: z.string().email({ message: "Invalid email address" }),
 })
 
 const AuthForm = ({ type }: { type: string }) => {
@@ -31,10 +21,10 @@ const AuthForm = ({ type }: { type: string }) => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      username: "",
+      email: "",
     },
   })
- 
+
   // 2. Define a submit handler.
   function onSubmit(values: z.infer<typeof formSchema>) {
     // Do something with the form values.
@@ -77,7 +67,37 @@ const AuthForm = ({ type }: { type: string }) => {
                 </div>
             ) : (
                 <>
-                    Form
+                    <Form {...form}>
+                        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+                            <CustomInput
+                                form={form}
+                                name='username'
+                                label='Username'
+                                placeholder='Enter your username'
+                            />
+
+                            <CustomInput
+                                form={form}
+                                name='email'
+                                label='Email'
+                                placeholder='Enter your email'
+                            />
+
+                            <CustomInput
+                                form={form}
+                                name='password'
+                                label='Password'
+                                placeholder='Enter your password'
+                            />
+                            <CustomInput
+                                form={form}
+                                name='confirmPassword'
+                                label='Confirm Password'
+                                placeholder='Confirm your password' 
+                            />     
+                            <Button type="submit">Submit</Button>
+                        </form>
+                    </Form>
                 </>
             )}
     </section>
