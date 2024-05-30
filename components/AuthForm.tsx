@@ -18,8 +18,8 @@ const AuthForm = ({ type }: { type: string }) => {
   const form = useForm<z.infer<typeof authFormSchema>>({
     resolver: zodResolver(authFormSchema),
     defaultValues: {
-      email: "",
-      password: ""
+        email: "",
+        password: ""
     },
   })
 
@@ -67,18 +67,13 @@ const AuthForm = ({ type }: { type: string }) => {
                 <>
                     <Form {...form}>
                         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-                            <CustomInput
-                                form={form}
-                                name='username'
-                                label='Username'
-                                placeholder='Enter your username'
-                            />
 
                             <CustomInput
                                 form={form}
                                 name='email'
                                 label='Email'
                                 placeholder='Enter your email'
+                                type='email'
                             />
 
                             <CustomInput
@@ -86,13 +81,9 @@ const AuthForm = ({ type }: { type: string }) => {
                                 name='password'
                                 label='Password'
                                 placeholder='Enter your password'
+                                type='password'
                             />
-                            <CustomInput
-                                form={form}
-                                name='confirmPassword'
-                                label='Confirm Password'
-                                placeholder='Confirm your password' 
-                            />     
+                            
                             <Button type="submit">Submit</Button>
                         </form>
                     </Form>

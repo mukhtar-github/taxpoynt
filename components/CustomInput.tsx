@@ -15,9 +15,10 @@ interface CustomInputProps {
   name: string
   label: string
   placeholder: string
+  type: string
 }
 
-const CustomInput = ({form, name, label, placeholder}: CustomInputProps) => {
+const CustomInput = ({form, name, label, placeholder, type}: CustomInputProps) => {
   return (
     <FormField
       control={form.control}
@@ -31,6 +32,7 @@ const CustomInput = ({form, name, label, placeholder}: CustomInputProps) => {
                   {...field}
                   placeholder={placeholder}
                   className='input-class'
+                  type={type}
                 />
               </FormControl>
               <FormMessage className='form-message mt-2'/>
