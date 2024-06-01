@@ -11,10 +11,14 @@ import { Form } from "@/components/ui/form"
 import CustomInput from './CustomInput'
 import { authFormSchema } from '@/lib/utils'
 import { Loader2 } from 'lucide-react'
+import { useRouter } from 'next/navigation'
+import { signIn, signUp } from '@/lib/actions/user.actions'
 
 const AuthForm = ({ type }: { type: string }) => {
     const [user, setUser] = useState(null)
     const [loading, setLoading] = useState(false)
+
+    const router = useRouter()
 
     const formSchema = authFormSchema(type)
 
@@ -28,12 +32,30 @@ const AuthForm = ({ type }: { type: string }) => {
   })
 
   // 2. Define a submit handler.
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    // Do something with the form values.
-    // ✅ This will be type-safe and validated.
+  const onSubmit = async (data: z.infer<typeof formSchema>) => {
     setLoading(true)
-    console.log(values)
-    setLoading(false)
+    try {
+        // Sign up with Appwrite and create a QuikBooks link token
+        if(type === 'sign-up') {
+            const newUser = await signUp(data)
+            setUser(newUser)
+        }
+
+        if(type === 'sign-in') {
+            // Sign in with Appwrite
+            const response = await signIn({
+                email: data.email,
+                password: data.password
+            })
+
+            if(response) router.push('/')
+        }
+
+    } catch (error) {
+        console.log(error)
+    } finally {
+        setLoading(false)
+    }
   }
 
   return (
@@ -73,92 +95,92 @@ const AuthForm = ({ type }: { type: string }) => {
                 <>
                     <Form {...form}>
                         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-
                             {type === 'sign-up' && (
                                <>
-                                    <CustomInput
-                                        form={form}
-                                        name='firstName'
-                                        label='First Name'
-                                        placeholder='Enter your first name'
-                                        type='firstName'
-                                    />
-
-                                    <CustomInput
-                                        form={form}
-                                        name='lastName'
-                                        label='Last Name'
-                                        placeholder='Enter your last name'
-                                        type='lastName'
-                                    />
-
-                                    <CustomInput
-                                        form={form}
-                                        name='business'
-                                        label='Business Name'
-                                        placeholder='Enter your business name'
-                                        type='business'
-                                    />
-
-                                    <CustomInput
-                                        form={form}
-                                        name='address'
-                                        label='Business Address'
-                                        placeholder='Enter your business address'
-                                        type='address'
-                                    />
-
-                                    <CustomInput
-                                        form={form}
-                                        name='state'
-                                        label='State'
-                                        placeholder='Enter your state'
-                                        type='state'
-                                    />
-
-                                    <CustomInput
-                                        form={form}
-                                        name='date'
-                                        label='Date of Registration'
-                                        placeholder='Enter your date of registration'
-                                        type='date'
-                                    />
-
-                                    <CustomInput
-                                        form={form}
-                                        name='phone'
-                                        label='Phone Number'
-                                        placeholder='Enter your phone number'
-                                        type='phone'
-                                    />
-
-                                    <CustomInput
-                                        form={form}
-                                        name='taxId'
-                                        label='Tax ID'
-                                        placeholder='Enter your Tax Identification Number (TIN)'
-                                        type='taxId'
-                                    />
-
+                                    <div className='flex gap-4'>
+                                        <CustomInput
+                                            form={form}
+                                            name='firstName'
+                                            label='First Name'
+                                            placeholder='Enter your first name'
+                                            type='firstName'
+                                        />
+                                        <CustomInput
+                                            form={form}
+                                            name='lastName'
+                                            label='Last Name'
+                                            placeholder='Enter your last name'
+                                            type='lastName'
+                                        />
+                                    </div>
+                                    <div className='flex gap-4'>
+                                        <CustomInput
+                                            form={form}
+                                            name='business'
+                                            label='Business Name'
+                                            placeholder='Enter your business name'
+                                            type='business'
+                                        />
+                                        <CustomInput
+                                            form={form}
+                                            name='state'
+                                            label='State'
+                                            placeholder='Enter your state'
+                                            type='state'
+                                        />
+                                    </div>
+                                    <div className='flex gap-4'>
+                                        <CustomInput
+                                            form={form}
+                                            name='address'
+                                            label='Business Address'
+                                            placeholder='Enter business address'
+                                            type='address'
+                                        />
+                                        <CustomInput
+                                            form={form}
+                                            name='date'
+                                            label='Date of Registration'
+                                            placeholder='Enter the date of registration'
+                                            type='date'
+                                        />
+                                    </div>
+                                    <div className='flex gap-4'>
+                                        <CustomInput
+                                            form={form}
+                                            name='phone'
+                                            label='Phone Number'
+                                            placeholder='Enter phone number'
+                                            type='phone'
+                                        />
+                                        <CustomInput
+                                            form={form}
+                                            name='taxId'
+                                            label='Tax ID'
+                                            placeholder='Enter Tax ID (TIN)'
+                                            type='taxId'
+                                        />
+                                    </div>
                                 </> 
                             )}
-
-                            <CustomInput
-                                form={form}
-                                name='email'
-                                label='Email'
-                                placeholder='Enter your email'
-                                type='email'
-                            />
-
-                            <CustomInput
-                                form={form}
-                                name='password'
-                                label='Password'
-                                placeholder='Enter your password'
-                                type='password'
-                            />
                             
+                            <div className='flex gap-4'>
+                                <CustomInput
+                                    form={form}
+                                    name='email'
+                                    label='Email'
+                                    placeholder='Enter your email'
+                                    type='email'
+                                />
+                                <CustomInput
+                                    form={form}
+                                    name='password'
+                                    label='Password'
+                                    placeholder='Enter your password'
+                                    type='password'
+                                />
+                            </div>
+
                             <div className='flex flex-col gap-4'>
                                 <Button type="submit" className='form-btn' disabled={loading}>
                                     {loading ? (
@@ -171,7 +193,6 @@ const AuthForm = ({ type }: { type: string }) => {
                                     ) : type === 'sign-in' ? 'Sign In' : 'Sign Up'}
                                 </Button>
                             </div>
-
                         </form>
                     </Form>
 
