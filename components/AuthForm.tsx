@@ -143,7 +143,7 @@ const AuthForm = ({ type }: { type: string }) => {
                                             name='dateOfReg'
                                             label='Date of Registration'
                                             placeholder='Enter the date of registration'
-                                            type='dateOfReg'
+                                            type='date'
                                         />
                                     </div>
                                     <div className='flex gap-4'>
