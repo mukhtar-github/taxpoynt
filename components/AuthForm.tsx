@@ -38,17 +38,18 @@ const AuthForm = ({ type }: { type: string }) => {
         // Sign up with Appwrite and create a QuikBooks link token
         if(type === 'sign-up') {
             const newUser = await signUp(data)
+
             setUser(newUser)
         }
 
         if(type === 'sign-in') {
             // Sign in with Appwrite
-            const response = await signIn({
-                email: data.email,
-                password: data.password
-            })
+            // const response = await signIn({
+            //     email: data.email,
+            //     password: data.password
+            // })
 
-            if(response) router.push('/')
+            // if(response) router.push('/')
         }
 
     } catch (error) {
