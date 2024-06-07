@@ -14,6 +14,7 @@ declare type SignUpParams = {
   address1?: string;
   state?: string;
   dateOfReg?: string;
+  phone?: string;
   taxId?: string;
   email: string;
   password: string;
