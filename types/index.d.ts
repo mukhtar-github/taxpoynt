@@ -10,12 +10,11 @@ declare type SearchParamProps = {
 declare type SignUpParams = {
   firstName: string;
   lastName: string;
+  businessName: string;
   address1: string;
-  city: string;
   state: string;
-  postalCode: string;
-  dateOfBirth: string;
-  ssn: string;
+  dateOfReg: string;
+  taxId: string;
   email: string;
   password: string;
 };
