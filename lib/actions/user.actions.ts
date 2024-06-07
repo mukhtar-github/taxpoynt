@@ -1,5 +1,7 @@
 'use server'
 
+import { createSessionClient } from "../appwrite"
+
 export const signIn = async () => {
     try {
         // Mutation / Database query / Make a fetch request
@@ -16,16 +18,12 @@ export const signUp = async (userData: SignUpParams) => {
     }
 }
 
-// const response = await fetch('/api/auth/sign-in', {
-    //     method: 'POST',
-    //     headers: {
-    //         'Content-Type': 'application/json'
-    //     },
-    //     body: JSON.stringify(data)
-    // })
-
-    // if(response.ok) {
-    //     return response.json()
-    // } else {
-    //     return null
-    // }
+export async function getLoggedInUser() {
+    try {
+      const { account } = await createSessionClient();
+      return await account.get();
+    } catch (error) {
+      return null;
+    }
+  }
+//The  getLoggedInUser  function returns the logged-in user.
