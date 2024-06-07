@@ -151,7 +151,7 @@ const AuthForm = ({ type }: { type: string }) => {
                                             form={form}
                                             name='phone'
                                             label='Phone Number'
-                                            placeholder='Enter phone number'
+                                            placeholder='ex. +234 123 456 7890'
                                             type='phone'
                                         />
                                         <CustomInput
