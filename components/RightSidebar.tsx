@@ -44,7 +44,7 @@ const RightSidebar = ({ user, transactions, taxReturns }: RightSidebarProps) => 
                     <TaxReturnCard
                         key={taxReturns[0].$id}
                         taxReturn={taxReturns[0]}
-                        userName={`${user.firstName} ${user.lastName}`}
+                        userName={user.name}
                         showBalance={false}
                     />
                     </div>
@@ -53,7 +53,7 @@ const RightSidebar = ({ user, transactions, taxReturns }: RightSidebarProps) => 
                             <TaxReturnCard
                                 key={taxReturns[1].$id}
                                 taxReturn={taxReturns[1]}
-                                userName={`${user.firstName} ${user.lastName}`}
+                                userName={user.name}
                                 showBalance={false}
                             />
                         </div>

@@ -10,7 +10,7 @@ const TaxReturnCard = ({ taxReturn, userName, showBalance = true }: CreditCardPr
             <div className='bank-card_content'>
                 <div>
                    <h1 className='text-16 font-semibold text-white'>
-                        {taxReturn.name || userName}
+                        {userName}
                         {/* {taxReturn.type} - {taxReturn.year} */}
                     </h1>
                     <p className='font-ibm-plex-serif font-black text-white'>
