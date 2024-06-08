@@ -44,16 +44,28 @@ export const signUp = async (userData: SignUpParams) => {
     }
 }
 
-//The  getLoggedInUser  function returns the logged-in user.
-export async function getLoggedInUser() {
-    try {
-      const { account } = await createSessionClient();
+export const getLoggedInUser = async () => {
+  try {
+    const { account } = await createSessionClient();
 
-      const user = await account.get();
+    const user = await account.get();
 
-      return parseStringify(user);
-    } catch (error) {
-      return null;
-    }
+    return parseStringify(user);
+  } catch (error) {
+    return null;
   }
+}
+
+export const logoutAccount = async () => {
+  try {
+    const { account } = await createSessionClient();
+
+    cookies().delete("appwrite-session");
+
+    await account.deleteSession("current");
+
+  } catch (error) {
+    return null; 
+  }
+}
 
