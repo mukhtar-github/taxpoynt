@@ -1,14 +1,12 @@
 import HeaderBox from '@/components/HeaderBox'
 import TotalBalanceBox from '@/components/TotalBalanceBox'
 import RightSidebar from '@/components/RightSidebar'
+import { getLoggedInUser } from '@/lib/actions/user.actions'
 
-const loggedIn = {
-  firstName: 'Mukhtar',
-  lastName: 'Garba',
-  email: 'contact@taxpoynt.com'
-}
+const Home = async () => {
 
-const Home = () => {
+  const loggedIn = await getLoggedInUser()
+
   return (
     <section className='home'>
       <div className='home-content'>
@@ -16,7 +14,7 @@ const Home = () => {
           <HeaderBox
             type='greeting'
             title='Welcome'
-            user= {loggedIn?.firstName || 'Guest'}
+            user= {loggedIn?.name || 'Guest'}
             subtext='Access and effectively manage your tax returns for better financial outcomes.'
           />
 

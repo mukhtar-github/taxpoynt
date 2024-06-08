@@ -29,16 +29,17 @@ declare type User = {
   $id: string;
   email: string;
   userId: string;
-  dwollaCustomerUrl: string;
-  dwollaCustomerId: string;
+  quickbooksCustomerUrl: string;
+  quickbooksCustomerId: string;
   firstName: string;
   lastName: string;
+  name: string;
   address1: string;
-  city: string;
   state: string;
-  postalCode: string;
-  dateOfBirth: string;
-  ssn: string;
+  businessName: string;
+  taxId: string;
+  dateOfReg: string;
+  phone: string;
 };
 
 declare type NewUserParams = {
