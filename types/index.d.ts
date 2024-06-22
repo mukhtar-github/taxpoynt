@@ -342,3 +342,12 @@ declare interface getBankProps {
 declare interface getBankByAccountIdProps {
   accountId: string;
 }
+
+// mono-connect.d.ts
+declare interface MonoConnectOptions {
+    key: string;
+    onSuccess: (data: any) => void;
+    onClose: () => void;
+    onLoad?: () => void;
+  }
+
