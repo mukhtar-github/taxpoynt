@@ -174,11 +174,21 @@ declare interface PaginationProps {
   totalPages: number;
 }
 
-declare interface PlaidLinkProps {
+// Define a type for the response you expect from the onSuccess callback
+interface MonoSuccessResponse {
+  code: string; // Adjust based on actual data expected from Mono
+}
+
+declare interface MonoLinkProps {
   user: User;
   variant?: "primary" | "ghost";
-  dwollaCustomerId?: string;
 }
+
+// declare interface PlaidLinkProps {
+//   user: User;
+//   variant?: "primary" | "ghost";
+//   dwollaCustomerId?: string;
+// }
 
 // declare type User = sdk.Models.Document & {
 //   accountId: string;
@@ -351,3 +361,5 @@ declare interface MonoConnectOptions {
     onLoad?: () => void;
   }
 
+// mono-connect.d.ts
+declare module '@mono.co/connect.js';

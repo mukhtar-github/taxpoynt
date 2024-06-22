@@ -1,12 +1,6 @@
 // Import necessary modules or dependencies
 import Connect from "@mono.co/connect.js";
 
-
-// Define a type for the response you expect from the onSuccess callback
-interface MonoSuccessResponse {
-    code: string; // Example property, adjust based on actual data
-}
-
 // Define the function with explicit types
 const monoConnect = (
   onSuccess: (response: MonoSuccessResponse) => void,
