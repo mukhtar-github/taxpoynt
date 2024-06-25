@@ -40,7 +40,7 @@ declare type User = {
   taxId: string;
   dateOfReg: string;
   phone: string;
-};
+} | null;
 
 declare type NewUserParams = {
   userId: string;
@@ -181,7 +181,7 @@ interface MonoSuccessResponse {
 
 declare interface MonoLinkProps {
   user: User;
-  variant?: "primary" | "ghost";
+  //variant?: "primary" | "ghost";
 }
 
 // declare interface PlaidLinkProps {

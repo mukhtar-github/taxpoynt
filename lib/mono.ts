@@ -7,7 +7,7 @@ const monoConnect = (
   onClose: () => void
 ) => {
   const connect = new Connect({
-    key: process.env.MONO_SECRET_KEY,
+    key: process.env.MONO_PUBLIC_KEY,
     onSuccess,
     onClose
   });

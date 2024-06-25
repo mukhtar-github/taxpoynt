@@ -1,11 +1,8 @@
 import monoConnect from '@/lib/mono';
 import React, { useCallback } from 'react';
+import { Button } from './ui/button';
 
 const MonoLink = ({ user }: MonoLinkProps) => {
-  // const handleMonoSuccess = useCallback((response: MonoSuccessResponse) => {
-  //   console.log('Mono connected successfully:', response);
-  //   // Handle successful connection, such as storing returned data or updating UI
-  // }, []);
 
   const handleMonoSuccess = useCallback((response: any) => {
     if (!response.code) {
@@ -30,9 +27,15 @@ const MonoLink = ({ user }: MonoLinkProps) => {
 
   return (
     <div>
-      <button onClick={openMonoWidget}>Link Bank Account with Mono</button>
+      <Button onClick={openMonoWidget}>Link Bank Account with Mono</Button>
     </div>
   );
 };
 
 export default MonoLink;
+
+
+// const handleMonoSuccess = useCallback((response: MonoSuccessResponse) => {
+  //   console.log('Mono connected successfully:', response);
+  //   // Handle successful connection, such as storing returned data or updating UI
+  // }, []);
