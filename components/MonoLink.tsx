@@ -1,8 +1,10 @@
 import monoConnect from '@/lib/mono';
 import React, { useCallback } from 'react';
 import { Button } from './ui/button';
+import { useRouter } from 'next/navigation';
 
 const MonoLink = ({ user }: MonoLinkProps) => {
+  const router = useRouter()
 
   const handleMonoSuccess = useCallback((response: any) => {
     if (!response.code) {
@@ -12,9 +14,11 @@ const MonoLink = ({ user }: MonoLinkProps) => {
   
     console.log('Mono connected successfully:', response.code);
     // Proceed with handling the correctly structured response
-  }, []);
+    console.log('Mono connected successfully:', response.code);
+    
+    router.push('/dashboard') // Navigate to /dashboard
+  }, [user]);
   
-
   const handleMonoClose = useCallback(() => {
     console.log('Mono widget closed');
     // Optionally handle widget close, such as re-enabling buttons or updating state
@@ -26,9 +30,14 @@ const MonoLink = ({ user }: MonoLinkProps) => {
   }, [handleMonoSuccess, handleMonoClose]);
 
   return (
-    <div>
-      <Button onClick={openMonoWidget}>Link Bank Account with Mono</Button>
-    </div>
+    <>
+      <Button
+        className='plaidlink-primary'
+        onClick={openMonoWidget}
+      >
+        Connect Bank Account
+      </Button>
+    </>
   );
 };
 
