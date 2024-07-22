@@ -21,6 +21,7 @@
     "clsx": "^2.1.1",
     "intuit-oauth": "^4.1.2",
     "lucide-react": "^0.378.0",
+    "mono-node": "^1.0.3",
     "next": "14.2.3",
     "node-appwrite": "^13.0.0",
     "node-quickbooks": "^2.0.45",

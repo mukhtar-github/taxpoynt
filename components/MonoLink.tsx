@@ -14,6 +14,7 @@ const MonoLink = ({ user }: MonoLinkProps) => {
   
     console.log('Mono connected successfully:', response.code);
     // Proceed with handling the correctly structured response
+
     console.log('Mono connected successfully:', response.code);
     
     router.push('/dashboard') // Navigate to /dashboard
