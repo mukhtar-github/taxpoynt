@@ -1,42 +1,40 @@
-import monoConnect from '@/lib/mono';
-import React, { useCallback } from 'react';
-import { Button } from './ui/button';
+import React, { useState, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
+import monoConnect from '@/lib/mono'; // Ensure this is TypeScript for type safety
+import { Button } from './ui/button';
 
 const MonoLink = ({ user }: MonoLinkProps) => {
-  const router = useRouter()
+  const [loading, setLoading] = useState(false);
+  const router = useRouter();
 
-  const handleMonoSuccess = useCallback((response: any) => {
-    if (!response.code) {
-      console.error('Unexpected response structure:', response);
-      return;
-    }
-  
+  const handleMonoSuccess = useCallback((response: MonoSuccessResponse) => {
     console.log('Mono connected successfully:', response.code);
-    // Proceed with handling the correctly structured response
+    router.push('/dashboard');
+  }, [router]);
 
-    console.log('Mono connected successfully:', response.code);
-    
-    router.push('/dashboard') // Navigate to /dashboard
-  }, [user]);
-  
   const handleMonoClose = useCallback(() => {
     console.log('Mono widget closed');
-    // Optionally handle widget close, such as re-enabling buttons or updating state
+    setLoading(false);
   }, []);
 
-  const openMonoWidget = useCallback(() => {
-    const mono = monoConnect(handleMonoSuccess, handleMonoClose);
+  const openMonoWidget = useCallback(async () => {
+    if (!user) {
+      console.log('No user information available');
+      return;
+    }
+    setLoading(true);
+    const mono = await monoConnect(handleMonoSuccess, handleMonoClose);
     mono.open();
-  }, [handleMonoSuccess, handleMonoClose]);
+  }, [user, handleMonoSuccess, handleMonoClose]);
 
   return (
     <>
       <Button
-        className='plaidlink-primary'
         onClick={openMonoWidget}
+        disabled={loading}
+        className='plaidlink-primary'
       >
-        Connect Bank Account
+        {loading ? 'Loading...' : 'Connect Bank Account'}
       </Button>
     </>
   );
@@ -44,8 +42,85 @@ const MonoLink = ({ user }: MonoLinkProps) => {
 
 export default MonoLink;
 
+const openMonoWidget = useCallback(async () => {
+  if (!user) {
+    console.log('No user information available');
+    return;
+  }
+  setLoading(true);
 
-// const handleMonoSuccess = useCallback((response: MonoSuccessResponse) => {
-  //   console.log('Mono connected successfully:', response);
-  //   // Handle successful connection, such as storing returned data or updating UI
-  // }, []);
+  try {
+    // Fetch the Mono connection token from your server
+    const response = await fetch('/api/mono/connection-token', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ userId: user.id }), // Assuming you have a user ID to send
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to fetch the Mono connection token');
+    }
+
+    const { token } = await response.json();
+
+    // Initialize the Mono widget with the fetched token
+    const mono = await monoConnect(handleMonoSuccess, handleMonoClose, token); // Adjust monoConnect to accept token
+    mono.open();
+  } catch (error) {
+    console.error('Error fetching Mono connection token:', error);
+    setLoading(false);
+  }
+}, [user, handleMonoSuccess, handleMonoClose]);
+// import monoConnect from '@/lib/mono';
+// import React, { useCallback } from 'react';
+// import { Button } from './ui/button';
+// import { useRouter } from 'next/navigation';
+
+// const MonoLink = ({ user }: MonoLinkProps) => {
+//   const router = useRouter()
+
+//   const handleMonoSuccess = useCallback((response: any) => {
+//     if (!response.code) {
+//       console.error('Unexpected response structure:', response);
+//       return;
+//     }
+  
+//     console.log('Mono connected successfully:', response.code);
+//     // Proceed with handling the correctly structured response
+
+//     console.log('Mono connected successfully:', response.code);
+    
+//     router.push('/dashboard') // Navigate to /dashboard
+//   }, [user]);
+  
+//   const handleMonoClose = useCallback(() => {
+//     console.log('Mono widget closed');
+//     // Optionally handle widget close, such as re-enabling buttons or updating state
+//   }, []);
+
+//   const openMonoWidget = useCallback(() => {
+//     const mono = monoConnect(handleMonoSuccess, handleMonoClose);
+//     mono.open();
+//   }, [handleMonoSuccess, handleMonoClose]);
+
+//   return (
+//     <>
+//       <Button
+//         className='plaidlink-primary'
+//         onClick={openMonoWidget}
+//       >
+//         Connect Bank Account
+//       </Button>
+//     </>
+//   );
+// };
+
+// export default MonoLink;
+
+
+// // const handleMonoSuccess = useCallback((response: MonoSuccessResponse) => {
+//   //   console.log('Mono connected successfully:', response);
+//   //   // Handle successful connection, such as storing returned data or updating UI
+//   // }, []);
