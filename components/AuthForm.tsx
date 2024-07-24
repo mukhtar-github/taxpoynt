@@ -16,7 +16,7 @@ import { signIn, signUp } from '@/lib/actions/user.actions'
 import MonoLink from './MonoLink'
 
 const AuthForm = ({ type }: { type: string }) => {
-    const [user, setUser] = useState(null)
+    const [user, setUser] = useState<{ id: string } | null>(null)
     const [loading, setLoading] = useState(false)
 
     const router = useRouter()
@@ -91,7 +91,7 @@ const AuthForm = ({ type }: { type: string }) => {
         </header>
             {/* {user ? ( */}
                 <div className='flex flex-col gap-4 '>
-                    <MonoLink user={user} />
+                    <MonoLink user={ user } />
                 </div>
              {/* ) : ( */}
                 <>

@@ -180,7 +180,8 @@ interface MonoSuccessResponse {
 }
 
 declare interface MonoLinkProps {
-  user: User;
+  //user: User;
+  user: { id: string } | null;
   //variant?: "primary" | "ghost";
 }
 
@@ -297,12 +298,12 @@ declare interface getTransactionsProps {
   accessToken: string;
 }
 
-declare interface CreateFundingSourceOptions {
-  customerId: string; // Dwolla Customer ID
-  fundingSourceName: string; // Dwolla Funding Source Name
-  plaidToken: string; // Plaid Account Processor Token
-  _links: object; // Dwolla On Demand Authorization Link
-}
+// declare interface CreateFundingSourceOptions {
+//   customerId: string; // Dwolla Customer ID
+//   fundingSourceName: string; // Dwolla Funding Source Name
+//   plaidToken: string; // Plaid Account Processor Token
+//   _links: object; // Dwolla On Demand Authorization Link
+// }
 
 declare interface CreateTransactionProps {
   name: string;
