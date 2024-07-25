@@ -180,10 +180,14 @@ interface MonoSuccessResponse {
 }
 
 declare interface MonoLinkProps {
-  //user: User;
-  user: { id: string } | null;
-  //variant?: "primary" | "ghost";
+  user: { id: string; firstName: string; lastName: string } | null;
 }
+
+// declare interface MonoLinkProps {
+//   //user: User;
+//   user: { id: string } | null;
+//   //variant?: "primary" | "ghost";
+// }
 
 // declare interface PlaidLinkProps {
 //   user: User;

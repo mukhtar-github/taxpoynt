@@ -1,7 +1,5 @@
-// Import necessary modules or dependencies
 import Connect from "@mono.co/connect.js";
 
-// Define the function with explicit types
 const monoConnect = (
   onSuccess: (response: MonoSuccessResponse) => void,
   onClose: () => void
@@ -17,4 +15,3 @@ const monoConnect = (
 };
 
 export default monoConnect;
-
