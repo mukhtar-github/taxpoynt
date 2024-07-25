@@ -38,7 +38,7 @@ const MonoLink = ({ user }: MonoLinkProps) => {
     <>
       <Button
         onClick={openMonoWidget}
-        disabled={loading}
+        disabled={loading || !user}
         className='plaidlink-primary'
       >
         {loading ? 'Loading...' : 'Connect Bank Account'}
