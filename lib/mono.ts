@@ -1,17 +1,21 @@
-import Connect from "@mono.co/connect.js";
+import loadMonoSDK from "./loadMonoSDK";
 
-const monoConnect = (
+const monoConnect = async (
   onSuccess: (response: MonoSuccessResponse) => void,
   onClose: () => void
-) => {
-  const connect = new Connect({
-    key: process.env.MONO_PUBLIC_KEY,
-    onSuccess,
-    onClose
-  });
+): Promise<void> => {
+  try {
+    await loadMonoSDK();
+    const connect = new (window as any).Connect({
+      key: process.env.NEXT_PUBLIC_MONO_PUBLIC_KEY,
+      onSuccess,
+      onClose
+    });
 
-  connect.setup();
-  return connect;
+    connect.setup();
+  } catch (error) {
+    console.error('Error initializing Mono SDK:', error);
+  }
 };
 
 export default monoConnect;

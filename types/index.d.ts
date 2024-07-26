@@ -176,11 +176,15 @@ declare interface PaginationProps {
 
 // Define a type for the response you expect from the onSuccess callback
 interface MonoSuccessResponse {
-  code: string; // Adjust based on actual data expected from Mono
+  code: string; // This typically will be the authorization code received from Mono
 }
 
 declare interface MonoLinkProps {
-  user: { id: string; firstName: string; lastName: string } | null;
+  user: {
+    id: string;
+    name: string;
+    email: string;
+} | null;
 }
 
 // declare interface MonoLinkProps {

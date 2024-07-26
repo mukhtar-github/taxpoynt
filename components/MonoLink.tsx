@@ -18,7 +18,7 @@ const MonoLink = ({ user }: MonoLinkProps) => {
     setLoading(false);
   }, []);
 
-  const openMonoWidget = useCallback(() => {
+  const openMonoWidget = useCallback(async () => {
     if (!user) {
       console.error('User information is required to open Mono widget');
       return;
@@ -26,7 +26,12 @@ const MonoLink = ({ user }: MonoLinkProps) => {
 
     setLoading(true);
     try {
-      const mono = monoConnect(handleMonoSuccess, handleMonoClose);
+      await monoConnect(handleMonoSuccess, handleMonoClose);
+      const mono = new (window as any).Connect({
+        key: process.env.NEXT_PUBLIC_MONO_PUBLIC_KEY,
+        onSuccess: handleMonoSuccess,
+        onClose: handleMonoClose
+      });
       mono.open();
     } catch (error) {
       console.error('Error initializing Mono widget:', error);
@@ -35,15 +40,13 @@ const MonoLink = ({ user }: MonoLinkProps) => {
   }, [handleMonoSuccess, handleMonoClose, user]);
 
   return (
-    <>
-      <Button
-        onClick={openMonoWidget}
-        disabled={loading || !user}
-        className='plaidlink-primary'
-      >
-        {loading ? 'Loading...' : 'Connect Bank Account'}
-      </Button>
-    </>
+    <Button
+      onClick={openMonoWidget}
+      disabled={loading || !user}
+      className='plaidlink-primary'
+    >
+      {loading ? 'Loading...' : 'Connect Bank Account'}
+    </Button>
   );
 };
 
