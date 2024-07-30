@@ -5,6 +5,12 @@ import { createAdminClient, createSessionClient } from "../appwrite"
 import { cookies } from "next/headers"
 import { parseStringify } from "../utils"
 
+const {
+  APPWRITE_DATABASE_ID: DATABASE_ID,
+  APPWRITE_USER_COLLECTION_ID: USER_COLLECTION_ID,
+  APPWRITE_TAX_RETURN_COLLECTION_ID: TAX_RETURN_COLLECTION_ID,
+} = process.env;
+
 export const signIn = async ({ email, password }: signInProps) => {
   try {
     // Mutation / Database query / Make a fetch request
@@ -69,3 +75,33 @@ export const logoutAccount = async () => {
   }
 }
 
+export const createTaxReturn = async ({
+  userId,
+  taxYear,
+  status,
+  documentUrl,
+  sharableId,
+}: CreateTaxReturnProps) => {
+  try {
+    const { database } = await createAdminClient();
+
+    // Assuming you have a specific collection for tax returns
+    const taxReturn = await database.createDocument(
+      DATABASE_ID!,
+      TAX_RETURN_COLLECTION_ID!,
+      ID.unique(),
+      {
+        userId,
+        taxYear,
+        status,
+        documentUrl,
+        sharableId,
+      }
+    );
+
+    return parseStringify(taxReturn);
+
+  } catch (error) {
+    console.error(error);
+  }
+}

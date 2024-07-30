@@ -341,14 +341,23 @@ declare interface exchangePublicTokenProps {
   user: User;
 }
 
-declare interface createBankAccountProps {
-  accessToken: string;
+// Define the properties expected for creating a tax return
+declare interface CreateTaxReturnProps {
   userId: string;
-  accountId: string;
-  bankId: string;
-  fundingSourceUrl: string;
+  taxYear: number;
+  status: 'drafted' | 'submitted' | 'pending review';
+  documentUrl?: string; // Optional, only if the document is already generated
   sharableId: string;
 }
+
+// declare interface createBankAccountProps {
+//   accessToken: string;
+//   userId: string;
+//   accountId: string;
+//   bankId: string;
+//   fundingSourceUrl: string;
+//   sharableId: string;
+// }
 
 declare interface getBanksProps {
   userId: string;
