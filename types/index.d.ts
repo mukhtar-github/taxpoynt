@@ -343,11 +343,12 @@ declare interface exchangePublicTokenProps {
 
 // Define the properties expected for creating a tax return
 declare interface CreateTaxReturnProps {
+  taxReturnId: string;  // Unique identifier for the tax return instance
   userId: string;
   taxYear: number;
+  taxTypeId: string;   // Identifier for the type of tax return
   status: 'drafted' | 'submitted' | 'pending review';
   documentUrl?: string; // Optional, only if the document is already generated
-  sharableId: string;
 }
 
 // declare interface createBankAccountProps {

@@ -76,11 +76,12 @@ export const logoutAccount = async () => {
 }
 
 export const createTaxReturn = async ({
+  taxReturnId,
   userId,
   taxYear,
+  taxTypeId,
   status,
   documentUrl,
-  sharableId,
 }: CreateTaxReturnProps) => {
   try {
     const { database } = await createAdminClient();
@@ -91,11 +92,12 @@ export const createTaxReturn = async ({
       TAX_RETURN_COLLECTION_ID!,
       ID.unique(),
       {
+        taxReturnId,
         userId,
         taxYear,
+        taxTypeId,
         status,
         documentUrl,
-        sharableId,
       }
     );
 
