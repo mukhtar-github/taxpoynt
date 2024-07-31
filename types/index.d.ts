@@ -342,7 +342,7 @@ declare interface exchangePublicTokenProps {
 }
 
 // Define the properties expected for creating a tax return
-declare interface CreateTaxReturnProps {
+declare interface createTaxReturnProps {
   taxReturnId: string;  // Unique identifier for the tax return instance
   userId: string;
   taxYear: number;

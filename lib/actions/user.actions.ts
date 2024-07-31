@@ -29,10 +29,34 @@ export const signUp = async (userData: SignUpParams) => {
 
   const { email, password, firstName, lastName } = userData;
 
-  try {
-    const { account } = await createAdminClient();
+  let newUserAccount;
 
-    const newUserAccount = await account.create(ID.unique(), email, password, `${firstName} ${lastName}`);
+  try {
+    const { account, database } = await createAdminClient();
+
+    newUserAccount = await account.create(
+      ID.unique(),
+      email,
+      password,
+      `${firstName} ${lastName}`
+    );
+
+    if(!newUserAccount) throw new Error('Error creating user account');
+
+    const newUser = await database.createDocument(
+      DATABASE_ID!,
+      USER_COLLECTION_ID!,
+      ID.unique(),
+      {
+        ...userData,
+        userId: newUserAccount.$id,
+        name: `${firstName} ${lastName}`,
+        //monoCustomerId,
+        //monoCustomerUrl,
+      }
+    );
+
+
   
     const session = await account.createEmailPasswordSession(email, password);
 
@@ -82,7 +106,7 @@ export const createTaxReturn = async ({
   taxTypeId,
   status,
   documentUrl,
-}: CreateTaxReturnProps) => {
+}: createTaxReturnProps) => {
   try {
     const { database } = await createAdminClient();
 
