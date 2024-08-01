@@ -25,9 +25,9 @@ export const signIn = async ({ email, password }: signInProps) => {
   }
 }
 
-export const signUp = async (userData: SignUpParams) => {
+export const signUp = async ({ password, ...userData }: SignUpParams) => {
 
-  const { email, password, firstName, lastName } = userData;
+  const { email, firstName, lastName } = userData;
 
   let newUserAccount;
 
@@ -54,7 +54,6 @@ export const signUp = async (userData: SignUpParams) => {
       {
         ...userData,
         userId: newUserAccount.$id,
-        name: `${firstName} ${lastName}`,
         taxpoyntId,  // Storing the generated Taxpoynt ID in the user's profile
       }
     );

@@ -24,95 +24,95 @@ const AuthForm = ({ type }: { type: string }) => {
     const formSchema = authFormSchema(type)
 
     // 1. Define your form.
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
-    defaultValues: {
-        email: "",
-        password: ""
-    },
-  })
+    const form = useForm<z.infer<typeof formSchema>>({
+        resolver: zodResolver(formSchema),
+        defaultValues: {
+            email: "",
+            password: ""
+        },
+    })
 
-  // 2. Define a submit handler.
-  const onSubmit = async (data: z.infer<typeof formSchema>) => {
-    setLoading(true)
+    // 2. Define a submit handler.
+    const onSubmit = async (data: z.infer<typeof formSchema>) => {
+        setLoading(true)
 
-    try {
-        // Sign up with Appwrite and generate Taxpoynt ID
-        if(type === 'sign-up') {
-            const userData = {
-                firstName: data.firstName!,
-                lastName: data.lastName!,
-                businessName: data.businessName!,
-                address1: data.address1!,
-                state: data.state!,
-                dateOfReg: data.dateOfReg!,
-                phone: data.phone!,
-                taxId: data.taxId!,
-                email: data.email,
-                password: data.password
+        try {
+            // Sign up with Appwrite and generate Taxpoynt ID
+            if(type === 'sign-up') {
+                const userData = {
+                    firstName: data.firstName!,
+                    lastName: data.lastName!,
+                    businessName: data.businessName!,
+                    address1: data.address1!,
+                    state: data.state!,
+                    dateOfReg: data.dateOfReg!,
+                    phone: data.phone!,
+                    taxId: data.taxId!,
+                    email: data.email,
+                    password: data.password
+                }
+
+                const newUser = await signUp(userData)
+
+                setUser(newUser)
             }
 
-            const newUser = await signUp(userData)
+            if(type === 'sign-in') {
+                // Sign in with Appwrite
+                const response = await signIn({
+                    email: data.email,
+                    password: data.password
+                })
 
-            setUser(newUser)
+                if(response) router.push('/')
+            }
+
+        } catch (error) {
+            console.log(error)
+        } finally {
+            setLoading(false)
         }
-
-        if(type === 'sign-in') {
-            // Sign in with Appwrite
-            const response = await signIn({
-                email: data.email,
-                password: data.password
-            })
-
-            if(response) router.push('/')
-        }
-
-    } catch (error) {
-        console.log(error)
-    } finally {
-        setLoading(false)
     }
-  }
 
-  return (
-    <section className='auth-form'>
-        <header className='flex flex-col gap-5 md:gap-8'>
-            <Link href='/' className='cursor-pointer items-center flex gap-1'>
-                <Image 
-                    alt='Taxpoynt Logo' 
-                    src='/icons/logo-fav.svg' 
-                    width={34}
-                    height={34}
-                />
-                <h1 className='text-26 font-ibm-plex-serif font-bold text-black-1'>Taxpoynt</h1>
-            </Link>
-            <div className='flex flex-col gap-1 md:gap-3'>
-                <h1 className='tex-24 lg:text-36 font-semibold text-gray-900'>
-                    {user 
-                        ? 'Link Your Account'
-                        : type === 'sign-in'
-                        ? 'Sign In'
-                        : 'Sign Up'
-                    }
-                    <p className='text-16 font-normal text-gray-600'>
-                        {user
-                            ? 'Link your account to get started'
-                            : 'Please enter your details to continue'
+    return (
+        <section className='auth-form'>
+            <header className='flex flex-col gap-5 md:gap-8'>
+                <Link href='/' className='cursor-pointer items-center flex gap-1'>
+                    <Image 
+                        alt='Taxpoynt Logo' 
+                        src='/icons/logo-fav.svg' 
+                        width={34}
+                        height={34}
+                    />
+                    <h1 className='text-26 font-ibm-plex-serif font-bold text-black-1'>Taxpoynt</h1>
+                </Link>
+                <div className='flex flex-col gap-1 md:gap-3'>
+                    <h1 className='tex-24 lg:text-36 font-semibold text-gray-900'>
+                        {user 
+                            ? 'Link Your Account'
+                            : type === 'sign-in'
+                            ? 'Sign In'
+                            : 'Sign Up'
                         }
-                    </p>
-                </h1>
-            </div>
-        </header>
-            {/* {user ? ( */}
+                        <p className='text-16 font-normal text-gray-600'>
+                            {user
+                                ? 'Link your account to get started'
+                                : 'Please enter your details to continue'
+                            }
+                        </p>
+                    </h1>
+                </div>
+            </header>
+            {user ? (
                 <div className='flex flex-col gap-4 '>
                     <MonoLink user={ user } />
                 </div>
-             {/* ) : ( */}
+            ) : (
                 <>
                     <Form {...form}>
                         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
                             {type === 'sign-up' && (
-                               <>
+                                <>
                                     <div className='flex gap-4'>
                                         <CustomInput
                                             form={form}
@@ -179,7 +179,7 @@ const AuthForm = ({ type }: { type: string }) => {
                                     </div>
                                 </> 
                             )}
-                            
+                                
                             <div className='flex gap-4'>
                                 <CustomInput
                                     form={form}
@@ -209,7 +209,7 @@ const AuthForm = ({ type }: { type: string }) => {
                                     ) : type === 'sign-in' ? 'Sign In' : 'Sign Up'}
                                 </Button>
                             </div>
-                        </form>
+                        </form>    
                     </Form>
 
                     <footer className='flex justify-center gap-1'>
@@ -226,9 +226,9 @@ const AuthForm = ({ type }: { type: string }) => {
                         </Link>
                     </footer>
                 </>
-             {/* )} */}
-    </section>
-  )
+            )}
+        </section>
+    )
 }
 
 export default AuthForm
