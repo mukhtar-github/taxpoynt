@@ -3,6 +3,8 @@ import { type ClassValue, clsx } from "clsx";
 import qs from "query-string";
 import { twMerge } from "tailwind-merge";
 import { z } from "zod";
+import { v4 as uuidv4 } from 'uuid';
+
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -209,3 +211,17 @@ export const authFormSchema = (type: string) => z.object({
   email: z.string().email(),
   password: z.string().min(8),
 })
+
+// Function to generate a unique Taxpoynt ID
+export const generateTaxpoyntId = (): string => {
+  return uuidv4(); // Generates a UUID
+};
+
+//Test code for uuid
+// const generateUUID = () => {
+//   const uuid = uuidv4();
+//   console.log("Generated UUID:", uuid);
+//   return uuid;
+//   };
+  
+//   generateUUID();

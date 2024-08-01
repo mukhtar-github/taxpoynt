@@ -35,10 +35,24 @@ const AuthForm = ({ type }: { type: string }) => {
   // 2. Define a submit handler.
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
     setLoading(true)
+
     try {
-        // Sign up with Appwrite and create a QuikBooks link token
+        // Sign up with Appwrite and generate Taxpoynt ID
         if(type === 'sign-up') {
-            const newUser = await signUp(data)
+            const userData = {
+                firstName: data.firstName!,
+                lastName: data.lastName!,
+                businessName: data.businessName!,
+                address1: data.address1!,
+                state: data.state!,
+                dateOfReg: data.dateOfReg!,
+                phone: data.phone!,
+                taxId: data.taxId!,
+                email: data.email,
+                password: data.password
+            }
+
+            const newUser = await signUp(userData)
 
             setUser(newUser)
         }

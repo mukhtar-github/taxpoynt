@@ -8,14 +8,14 @@ declare type SearchParamProps = {
 // ========================================
 
 declare type SignUpParams = {
-  firstName?: string;
-  lastName?: string;
-  businessName?: string;
-  address1?: string;
-  state?: string;
-  dateOfReg?: string;
-  phone?: string;
-  taxId?: string;
+  firstName: string;
+  lastName: string;
+  businessName: string;
+  address1: string;
+  state: string;
+  dateOfReg: string;
+  phone: string;
+  taxId: string;
   email: string;
   password: string;
 };
@@ -29,8 +29,7 @@ declare type User = {
   $id: string;
   email: string;
   userId: string;
-  quickbooksCustomerUrl: string;
-  quickbooksCustomerId: string;
+  taxpoyntId: string;
   firstName: string;
   lastName: string;
   name: string;

@@ -3,7 +3,7 @@
 import { ID } from "node-appwrite"
 import { createAdminClient, createSessionClient } from "../appwrite"
 import { cookies } from "next/headers"
-import { parseStringify } from "../utils"
+import { generateTaxpoyntId, parseStringify } from "../utils"
 
 const {
   APPWRITE_DATABASE_ID: DATABASE_ID,
@@ -31,6 +31,9 @@ export const signUp = async (userData: SignUpParams) => {
 
   let newUserAccount;
 
+  // Generate a unique Taxpoynt ID for the user
+  const taxpoyntId = generateTaxpoyntId();  // Use the function to generate the ID
+
   try {
     const { account, database } = await createAdminClient();
 
@@ -43,6 +46,7 @@ export const signUp = async (userData: SignUpParams) => {
 
     if(!newUserAccount) throw new Error('Error creating user account');
 
+    // Create a new user document in the Appwrite database with Taxpoynt ID
     const newUser = await database.createDocument(
       DATABASE_ID!,
       USER_COLLECTION_ID!,
@@ -51,12 +55,9 @@ export const signUp = async (userData: SignUpParams) => {
         ...userData,
         userId: newUserAccount.$id,
         name: `${firstName} ${lastName}`,
-        //monoCustomerId,
-        //monoCustomerUrl,
+        taxpoyntId,  // Storing the generated Taxpoynt ID in the user's profile
       }
     );
-
-
   
     const session = await account.createEmailPasswordSession(email, password);
 
@@ -67,11 +68,12 @@ export const signUp = async (userData: SignUpParams) => {
       secure: true,
     });
 
-    return parseStringify(newUserAccount);
+    return parseStringify(newUser);
 
   } catch (error) {
     console.error('Error', error) 
   }
+
 }
 
 export const getLoggedInUser = async () => {
