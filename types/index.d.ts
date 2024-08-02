@@ -179,18 +179,10 @@ interface MonoSuccessResponse {
 }
 
 declare interface MonoLinkProps {
-  user: {
-    id: string;
-    name: string;
-    email: string;
-} | null;
+  user: User;
+  // loading: boolean;
+  // openMonoWidget: () => void;
 }
-
-// declare interface MonoLinkProps {
-//   //user: User;
-//   user: { id: string } | null;
-//   //variant?: "primary" | "ghost";
-// }
 
 // declare interface PlaidLinkProps {
 //   user: User;

@@ -2,7 +2,7 @@
 
 import Image from 'next/image'
 import Link from 'next/link'
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { z } from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
@@ -12,12 +12,22 @@ import CustomInput from './CustomInput'
 import { authFormSchema } from '@/lib/utils'
 import { Loader2 } from 'lucide-react'
 import { useRouter } from 'next/navigation'
-import { signIn, signUp } from '@/lib/actions/user.actions'
+import { getLoggedInUser, signIn, signUp } from '@/lib/actions/user.actions'
 import MonoLink from './MonoLink'
 
 const AuthForm = ({ type }: { type: string }) => {
-    const [user, setUser] = useState<{ id: string } | null>(null)
+    const [user, setUser] = useState(null)
     const [loading, setLoading] = useState(false)
+
+    useEffect(() => {
+        // Simulate fetching user data after sign-up
+        const fetchUserData = async () => {
+            const userData = await getLoggedInUser(); // Replace with actual user data fetching logic
+            setUser(userData);
+        };
+        
+        fetchUserData();
+    }, []);
 
     const router = useRouter()
 
@@ -105,7 +115,7 @@ const AuthForm = ({ type }: { type: string }) => {
             </header>
             {user ? (
                 <div className='flex flex-col gap-4 '>
-                    <MonoLink user={ user } />
+                    <MonoLink user={user} />
                 </div>
             ) : (
                 <>

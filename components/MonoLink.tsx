@@ -10,7 +10,7 @@ const MonoLink = ({ user }: MonoLinkProps) => {
   const handleMonoSuccess = useCallback((response: MonoSuccessResponse) => {
     console.log('Mono connected successfully:', response.code);
     setLoading(false);
-    router.push('/dashboard');
+    router.push('/');
   }, [router]);
 
   const handleMonoClose = useCallback(() => {
@@ -26,12 +26,15 @@ const MonoLink = ({ user }: MonoLinkProps) => {
 
     setLoading(true);
     try {
+      console.log('Initializing Mono SDK...');
       await monoConnect(handleMonoSuccess, handleMonoClose);
+      console.log('Mono SDK initialized successfully');
       const mono = new (window as any).Connect({
         key: process.env.NEXT_PUBLIC_MONO_PUBLIC_KEY,
         onSuccess: handleMonoSuccess,
         onClose: handleMonoClose
       });
+      mono.setup();
       mono.open();
     } catch (error) {
       console.error('Error initializing Mono widget:', error);
@@ -51,3 +54,37 @@ const MonoLink = ({ user }: MonoLinkProps) => {
 };
 
 export default MonoLink;
+
+
+//   const openMonoWidget = useCallback(async () => {
+//     if (!user) {
+//       console.error('User information is required to open Mono widget');
+//       return;
+//     }
+
+//     setLoading(true);
+//     try {
+//       console.log('Initializing Mono SDK...');
+//       await loadMonoSDK();
+//       console.log('Mono SDK initialized successfully');
+//       const mono = new (window as any).Connect({
+//         key: process.env.NEXT_PUBLIC_MONO_PUBLIC_KEY,
+//         onSuccess: handleMonoSuccess,
+//         onClose: handleMonoClose
+//       });
+//       mono.setup();
+//       mono.open();
+//     } catch (error) {
+//       console.error('Error initializing Mono widget:', error);
+//       setLoading(false);
+//     }
+//   }, [handleMonoSuccess, handleMonoClose, user]);
+
+//   return (
+//     <button onClick={openMonoWidget} disabled={loading || !user} className='plaidlink-primary'>
+//       {loading ? 'Loading...' : 'Open Mono Widget'}
+//     </button>
+//   );
+// };
+
+// export default MonoLink;
