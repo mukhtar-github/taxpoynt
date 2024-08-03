@@ -1,5 +1,5 @@
-"use client"
-
+"use client";
+//components/AuthForm.tsx
 import Image from 'next/image'
 import Link from 'next/link'
 import React, { useState, useEffect } from 'react'
@@ -13,7 +13,8 @@ import { authFormSchema } from '@/lib/utils'
 import { Loader2 } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { getLoggedInUser, signIn, signUp } from '@/lib/actions/user.actions'
-import MonoLink from './MonoLink'
+import LinkUser from './LinkUser';
+//import MonoLink from './MonoLink'
 
 const AuthForm = ({ type }: { type: string }) => {
     const [user, setUser] = useState(null)
@@ -115,7 +116,7 @@ const AuthForm = ({ type }: { type: string }) => {
             </header>
             {user ? (
                 <div className='flex flex-col gap-4 '>
-                    <MonoLink user={user} />
+                    <LinkUser user={user} />
                 </div>
             ) : (
                 <>
