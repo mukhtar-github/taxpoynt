@@ -51,14 +51,14 @@ const AuthForm = ({ type }: { type: string }) => {
             // Sign up with Appwrite and generate Taxpoynt ID
             if(type === 'sign-up') {
                 const userData = {
-                    firstName: data.firstName!,
-                    lastName: data.lastName!,
-                    businessName: data.businessName!,
-                    address1: data.address1!,
+                    first_name: data.first_name!,
+                    last_name: data.last_name!,
+                    business_name: data.business_name!,
+                    address: data.address!,
                     state: data.state!,
-                    dateOfReg: data.dateOfReg!,
+                    business_reg_date: data.business_reg_date!,
                     phone: data.phone!,
-                    taxId: data.taxId!,
+                    identification_no: data.identification_no!,
                     email: data.email,
                     password: data.password
                 }
@@ -127,48 +127,48 @@ const AuthForm = ({ type }: { type: string }) => {
                                     <div className='flex gap-4'>
                                         <CustomInput
                                             form={form}
-                                            name='firstName'
+                                            name='first_name'
                                             label='First Name'
-                                            placeholder='Enter your first name'
-                                            type='firstName'
+                                            placeholder='First Name'
+                                            type='first_name'
                                         />
                                         <CustomInput
                                             form={form}
-                                            name='lastName'
+                                            name='last_name'
                                             label='Last Name'
-                                            placeholder='Enter your last name'
-                                            type='lastName'
+                                            placeholder='Last Name'
+                                            type='last_name'
                                         />
                                     </div>
                                     <div className='flex gap-4'>
                                         <CustomInput
                                             form={form}
-                                            name='businessName'
+                                            name='business_name'
                                             label='Business Name'
-                                            placeholder='Enter your business name'
-                                            type='businessName'
+                                            placeholder='Business Name'
+                                            type='business_name'
                                         />
                                         <CustomInput
                                             form={form}
                                             name='state'
                                             label='State'
-                                            placeholder='Enter your state'
+                                            placeholder='State'
                                             type='state'
                                         />
                                     </div>
                                     <div className='flex gap-4'>
                                         <CustomInput
                                             form={form}
-                                            name='address1'
+                                            name='address'
                                             label='Business Address'
-                                            placeholder='Enter business address'
+                                            placeholder='Business Address'
                                             type='address'
                                         />
                                         <CustomInput
                                             form={form}
-                                            name='dateOfReg'
-                                            label='Date of Registration'
-                                            placeholder='Enter the date of registration'
+                                            name='business_reg_date'
+                                            label='Bussiness Registration Date'
+                                            placeholder='Bussiness Registration Date'
                                             type='date'
                                         />
                                     </div>
@@ -177,15 +177,15 @@ const AuthForm = ({ type }: { type: string }) => {
                                             form={form}
                                             name='phone'
                                             label='Phone Number'
-                                            placeholder='ex. +234 123 456 7890'
+                                            placeholder='ex. +2341234567890'
                                             type='phone'
                                         />
                                         <CustomInput
                                             form={form}
-                                            name='taxId'
-                                            label='Tax ID'
-                                            placeholder='Enter Tax ID (TIN)'
-                                            type='taxId'
+                                            name='identification_no'
+                                            label='ID Number'
+                                            placeholder='BVN'
+                                            type='identification_no'
                                         />
                                     </div>
                                 </> 

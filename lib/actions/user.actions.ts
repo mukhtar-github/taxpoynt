@@ -4,11 +4,12 @@ import { ID } from "node-appwrite"
 import { createAdminClient, createSessionClient } from "../appwrite"
 import { cookies } from "next/headers"
 import { generateTaxpoyntId, parseStringify } from "../utils"
+import authenticateAccount from "../mono"
 
 const {
   APPWRITE_DATABASE_ID: DATABASE_ID,
   APPWRITE_USER_COLLECTION_ID: USER_COLLECTION_ID,
-  APPWRITE_TAX_RETURN_COLLECTION_ID: TAX_RETURN_COLLECTION_ID,
+  //APPWRITE_TAX_RETURN_COLLECTION_ID: TAX_RETURN_COLLECTION_ID,
 } = process.env;
 
 export const signIn = async ({ email, password }: signInProps) => {
@@ -27,7 +28,7 @@ export const signIn = async ({ email, password }: signInProps) => {
 
 export const signUp = async ({ password, ...userData }: SignUpParams) => {
 
-  const { email, firstName, lastName } = userData;
+  const { email, first_name, last_name } = userData;
 
   let newUserAccount;
 
@@ -41,7 +42,7 @@ export const signUp = async ({ password, ...userData }: SignUpParams) => {
       ID.unique(),
       email,
       password,
-      `${firstName} ${lastName}`
+      `${first_name} ${last_name}`
     );
 
     if(!newUserAccount) throw new Error('Error creating user account');
@@ -75,6 +76,53 @@ export const signUp = async ({ password, ...userData }: SignUpParams) => {
 
 }
 
+export const updateUserWithMonoAccountId = async ({
+  DOCUMENT_ID,
+  accountId,
+}: {
+  DOCUMENT_ID: string;
+  accountId: string;
+}) => {
+  try {
+    const { database } = await createAdminClient();
+
+    // Fetch the existing user document
+    const userDocument = await database.getDocument(DATABASE_ID!, USER_COLLECTION_ID!, DOCUMENT_ID);
+
+    // Update the user document with the Mono Account ID
+    userDocument.accountId = accountId;
+
+    // Save the updated document back to the database
+    const updatedUserDocument = await database.updateDocument(
+      DATABASE_ID!,
+      USER_COLLECTION_ID!,
+      DOCUMENT_ID,
+      { accountId } // Only update the accountId field
+    );
+
+    return parseStringify(updatedUserDocument);
+
+  } catch (error) {
+    console.error('Error updating user with Mono Account ID', error);
+    throw error; // Rethrow the error
+  }
+};
+
+export const linkMonoAccount = async ({ DOCUMENT_ID, authorizationToken }: { DOCUMENT_ID: string; authorizationToken: string; }) => {
+  try {
+    // Call the Mono API to exchange the token for an Account ID
+    const accountId = await authenticateAccount(authorizationToken);
+
+    // Update the user document with the Mono Account ID
+    const updatedUser = await updateUserWithMonoAccountId({ DOCUMENT_ID, accountId });
+
+    return updatedUser;
+
+  } catch (error) {
+    console.error('Error linking Mono account', error);
+  }
+};
+
 export const getLoggedInUser = async () => {
   try {
     const { account } = await createSessionClient();
@@ -97,38 +145,5 @@ export const logoutAccount = async () => {
 
   } catch (error) {
     return null; 
-  }
-}
-
-export const createTaxReturn = async ({
-  taxReturnId,
-  userId,
-  taxYear,
-  taxTypeId,
-  status,
-  documentUrl,
-}: createTaxReturnProps) => {
-  try {
-    const { database } = await createAdminClient();
-
-    // Assuming you have a specific collection for tax returns
-    const taxReturn = await database.createDocument(
-      DATABASE_ID!,
-      TAX_RETURN_COLLECTION_ID!,
-      ID.unique(),
-      {
-        taxReturnId,
-        userId,
-        taxYear,
-        taxTypeId,
-        status,
-        documentUrl,
-      }
-    );
-
-    return parseStringify(taxReturn);
-
-  } catch (error) {
-    console.error(error);
   }
 }

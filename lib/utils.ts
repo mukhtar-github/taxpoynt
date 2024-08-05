@@ -199,14 +199,14 @@ export const getTransactionStatus = (date: Date) => {
 
 export const authFormSchema = (type: string) => z.object({
   // signup
-  firstName: type === 'sign-in' ? z.string().optional() : z.string().min(3),
-  lastName: type === 'sign-in' ? z.string().optional() : z.string().min(3),
-  businessName: type === 'sign-in' ? z.string().optional() : z.string().min(3),
-  address1: type === 'sign-in' ? z.string().optional() : z.string().max(50),
+  first_name: type === 'sign-in' ? z.string().optional() : z.string().min(3),
+  last_name: type === 'sign-in' ? z.string().optional() : z.string().min(3),
+  business_name: type === 'sign-in' ? z.string().optional() : z.string().min(3),
+  address: type === 'sign-in' ? z.string().optional() : z.string().max(50),
   state: type === 'sign-in' ? z.string().optional() : z.string().min(3),
-  dateOfReg:  type === 'sign-in' ? z.string().optional() : z.string().date().min(3),
+  business_reg_date:  type === 'sign-in' ? z.string().optional() : z.string().date().min(3),
   phone: type === 'sign-in' ? z.string().optional() : z.string().max(15),
-  taxId: type === 'sign-in' ? z.string().optional() : z.string().min(3),
+  identification_no: type === 'sign-in' ? z.string().optional() : z.string().min(3),
   // both signup and login
   email: z.string().email(),
   password: z.string().min(8),

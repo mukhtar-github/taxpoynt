@@ -8,14 +8,14 @@ declare type SearchParamProps = {
 // ========================================
 
 declare type SignUpParams = {
-  firstName: string;
-  lastName: string;
-  businessName: string;
-  address1: string;
+  first_name: string;
+  last_name: string;
+  business_name: string;
+  address: string;
   state: string;
-  dateOfReg: string;
+  business_reg_date: string;
   phone: string;
-  taxId: string;
+  identification_no: string;
   email: string;
   password: string;
 };
@@ -29,16 +29,17 @@ declare type User = {
   $id: string;
   email: string;
   userId: string;
+  accountId: string;
   taxpoyntId: string;
-  firstName: string;
-  lastName: string;
-  name: string;
-  address1: string;
+  first_name: string;
+  last_name: string;
+  address: string;
   state: string;
-  businessName: string;
+  business_name: string;
   taxId: string;
-  dateOfReg: string;
+  business_reg_date: string;
   phone: string;
+  //name: string;
 } | null;
 
 declare type NewUserParams = {
