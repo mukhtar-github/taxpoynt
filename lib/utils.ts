@@ -217,6 +217,22 @@ export const generateTaxpoyntId = (): string => {
   return uuidv4(); // Generates a UUID
 };
 
+//Custom Error Class (utils/error.ts)
+
+export class AppError extends Error {
+  statusCode: number;
+
+  constructor(message: string, statusCode: number) {
+      super(message);
+      this.statusCode = statusCode;
+      Object.setPrototypeOf(this, AppError.prototype);
+  }
+
+  serializeErrors() {
+      return [{ message: this.message }];
+  }
+}
+
 //Test code for uuid
 // const generateUUID = () => {
 //   const uuid = uuidv4();
