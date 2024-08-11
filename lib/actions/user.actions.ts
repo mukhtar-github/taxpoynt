@@ -86,13 +86,7 @@ export const updateUserWithMonoAccountId = async ({
   try {
     const { database } = await createAdminClient();
 
-    // Fetch the existing user document
-    const userDocument = await database.getDocument(DATABASE_ID!, USER_COLLECTION_ID!, DOCUMENT_ID);
-
     // Update the user document with the Mono Account ID
-    userDocument.accountId = accountId;
-
-    // Save the updated document back to the database
     const updatedUserDocument = await database.updateDocument(
       DATABASE_ID!,
       USER_COLLECTION_ID!,
@@ -104,7 +98,7 @@ export const updateUserWithMonoAccountId = async ({
 
   } catch (error) {
     console.error('Error updating user with Mono Account ID', error);
-    throw error; // Rethrow the error
+    throw error; // Rethrow the error for upstream handling
   }
 };
 

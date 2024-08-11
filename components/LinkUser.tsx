@@ -1,6 +1,7 @@
 import { useState, useCallback } from "react";
 import { Button } from './ui/button';
-import { useRouter } from 'next/navigation';
+import { useRouter } from 'next/router';
+import axios from 'axios';
 
 function LinkUser({ user }: { user: any }) {
   const [scriptLoaded, setScriptLoaded] = useState(false);
@@ -26,7 +27,14 @@ function LinkUser({ user }: { user: any }) {
       onLoad: () => setScriptLoaded(true),
       onSuccess: async ({ code }: { code: string }) => {
         console.log(`Linked successfully: ${code}`);
-        // Add logic to handle the success case, e.g., call an API to link the account
+        try {
+          const result = await axios.post('/api/link-account', { code });
+          console.log('Account linked successfully:', result.data);
+          // Handle further actions after successful linking, e.g., redirect or display a success message
+        } catch (error) {
+          console.error('Failed to link account:', error);
+          // Handle errors, e.g., display an error message to the user
+        }
       },
     });
 

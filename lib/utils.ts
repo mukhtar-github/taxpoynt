@@ -218,19 +218,20 @@ export const generateTaxpoyntId = (): string => {
 };
 
 //Custom Error Class (utils/error.ts)
-
 export class AppError extends Error {
-  statusCode: number;
+    public readonly statusCode: number;
+    public readonly isOperational: boolean;
 
-  constructor(message: string, statusCode: number) {
-      super(message);
-      this.statusCode = statusCode;
-      Object.setPrototypeOf(this, AppError.prototype);
-  }
+    constructor(message: string, statusCode: number, isOperational: boolean = true) {
+        super(message);
+        this.statusCode = statusCode;
+        this.isOperational = isOperational;
+        Object.setPrototypeOf(this, new.target.prototype); // restore prototype chain
+    }
 
-  serializeErrors() {
-      return [{ message: this.message }];
-  }
+    serializeErrors() {
+        return [{ message: this.message }];
+    }
 }
 
 //Test code for uuid
