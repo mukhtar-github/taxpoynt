@@ -36,7 +36,7 @@ declare type User = {
   address: string;
   state: string;
   business_name: string;
-  taxId: string;
+  identification_no: string;
   business_reg_date: string;
   phone: string;
   //name: string;

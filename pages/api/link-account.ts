@@ -11,9 +11,20 @@ interface ExtendedNextApiRequest extends NextApiRequest {
 }
 
 const handler = async (req: ExtendedNextApiRequest, res: NextApiResponse) => {
+    // Ensure the request method is POST
+    if (req.method !== 'POST') {
+        res.status(405).json({ error: 'Method Not Allowed' });
+        return;
+    }
+
+    // Validate the presence of the 'code' in the request body
+    if (!req.body.code) {
+        res.status(400).json({ error: 'Authorization code is required' });
+        return;
+    }
+
     try {
         const { code } = req.body;
-
         const user = await linkMonoAccount({ DOCUMENT_ID: req.user.id, authorizationToken: code });
         res.status(200).json({ message: 'Account linked successfully', user });
     } catch (error) {

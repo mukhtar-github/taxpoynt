@@ -14,7 +14,6 @@ import { Loader2 } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { getLoggedInUser, signIn, signUp } from '@/lib/actions/user.actions'
 import LinkUser from './LinkUser';
-//import MonoLink from './MonoLink'
 
 const AuthForm = ({ type }: { type: string }) => {
     const [user, setUser] = useState(null)
@@ -151,8 +150,8 @@ const AuthForm = ({ type }: { type: string }) => {
                                         <CustomInput
                                             form={form}
                                             name='state'
-                                            label='State'
-                                            placeholder='State'
+                                            label='Business State'
+                                            placeholder='Business State'
                                             type='state'
                                         />
                                     </div>
@@ -167,8 +166,8 @@ const AuthForm = ({ type }: { type: string }) => {
                                         <CustomInput
                                             form={form}
                                             name='business_reg_date'
-                                            label='Bussiness Registration Date'
-                                            placeholder='Bussiness Registration Date'
+                                            label='Bussiness Reg Date'
+                                            placeholder='Bussiness Reg Date'
                                             type='date'
                                         />
                                     </div>

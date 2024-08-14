@@ -1,39 +1,42 @@
 import { useState, useCallback } from "react";
 import { Button } from './ui/button';
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/navigation';
 import axios from 'axios';
 
 function LinkUser({ user }: { user: any }) {
   const [scriptLoaded, setScriptLoaded] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
   const router = useRouter();
 
   const openMonoWidget = useCallback(async () => {
     const MonoConnect = (await import("@mono.co/connect.js")).default;
 
-    const customer = {
-      name: user.name || '', // Ensure valid values
-      email: user.email || '', // Ensure valid values
-      identity: {
-        type: 'bvn', // Example type, ensure valid value
-        number: user.identification_no || '' // Ensure valid values
-      },
-    };
-    
     const monoInstance = new MonoConnect({
-      key: "test_pk_xuwpfgfoxj1n6ndjumt0",
+      key: 'live_pk_iwv8vjj1xslj0ii24zls',
       scope: 'auth',
-      data: { customer },
-      onClose: () => console.log("Widget closed"),
+      onClose: () => {
+        console.log("Widget closed");
+        if (!loading) {
+          setError('Account linking was cancelled.');
+        }
+      },
       onLoad: () => setScriptLoaded(true),
       onSuccess: async ({ code }: { code: string }) => {
-        console.log(`Linked successfully: ${code}`);
+        setLoading(true);
         try {
-          const result = await axios.post('/api/link-account', { code });
-          console.log('Account linked successfully:', result.data);
-          // Handle further actions after successful linking, e.g., redirect or display a success message
+          const response = await axios.post('/api/link-account', { code });
+          if (response.status === 200) {
+            console.log('Account linked successfully:', response.data);
+            router.push('/');
+          } else {
+            throw new Error('Failed to link account with non-success status from server.');
+          }
         } catch (error) {
-          console.error('Failed to link account:', error);
-          // Handle errors, e.g., display an error message to the user
+          console.error('Error linking account:', error);
+          setError('Failed to link account. Please try again.');
+        } finally {
+          setLoading(false);
         }
       },
     });
@@ -43,12 +46,16 @@ function LinkUser({ user }: { user: any }) {
   }, [router, user]);
 
   return (
-    <Button
-      onClick={openMonoWidget}
-      className='plaidlink-primary'
-    >
-      Connect Bank Account
-    </Button>
+    <>
+      <Button
+        onClick={openMonoWidget}
+        className='plaidlink-primary'
+        disabled={loading}
+      >
+        {loading ? 'Linking...' : 'Connect Bank Account'}
+      </Button>
+      {error && <p style={{ color: 'red' }}>{error}</p>}
+    </>
   );
 }
 
