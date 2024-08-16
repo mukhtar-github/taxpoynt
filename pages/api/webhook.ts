@@ -1,7 +1,9 @@
+// pages/api/webhook.ts
 "use server";
 import { NextApiRequest, NextApiResponse } from 'next';
 import { updateUserWithMonoAccountId } from '../../lib/actions/user.actions';
 import { errorHandler } from '../../lib/middleware/errorHandler';
+import { createAdminClient } from '../../lib/appwrite'; // Ensure this import is correct based on your actual file structure
 
 const secret = process.env.MONO_WEBHOOK_SEC;
 
@@ -11,7 +13,23 @@ async function verifyWebhook(req: NextApiRequest, res: NextApiResponse): Promise
 
     if (req.headers['mono-webhook-secret'] !== secret) {
         res.status(401).json({ message: "Unauthorized request." });
-        return; // Stop further execution after sending response
+        throw new Error("Unauthorized request due to secret mismatch.");
+    }
+}
+
+async function extractUserId(webhook: any): Promise<string | null> {
+    // Adjust this logic based on your webhook payload structure
+    return webhook.data.user ? webhook.data.user.id : null;
+}
+
+async function fetchUserById(userId: string): Promise<any> {
+    const { database } = await createAdminClient();
+    try {
+        const userDocument = await database.getDocument(process.env.APPWRITE_DATABASE_ID!, process.env.APPWRITE_USER_COLLECTION_ID!, userId);
+        return userDocument;
+    } catch (error) {
+        console.error('Error fetching user by ID:', error);
+        throw error;
     }
 }
 
@@ -22,39 +40,46 @@ export default async function handleWebhook(req: NextApiRequest, res: NextApiRes
         return;
     }
 
-    console.log('Received webhook payload:', req.body);
-
     try {
         await verifyWebhook(req, res);
 
-        // Validate the structure of the webhook payload
-        if (!req.body.data || !req.body.data.account) {
-            console.error('Webhook data is incomplete or missing:', req.body);
-            return res.status(400).json({ error: 'Bad Request: Incomplete data' });
+        const webhook = req.body;
+        console.log("Received webhook data:", webhook);  // Detailed logging
+
+        const userId = await extractUserId(webhook);
+        if (!userId) {
+            return res.status(400).json({ error: "User identifier missing in webhook payload." });
         }
 
-        const { account } = req.body.data;
-        if (!account._id || !account.name || !account.accountNumber) {
-            console.error('Required account fields are missing:', account);
-            return res.status(400).json({ error: 'Bad Request: Missing required account fields' });
+        const user = await fetchUserById(userId);
+        if (!user) {
+            return res.status(404).json({ error: "User not found." });
         }
 
-        const userId = account._id; // Assuming _id is the user ID
+        if (webhook.event === "mono.events.account_connected" || webhook.event === "mono.events.account_updated") {
+            if (user.accountId === null) { // Check if accountId is initially null
+                const accountId = webhook.data.account._id; // Assuming this is how you get accountId from webhook
+                if (!accountId) {
+                    return res.status(400).json({ error: "Account ID missing in webhook data." });
+                }
 
-        try {
-            const updatedUser = await updateUserWithMonoAccountId({
-                DOCUMENT_ID: userId,
-                accountId: account._id, // Map account ID from webhook
-                // Add other fields as necessary
-            });
-            console.log('User account updated successfully:', updatedUser);
-            res.status(200).json({ message: 'User updated successfully' });
-        } catch (error) {
-            console.error('Error updating user:', error);
-            return res.status(404).json({ error: 'Error: Document with the requested ID could not be found.' });
+                await updateUserWithMonoAccountId({
+                    DOCUMENT_ID: userId,
+                    accountId: accountId
+                });
+                return res.status(200).json({ message: "Account linked successfully." });
+            } else {
+                return res.status(400).json({ error: "Account already linked." });
+            }
+        } else {
+            console.log('Unhandled event:', webhook.event);
+            return res.status(400).json({ message: 'Unhandled event type' });
         }
     } catch (error) {
-        console.error('Error in webhook verification:', error);
-        return res.status(500).json({ error: 'Internal Server Error' });
+        if (error instanceof Error) {
+            errorHandler(error, req, res);
+        } else {
+            errorHandler(new Error('Unknown error occurred'), req, res);
+        }
     }
 }

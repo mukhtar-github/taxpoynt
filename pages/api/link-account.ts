@@ -1,7 +1,8 @@
 import { linkMonoAccount } from '@/lib/actions/user.actions';
-import { withUserSession } from '@/lib/middleware/userSession';
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { errorHandler } from '@/lib/middleware/errorHandler';
+import { withUserSession } from '@/lib/middleware/userSession';
+
 
 // Extend the NextApiRequest type to include the user property
 interface ExtendedNextApiRequest extends NextApiRequest {
@@ -26,6 +27,9 @@ const handler = async (req: ExtendedNextApiRequest, res: NextApiResponse) => {
     try {
         const { code } = req.body;
         const user = await linkMonoAccount({ DOCUMENT_ID: req.user.id, authorizationToken: code });
+        if (!user) {
+            throw new Error('Failed to link account');
+        }
         res.status(200).json({ message: 'Account linked successfully', user });
     } catch (error) {
         if (error instanceof Error) {

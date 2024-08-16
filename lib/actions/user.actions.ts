@@ -86,13 +86,6 @@ export const updateUserWithMonoAccountId = async ({
   try {
     const { database } = await createAdminClient();
 
-    // First, check if the document exists before attempting an update
-    const existingUser = await database.getDocument(DATABASE_ID!, USER_COLLECTION_ID!, DOCUMENT_ID);
-    if (!existingUser) {
-      console.error(`No user found with ID ${DOCUMENT_ID}`);
-      throw new Error(`No user found with ID ${DOCUMENT_ID}`);
-    }
-
     // Update the user document with the Mono Account ID
     const updatedUserDocument = await database.updateDocument(
       DATABASE_ID!,
@@ -148,16 +141,3 @@ export const logoutAccount = async () => {
     return null; 
   }
 }
-
-
-// // This function should be part of your user management logic
-// async function createUser(userData: any): Promise<string> {
-//     try {
-//         const userDocument = await database.createDocument('users', userData);
-//         console.log('User document created with ID:', userDocument.$id);
-//         return userDocument.$id;  // Return the new document ID
-//     } catch (error) {
-//         console.error('Failed to create user document:', error);
-//         throw new Error('User creation failed');
-//     }
-// }
