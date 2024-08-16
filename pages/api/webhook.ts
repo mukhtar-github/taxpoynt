@@ -3,7 +3,8 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { updateUserWithMonoAccountId } from '../../lib/actions/user.actions';
 import { errorHandler } from '../../lib/middleware/errorHandler';
-import { createAdminClient } from '../../lib/appwrite'; // Ensure this import is correct based on your actual file structure
+import { createAdminClient } from '../../lib/appwrite';
+import { Query } from 'node-appwrite'; // Add this import
 
 const secret = process.env.MONO_WEBHOOK_SEC;
 
@@ -17,18 +18,21 @@ async function verifyWebhook(req: NextApiRequest, res: NextApiResponse): Promise
     }
 }
 
-async function extractUserId(webhook: any): Promise<string | null> {
-    // Adjust this logic based on your webhook payload structure
-    return webhook.data.user ? webhook.data.user.id : null;
-}
-
-async function fetchUserById(userId: string): Promise<any> {
+async function findUserByBVN(bvn: string): Promise<any> {
     const { database } = await createAdminClient();
+    console.log("Attempting to find user with BVN:", bvn);
     try {
-        const userDocument = await database.getDocument(process.env.APPWRITE_DATABASE_ID!, process.env.APPWRITE_USER_COLLECTION_ID!, userId);
-        return userDocument;
+        const users = await database.listDocuments(
+            process.env.APPWRITE_DATABASE_ID!,
+            process.env.APPWRITE_USER_COLLECTION_ID!,
+            [Query.equal('identification_no', bvn)]
+        );
+        if (users.documents.length > 0) {
+            return users.documents[0];
+        }
+        return null;
     } catch (error) {
-        console.error('Error fetching user by ID:', error);
+        console.error('Error finding user by BVN:', error);
         throw error;
     }
 }
@@ -46,34 +50,30 @@ export default async function handleWebhook(req: NextApiRequest, res: NextApiRes
         const webhook = req.body;
         console.log("Received webhook data:", webhook);  // Detailed logging
 
-        const userId = await extractUserId(webhook);
-        if (!userId) {
-            return res.status(400).json({ error: "User identifier missing in webhook payload." });
-        }
+        if (webhook.event === 'mono.events.account_updated' || webhook.event === 'mono.events.account_connected') {
+            const bvn = webhook.data.account.bvn;
+            const accountId = webhook.data.account._id;
 
-        const user = await fetchUserById(userId);
-        if (!user) {
-            return res.status(404).json({ error: "User not found." });
-        }
-
-        if (webhook.event === "mono.events.account_connected" || webhook.event === "mono.events.account_updated") {
-            if (user.accountId === null) { // Check if accountId is initially null
-                const accountId = webhook.data.account._id; // Assuming this is how you get accountId from webhook
-                if (!accountId) {
-                    return res.status(400).json({ error: "Account ID missing in webhook data." });
-                }
-
-                await updateUserWithMonoAccountId({
-                    DOCUMENT_ID: userId,
-                    accountId: accountId
-                });
-                return res.status(200).json({ message: "Account linked successfully." });
-            } else {
-                return res.status(400).json({ error: "Account already linked." });
+            if (!bvn || !accountId) {
+                console.error('BVN or Account ID is missing in the webhook payload');
+                return res.status(400).json({ error: "BVN or Account ID is missing in the webhook payload." });
             }
+
+            const user = await findUserByBVN(bvn);
+            if (!user) {
+                console.error('No user found with BVN:', bvn);
+                return res.status(404).json({ error: 'User not found.' });
+            }
+
+            const updatedUser = await updateUserWithMonoAccountId({
+                DOCUMENT_ID: user.$id, // Use the Appwrite document ID
+                accountId: accountId
+            });
+            console.log('User account updated successfully:', updatedUser);
+            res.status(200).json({ message: 'User updated successfully' });
         } else {
             console.log('Unhandled event:', webhook.event);
-            return res.status(400).json({ message: 'Unhandled event type' });
+            res.status(400).json({ message: 'Unhandled event type' });
         }
     } catch (error) {
         if (error instanceof Error) {

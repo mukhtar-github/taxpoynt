@@ -86,19 +86,18 @@ export const updateUserWithMonoAccountId = async ({
   try {
     const { database } = await createAdminClient();
 
-    // Update the user document with the Mono Account ID
     const updatedUserDocument = await database.updateDocument(
       DATABASE_ID!,
       USER_COLLECTION_ID!,
       DOCUMENT_ID,
-      { accountId } // Only update the accountId field
+      { accountId } // Make sure this matches the field name in your Appwrite database
     );
 
     return parseStringify(updatedUserDocument);
 
   } catch (error) {
     console.error('Error updating user with Mono Account ID', error);
-    throw error; // Rethrow the error for upstream handling
+    throw error;
   }
 };
 
