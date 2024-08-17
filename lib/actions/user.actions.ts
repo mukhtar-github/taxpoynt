@@ -106,13 +106,32 @@ export const linkMonoAccount = async ({ DOCUMENT_ID, authorizationToken }: { DOC
     // Call the Mono API to exchange the token for an Account ID
     const accountId = await authenticateAccount(authorizationToken);
 
+    if (!accountId) {
+      throw new Error('Failed to authenticate account with Mono');
+    }
+
     // Update the user document with the Mono Account ID
     const updatedUser = await updateUserWithMonoAccountId({ DOCUMENT_ID, accountId });
 
-    return updatedUser;
+    if (!updatedUser) {
+      throw new Error('Failed to update user with Mono Account ID');
+    }
+
+    // Return a success response with the updated user data
+    return {
+      success: true,
+      message: 'Account linked successfully',
+      user: updatedUser
+    };
 
   } catch (error) {
     console.error('Error linking Mono account', error);
+    // Return an error response
+    return {
+      success: false,
+      message: error instanceof Error ? error.message : 'An unknown error occurred while linking the account',
+      error: error
+    };
   }
 };
 

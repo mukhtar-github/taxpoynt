@@ -2,7 +2,7 @@
 //components/AuthForm.tsx
 import Image from 'next/image'
 import Link from 'next/link'
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import { z } from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
@@ -13,27 +13,65 @@ import { authFormSchema } from '@/lib/utils'
 import { Loader2 } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { getLoggedInUser, signIn, signUp } from '@/lib/actions/user.actions'
-import LinkUser from './LinkUser';
+import LinkUser from './LinkUser'
+import { toast } from 'react-hot-toast' // Assuming you're using react-hot-toast for notifications
+
+// Define the User interface
+interface User {
+  $id: string;
+  email: string;
+  accountId: string | null;
+  first_name: string;
+  last_name: string;
+  business_name: string;
+  address: string;
+  state: string;
+  business_reg_date: string;
+  phone: string;
+  identification_no: string;
+}
 
 const AuthForm = ({ type }: { type: string }) => {
-    const [user, setUser] = useState(null)
+    const [user, setUser] = useState<User | null>(null)
     const [loading, setLoading] = useState(false)
+    const router = useRouter()
 
     useEffect(() => {
-        // Simulate fetching user data after sign-up
         const fetchUserData = async () => {
-            const userData = await getLoggedInUser(); // Replace with actual user data fetching logic
+            const userData = await getLoggedInUser();
             setUser(userData);
         };
         
         fetchUserData();
     }, []);
 
-    const router = useRouter()
+    const handleAccountLinked = useCallback((linkedUser: User) => {
+        setUser(linkedUser)
+        toast.success('Account linked successfully!')
+        // Add a slight delay before redirecting to ensure the toast message is visible
+        setTimeout(() => {
+            router.push('/');
+        }, 1500); // 1.5 seconds delay
+    }, [router])
+
+    useEffect(() => {
+      let intervalId: NodeJS.Timeout;
+      if (user && user.accountId === null) {
+        intervalId = setInterval(async () => {
+          const updatedUserData = await getLoggedInUser();
+          if (updatedUserData && updatedUserData.accountId) {
+            clearInterval(intervalId);
+            handleAccountLinked(updatedUserData);
+          }
+        }, 5000); // Check every 5 seconds
+      }
+      return () => {
+        if (intervalId) clearInterval(intervalId);
+      };
+    }, [user, handleAccountLinked]);
 
     const formSchema = authFormSchema(type)
 
-    // 1. Define your form.
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
@@ -42,12 +80,10 @@ const AuthForm = ({ type }: { type: string }) => {
         },
     })
 
-    // 2. Define a submit handler.
     const onSubmit = async (data: z.infer<typeof formSchema>) => {
         setLoading(true)
 
         try {
-            // Sign up with Appwrite and generate Taxpoynt ID
             if(type === 'sign-up') {
                 const userData = {
                     first_name: data.first_name!,
@@ -63,22 +99,29 @@ const AuthForm = ({ type }: { type: string }) => {
                 }
 
                 const newUser = await signUp(userData)
-
-                setUser(newUser)
+                setUser({
+                    ...newUser,
+                    accountId: null // Ensure accountId is set to null for new users
+                } as User)
+                toast.success('Sign up successful! Please link your account.')
             }
 
             if(type === 'sign-in') {
-                // Sign in with Appwrite
                 const response = await signIn({
                     email: data.email,
                     password: data.password
                 })
 
-                if(response) router.push('/')
+                if(response) {
+                    setUser(response as User)
+                    toast.success('Sign in successful!')
+                    router.push('/')
+                }
             }
 
         } catch (error) {
-            console.log(error)
+            console.error(error)
+            toast.error('An error occurred. Please try again.')
         } finally {
             setLoading(false)
         }
@@ -98,24 +141,24 @@ const AuthForm = ({ type }: { type: string }) => {
                 </Link>
                 <div className='flex flex-col gap-1 md:gap-3'>
                     <h1 className='tex-24 lg:text-36 font-semibold text-gray-900'>
-                        {user 
+                        {user && user.accountId === null
                             ? 'Link Your Account'
                             : type === 'sign-in'
                             ? 'Sign In'
                             : 'Sign Up'
                         }
-                        <p className='text-16 font-normal text-gray-600'>
-                            {user
-                                ? 'Link your account to get started'
-                                : 'Please enter your details to continue'
-                            }
-                        </p>
                     </h1>
+                    <p className='text-16 font-normal text-gray-600'>
+                        {user && user.accountId === null
+                            ? 'Link your account to get started'
+                            : 'Please enter your details to continue'
+                        }
+                    </p>
                 </div>
             </header>
-            {user ? (
+            {user && user.accountId === null ? (
                 <div className='flex flex-col gap-4 '>
-                    <LinkUser user={user} />
+                    <LinkUser user={user} onAccountLinked={handleAccountLinked} />
                 </div>
             ) : (
                 <>

@@ -3,8 +3,13 @@ import TotalBalanceBox from '@/components/TotalBalanceBox'
 import RightSidebar from '@/components/RightSidebar'
 import { getLoggedInUser } from '@/lib/actions/user.actions'
 
-const Home = async () => {
+// Placeholder data for development use only
+const placeholderTaxReturns = [
+  { $id: '1', currentBalance: 123.50, type: 'Income Tax', year: '2023' },
+  { $id: '2', currentBalance: 500.50, type: 'VAT', year: '2023' }
+];
 
+const Home = async () => {
   const loggedIn = await getLoggedInUser()
 
   return (
@@ -14,7 +19,7 @@ const Home = async () => {
           <HeaderBox
             type='greeting'
             title='Welcome'
-            user= {loggedIn?.name || 'Guest'}
+            user={loggedIn?.name || 'Guest'}
             subtext='Access and effectively manage your tax returns for better financial outcomes.'
           />
 
@@ -31,12 +36,7 @@ const Home = async () => {
       <RightSidebar
         user={loggedIn}
         transactions={[]}
-        taxReturns={
-          [
-            { currentBalance: 123.50 },
-            { currentBalance: 500.50 }
-          ]
-        } // instead of banks
+        taxReturns={placeholderTaxReturns} // Placeholder data for development
       />
     </section>
   )

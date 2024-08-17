@@ -39,7 +39,7 @@ declare type User = {
   identification_no: string;
   business_reg_date: string;
   phone: string;
-  //name: string;
+  name: string;
 } | null;
 
 declare type NewUserParams = {

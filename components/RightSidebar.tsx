@@ -4,6 +4,8 @@ import React from 'react'
 import TaxReturnCard from './TaxReturnCard'
 
 const RightSidebar = ({ user, transactions, taxReturns }: RightSidebarProps) => {
+  console.log("User data:", user);  // This will log the user data to the console
+
   return (
     <aside className='right-sidebar'>
         <section className='flex flex-col pb-8'>
@@ -11,13 +13,13 @@ const RightSidebar = ({ user, transactions, taxReturns }: RightSidebarProps) => 
             <div className='profile'>
                 <div className='profile-img'>
                     <span className='text-5xl font-bold text-blue-500'>
-                    {user && user.name[0]}
+                    {user?.name?.[0] || ''}
                     </span>
                 </div>
                 
                 <div className='profile-details'>
-                    <h1 className='profile-name'>{user && user.name}</h1>
-                    <p className='profile-email'>{user && user.email}</p>
+                    <h1 className='profile-name'>{user?.name || 'User'}</h1>
+                    <p className='profile-email'>{user?.email || 'No email'}</p>
                 </div>
             </div>
         </section>
@@ -44,7 +46,7 @@ const RightSidebar = ({ user, transactions, taxReturns }: RightSidebarProps) => 
                     <TaxReturnCard
                         key={taxReturns[0].$id}
                         taxReturn={taxReturns[0]}
-                        userName={user && user.name}
+                        userName={user?.name || 'User'}
                         showBalance={false}
                     />
                     </div>
@@ -53,7 +55,7 @@ const RightSidebar = ({ user, transactions, taxReturns }: RightSidebarProps) => 
                             <TaxReturnCard
                                 key={taxReturns[1].$id}
                                 taxReturn={taxReturns[1]}
-                                userName={user && user.name}
+                                userName={user?.name || 'User'}
                                 showBalance={false}
                             />
                         </div>

@@ -4,13 +4,14 @@ import { NextApiRequest, NextApiResponse } from 'next';
 import { updateUserWithMonoAccountId } from '../../lib/actions/user.actions';
 import { errorHandler } from '../../lib/middleware/errorHandler';
 import { createAdminClient } from '../../lib/appwrite';
-import { Query } from 'node-appwrite'; // Add this import
+import { Query } from 'node-appwrite';
+import { logger } from '../../lib/logger'; // Import the logger
 
 const secret = process.env.MONO_WEBHOOK_SEC;
 
 async function verifyWebhook(req: NextApiRequest, res: NextApiResponse): Promise<void> {
-    console.log("Received headers:", req.headers); // Log all headers for debugging
-    console.log("Expected secret:", secret); // Debugging line
+    logger.info("Received webhook request", { headers: req.headers });
+    logger.debug("Expected secret", { secret });
 
     if (req.headers['mono-webhook-secret'] !== secret) {
         res.status(401).json({ message: "Unauthorized request." });
@@ -20,7 +21,7 @@ async function verifyWebhook(req: NextApiRequest, res: NextApiResponse): Promise
 
 async function findUserByBVN(bvn: string): Promise<any> {
     const { database } = await createAdminClient();
-    console.log("Attempting to find user with BVN:", bvn);
+    logger.info("Attempting to find user with BVN", { bvn });
     try {
         const users = await database.listDocuments(
             process.env.APPWRITE_DATABASE_ID!,
@@ -32,7 +33,7 @@ async function findUserByBVN(bvn: string): Promise<any> {
         }
         return null;
     } catch (error) {
-        console.error('Error finding user by BVN:', error);
+        logger.error('Error finding user by BVN', { error });
         throw error;
     }
 }
@@ -48,31 +49,31 @@ export default async function handleWebhook(req: NextApiRequest, res: NextApiRes
         await verifyWebhook(req, res);
 
         const webhook = req.body;
-        console.log("Received webhook data:", webhook);  // Detailed logging
+        logger.info("Received webhook data", { webhook });
 
         if (webhook.event === 'mono.events.account_updated' || webhook.event === 'mono.events.account_connected') {
             const bvn = webhook.data.account.bvn;
             const accountId = webhook.data.account._id;
 
             if (!bvn || !accountId) {
-                console.error('BVN or Account ID is missing in the webhook payload');
+                logger.error('BVN or Account ID is missing in the webhook payload');
                 return res.status(400).json({ error: "BVN or Account ID is missing in the webhook payload." });
             }
 
             const user = await findUserByBVN(bvn);
             if (!user) {
-                console.error('No user found with BVN:', bvn);
+                logger.error('No user found with BVN', { bvn });
                 return res.status(404).json({ error: 'User not found.' });
             }
 
             const updatedUser = await updateUserWithMonoAccountId({
-                DOCUMENT_ID: user.$id, // Use the Appwrite document ID
+                DOCUMENT_ID: user.$id,
                 accountId: accountId
             });
-            console.log('User account updated successfully:', updatedUser);
+            logger.info('User account updated successfully', { updatedUser });
             res.status(200).json({ message: 'User updated successfully' });
         } else {
-            console.log('Unhandled event:', webhook.event);
+            logger.error('Unhandled event', { event: webhook.event });
             res.status(400).json({ message: 'Unhandled event type' });
         }
     } catch (error) {

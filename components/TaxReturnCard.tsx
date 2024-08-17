@@ -3,6 +3,15 @@ import Image from 'next/image'
 import Link from 'next/link'
 import React from 'react'
 
+interface CreditCardProps {
+  taxReturn: {
+    currentBalance: number;
+    // other properties
+  };
+  userName: string;
+  showBalance?: boolean;
+}
+
 const TaxReturnCard = ({ taxReturn, userName, showBalance = true }: CreditCardProps) => {
   return (
     <div className='flex flex-col'>
