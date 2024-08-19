@@ -28,17 +28,18 @@ declare type LoginUser = {
 declare type User = {
   $id: string;
   email: string;
-  userId: string;
-  accountId: string;
-  taxpoyntId: string;
+  accountId: string | null;
   first_name: string;
   last_name: string;
+  business_name: string;
   address: string;
   state: string;
-  business_name: string;
-  identification_no: string;
   business_reg_date: string;
   phone: string;
+  identification_no: string;
+  requiresReauth: boolean;
+  reauthUrl: string | null;
+  taxpoyntId: string;
   name: string;
 } | null;
 
@@ -48,6 +49,35 @@ declare type NewUserParams = {
   name: string;
   password: string;
 };
+
+declare type Transaction = {
+  monoId: string;
+  narration: string;
+  amount: number;
+  type: 'debit' | 'credit';
+  balance: number;
+  date: string;
+  category: string;
+  userId: string;
+  accountId: string;
+  status: string;
+  isTaxRelated: boolean;
+  // createdAt: string;
+  // updatedAt: string;
+}
+
+declare type MonoTransactionsResponse = {
+  status: string;
+  message: string;
+  timestamp: string;
+  data: MonoTransaction[];
+  meta: {
+      total: number;
+      page: number;
+      previous: string | null;
+      next: string | null;
+  };
+}
 
 declare type Account = {
   id: string;

@@ -18,18 +18,20 @@ import { toast } from 'react-hot-toast' // Assuming you're using react-hot-toast
 
 // Define the User interface
 interface User {
-  $id: string;
-  email: string;
-  accountId: string | null;
-  first_name: string;
-  last_name: string;
-  business_name: string;
-  address: string;
-  state: string;
-  business_reg_date: string;
-  phone: string;
-  identification_no: string;
-}
+    $id: string;
+    email: string;
+    accountId: string | null;
+    first_name: string;
+    last_name: string;
+    business_name: string;
+    address: string;
+    state: string;
+    business_reg_date: string;
+    phone: string;
+    identification_no: string;
+    requiresReauth: boolean;
+    reauthUrl: string | null;
+  }
 
 const AuthForm = ({ type }: { type: string }) => {
     const [user, setUser] = useState<User | null>(null)

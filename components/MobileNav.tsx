@@ -42,11 +42,11 @@ const MobileNav = ({ user }: MobileNavProps) => {
                     <SheetClose asChild>
                         <nav className="flex h-full flex-col gap-6 pt-16 text-white">
                             {sidebarLinks.map((item) => {
-                                const isActive = pathname === item.route || pathname.startsWith(`${item.route}/`);
+                                const isActive = pathname === item.route || pathname?.startsWith(`${item.route}/`);
                                 return (
                                     <SheetClose asChild key={item.route}>
-                                        <Link href={item.route} key={item.label} className={cn('mobilenav-sheet_close w-full', {'bg-bank-gradient': isActive})}>
-                                                <Image 
+                                        <Link href={item.route} className={cn('mobilenav-sheet_close w-full', {'bg-bank-gradient': isActive})}>
+                                            <Image 
                                                     alt={item.label} 
                                                     src={item.imgURL} 
                                                     width={20}

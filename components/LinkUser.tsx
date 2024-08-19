@@ -13,6 +13,14 @@ function LinkUser({ user, onAccountLinked }: { user: any; onAccountLinked: (user
   useEffect(() => {
     // Check if the account is already linked when the component mounts
     setIsAccountLinked(!!user.accountId);
+
+    // Check if re-authorization is required
+    if (user.requiresReauth && user.reauthUrl) {
+      toast.error('Re-authorization required. Redirecting...');
+      setTimeout(() => {
+        window.location.href = user.reauthUrl;
+      }, 2000);
+    }
   }, [user]);
 
   const showSuccessMessage = (message: string) => toast.success(message);
@@ -64,6 +72,30 @@ function LinkUser({ user, onAccountLinked }: { user: any; onAccountLinked: (user
     monoInstance.setup();
     monoInstance.open();
   }, [loading, linkAccount]);
+
+  const handleReauthorization = useCallback(async () => {
+    try {
+      const response = await axios.post('/api/reauthorize', { userId: user.$id });
+      if (response.data.success) {
+        showSuccessMessage('Re-authorization successful');
+        // Update the user's requiresReauth status
+        onAccountLinked({ ...user, requiresReauth: false });
+      } else {
+        throw new Error(response.data.message || 'Failed to re-authorize');
+      }
+    } catch (error) {
+      console.error('Error re-authorizing:', error);
+      showErrorMessage(error instanceof Error ? error.message : 'An error occurred during re-authorization');
+    }
+  }, [user, onAccountLinked]);
+
+  if (user.requiresReauth) {
+    return (
+      <Button onClick={handleReauthorization} className='plaidlink-primary'>
+        Re-authorize Account
+      </Button>
+    );
+  }
 
   if (isAccountLinked) {
     return <p>Your account is already linked.</p>;

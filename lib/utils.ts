@@ -4,7 +4,7 @@ import qs from "query-string";
 import { twMerge } from "tailwind-merge";
 import { z } from "zod";
 import { v4 as uuidv4 } from 'uuid';
-
+//import { format } from 'date-fns';
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -77,6 +77,18 @@ export function formatAmount(amount: number): string {
 
   return formatter.format(amount);
 }
+
+//Utility Functions for Formatting Tasks
+// export const formatDate = (date: Date, formatStr: string = 'PP'): string => {
+//   return format(date, formatStr);  // 'PP' is a date-fns format that corresponds to 'MMM do, yyyy'
+// };
+
+export const formatCurrency = (amount: number, locale: string = 'en-US', currency: string = 'USD'): string => {
+  return new Intl.NumberFormat(locale, {
+    style: 'currency',
+    currency: currency
+  }).format(amount);
+};
 
 export const parseStringify = (value: any) => JSON.parse(JSON.stringify(value));
 
@@ -233,6 +245,55 @@ export class AppError extends Error {
         return [{ message: this.message }];
     }
 }
+
+// utils/taxCalculator.ts
+
+export function calculateVAT(amount: number): number {
+    const VAT_RATE = 0.075;  // 7.5%
+    return amount * VAT_RATE;
+}
+
+interface TaxBracket {
+  upperBound: number;
+  rate: number;
+}
+
+const incomeTaxBrackets: TaxBracket[] = [
+  { upperBound: 300000, rate: 0.07 },
+  { upperBound: 600000, rate: 0.11 },
+  { upperBound: 1100000, rate: 0.15 },
+  { upperBound: 1600000, rate: 0.19 },
+  { upperBound: 3200000, rate: 0.21 },
+  { upperBound: Infinity, rate: 0.24 }
+];
+
+export function calculateIncomeTax(income: number): number {
+  let tax = 0;
+  let previousUpperBound = 0;
+
+  for (const bracket of incomeTaxBrackets) {
+      if (income > bracket.upperBound) {
+          tax += (bracket.upperBound - previousUpperBound) * bracket.rate;
+          previousUpperBound = bracket.upperBound;
+      } else {
+          tax += (income - previousUpperBound) * bracket.rate;
+          break;
+      }
+  }
+
+  return tax;
+}
+
+// Function to securely retrieve the Mono API secret key
+export const getMonoSecretKey = (): string => {
+  const monoSecretKey = process.env.MONO_SECRET_KEY;
+
+  if (!monoSecretKey) {
+    throw new Error('MONO_SECRET_KEY is not set in the environment variables');
+  }
+
+  return monoSecretKey;
+};
 
 //Test code for uuid
 // const generateUUID = () => {

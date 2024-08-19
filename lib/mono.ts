@@ -1,7 +1,7 @@
 "use server";
 import axios from 'axios';
 
-const authenticateAccount = async (authorizationToken: string): Promise<string> => {
+const authenticateAccount = async (authorizationToken: string, p0: string, p1: string): Promise<string> => {
   const MONO_API_URL = 'https://api.withmono.com/account/auth';
 
   try {

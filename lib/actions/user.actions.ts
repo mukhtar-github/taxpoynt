@@ -5,6 +5,7 @@ import { createAdminClient, createSessionClient } from "../appwrite"
 import { cookies } from "next/headers"
 import { generateTaxpoyntId, parseStringify } from "../utils"
 import authenticateAccount from "../mono"
+//import authenticateAccount from "../mono"
 
 const {
   APPWRITE_DATABASE_ID: DATABASE_ID,
@@ -104,7 +105,7 @@ export const updateUserWithMonoAccountId = async ({
 export const linkMonoAccount = async ({ DOCUMENT_ID, authorizationToken }: { DOCUMENT_ID: string; authorizationToken: string; }) => {
   try {
     // Call the Mono API to exchange the token for an Account ID
-    const accountId = await authenticateAccount(authorizationToken);
+    const accountId = await authenticateAccount(authorizationToken, DOCUMENT_ID, 'link');
 
     if (!accountId) {
       throw new Error('Failed to authenticate account with Mono');
@@ -158,4 +159,20 @@ export const logoutAccount = async () => {
   } catch (error) {
     return null; 
   }
+}
+
+export async function updateUserReauthStatus({ DOCUMENT_ID, requiresReauth, reauthUrl }: { DOCUMENT_ID: string, requiresReauth: boolean, reauthUrl?: string }) {
+    try {
+        const { database } = await createAdminClient();
+        const updatedUser = await database.updateDocument(
+            DATABASE_ID!,
+            USER_COLLECTION_ID!,
+            DOCUMENT_ID,
+            { requiresReauth, reauthUrl }
+        );
+        return updatedUser;
+    } catch (error) {
+        console.error('Error updating user reauth status:', error);
+        throw new Error('Failed to update user reauth status');
+    }
 }
