@@ -6,7 +6,7 @@ import { createAdminClient } from '@/lib/appwrite';
 import { ID } from 'node-appwrite';
 
 const MONO_API_BASE_URL = 'https://api.withmono.com/v2';
-const { APPWRITE_DATABASE_ID, APPWRITE_TRANSACTIONS_COLLECTION_ID } = process.env;
+const { NEXT_PUBLIC_APPWRITE_DATABASE_ID, NEXT_PUBLIC_APPWRITE_TRANSACTION_COLLECTION_ID } = process.env;
 
 interface MonoTransaction {
     id: string;
@@ -33,6 +33,7 @@ interface MonoTransactionsResponse {
 }
 
 interface MonoApiResponse<T> {
+    forEach(arg0: (transaction: { income: number; amount: number; }) => void): unknown;
     data: T;
     hasNewData: boolean;
 }
@@ -57,6 +58,14 @@ export const getMonoTransactions = async (accountId: string, page: number = 1, r
         return {
             data: response.data,
             hasNewData,
+            forEach: (callback: (transaction: { income: number; amount: number; }) => void) => {
+                response.data.data.forEach((transaction) => {
+                    callback({
+                        income: transaction.type === 'credit' ? transaction.amount : 0,
+                        amount: transaction.amount
+                    });
+                });
+            }
         };
     } catch (error) {
         console.error('Error fetching Mono transactions:', error);
@@ -68,8 +77,8 @@ export const saveTransaction = async (transaction: MonoTransaction, userId: stri
     try {
         const { database } = await createAdminClient();
         const savedTransaction = await database.createDocument(
-            APPWRITE_DATABASE_ID!,
-            APPWRITE_TRANSACTIONS_COLLECTION_ID!,
+            NEXT_PUBLIC_APPWRITE_DATABASE_ID!,
+            NEXT_PUBLIC_APPWRITE_TRANSACTION_COLLECTION_ID!,
             ID.unique(),
             {
                 monoId: transaction.id,

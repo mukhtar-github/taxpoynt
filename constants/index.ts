@@ -3,9 +3,6 @@ export const sidebarLinks = [
     imgURL: "/icons/dashboard.svg",
     route: "/",
     label: "Dashboard",
-    // imgURL: "/icons/home.svg",
-    // route: "/",
-    // label: "Home",
   },
   {
     imgURL: "/icons/tax-returns.svg",
@@ -21,6 +18,17 @@ export const sidebarLinks = [
     imgURL: "/icons/documents.svg",
     route: "/documents",
     label: "Documents",
+  },
+  {
+    imgURL: "/icons/tax-form.svg",
+    route: "/tax-form",
+    label: "Tax Form",
+  },
+  {
+    imgURL: "/icons/admin.svg",
+    route: "/admin/tax-management",
+    label: "Tax Management",
+    adminOnly: true,  // Add this flag for admin-only links
   },
 ];
 

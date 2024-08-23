@@ -41,6 +41,8 @@ declare type User = {
   reauthUrl: string | null;
   taxpoyntId: string;
   name: string;
+  subscribed_categories: string[];
+  isAdmin: boolean;
 } | null;
 
 declare type NewUserParams = {
@@ -62,8 +64,6 @@ declare type Transaction = {
   accountId: string;
   status: string;
   isTaxRelated: boolean;
-  // createdAt: string;
-  // updatedAt: string;
 }
 
 declare type MonoTransactionsResponse = {
@@ -77,6 +77,89 @@ declare type MonoTransactionsResponse = {
       previous: string | null;
       next: string | null;
   };
+}
+
+declare type MonoApiResponse<T> = {
+  forEach(arg0: (transaction: { income: number; amount: number; }) => void): unknown;
+  data: T;
+  hasNewData: boolean;
+}
+
+declare type TaxReturn = {
+  $id: string;
+  taxReturnId: string;
+  taxPeriod: string;
+  documentUrl: string;
+  status: string;
+  currentBalance: number;
+  type: string;
+  year: string;
+  dueDate: string;
+}
+
+declare type TaxReturnsListProps = {
+  taxReturns: TaxReturn[];
+}
+
+declare type Document = {
+  id: string;
+  name: string;
+  type: string;
+  uploadDate: string;
+  userId: string;
+  fileUrl: string;
+  size?: number;
+  status: 'Pending' | 'Approved' | 'Rejected';
+  downloadUrl: string;
+}
+
+declare type DocumentListProps = {
+  documents: Document[];
+}
+
+interface TaxUpdatesAndRemindersProps {
+  userId: string;
+}
+
+interface TaxUpdate {
+  date: string | number | Date;
+  category: ReactNode;
+  $id: string;
+  title: string;
+  description: string;
+}
+
+interface Reminder {
+  $id: string;
+  title: string;
+  description: string;
+  dueDate: string;
+}
+
+declare type TaxUpdate = {
+  $id: Key | null | undefined;
+  id: string;
+  title: string;
+  description: string;
+  date: string;
+  category: 'law_change' | 'new_regulation' | 'deadline_extension';
+}
+
+declare type TaxUpdatesListProps = {
+  taxUpdates: TaxUpdate[];
+}
+
+declare type TaxReminder = {
+  id: string;
+  title: string;
+  dueDate: string;
+  description: string;
+  priority: 'high' | 'medium' | 'low';
+  completed: boolean;
+}
+
+declare type TaxRemindersListProps = {
+  taxReminders: TaxReminder[];
 }
 
 declare type Account = {

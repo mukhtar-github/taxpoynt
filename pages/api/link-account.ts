@@ -44,5 +44,3 @@ const handler = async (req: ExtendedNextApiRequest, res: NextApiResponse) => {
 export default function linkAccountRoute(req: NextApiRequest, res: NextApiResponse) {
     withUserSession(req, res, () => handler(req as ExtendedNextApiRequest, res));
 }
-
-//export default withUserSession(handler);

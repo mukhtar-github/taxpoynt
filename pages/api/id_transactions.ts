@@ -1,7 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { authenticateRequest } from '@/lib/middleware/authMiddleware';
-import { getMonoTransactionDetails } from '@/lib/actions/transaction.actions';
-;
+import { getMonoTransactions } from '@/lib/actions/transaction.actions';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     if (!await authenticateRequest(req, res)) return;
@@ -14,7 +13,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         }
 
         try {
-            const transactionDetails = await getMonoTransactionDetails(id as string);
+            const transactionDetails = await getMonoTransactions(id as string);
             return res.status(200).json(transactionDetails);
         } catch (error) {
             console.error('Error fetching transaction details:', error);

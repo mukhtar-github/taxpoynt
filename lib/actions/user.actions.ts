@@ -3,13 +3,13 @@
 import { ID } from "node-appwrite"
 import { createAdminClient, createSessionClient } from "../appwrite"
 import { cookies } from "next/headers"
-import { generateTaxpoyntId, parseStringify } from "../utils"
+import { parseStringify } from "../utils"
 import authenticateAccount from "../mono"
-//import authenticateAccount from "../mono"
+import { setUserAsAdmin } from "./admin.actions"
 
 const {
-  APPWRITE_DATABASE_ID: DATABASE_ID,
-  APPWRITE_USER_COLLECTION_ID: USER_COLLECTION_ID,
+  NEXT_PUBLIC_APPWRITE_DATABASE_ID: DATABASE_ID,
+  NEXT_PUBLIC_APPWRITE_USER_COLLECTION_ID: USER_COLLECTION_ID,
 } = process.env;
 
 export const signIn = async ({ email, password }: signInProps) => {
@@ -32,9 +32,6 @@ export const signUp = async ({ password, ...userData }: SignUpParams) => {
 
   let newUserAccount;
 
-  // Generate a unique Taxpoynt ID for the user
-  const taxpoyntId = generateTaxpoyntId();  // Use the function to generate the ID
-
   try {
     const { account, database } = await createAdminClient();
 
@@ -47,7 +44,6 @@ export const signUp = async ({ password, ...userData }: SignUpParams) => {
 
     if(!newUserAccount) throw new Error('Error creating user account');
 
-    // Create a new user document in the Appwrite database with Taxpoynt ID
     const newUser = await database.createDocument(
       DATABASE_ID!,
       USER_COLLECTION_ID!,
@@ -55,8 +51,8 @@ export const signUp = async ({ password, ...userData }: SignUpParams) => {
       {
         ...userData,
         userId: newUserAccount.$id,
-        taxpoyntId,  // Storing the generated Taxpoynt ID in the user's profile
         accountId: null,
+        isAdmin: false, // Set isAdmin to false initially
       }
     );
   
@@ -69,7 +65,10 @@ export const signUp = async ({ password, ...userData }: SignUpParams) => {
       secure: true,
     });
 
-    return parseStringify(newUser);
+    // Check if the user should be an admin
+    const { isAdmin } = await setUserAsAdmin(newUser.$id, email);
+
+    return parseStringify({ ...newUser, isAdmin });
 
   } catch (error) {
     console.error('Error', error) 

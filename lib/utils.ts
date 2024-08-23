@@ -1,10 +1,15 @@
 /* eslint-disable no-prototype-builtins */
 import { type ClassValue, clsx } from "clsx";
-import qs from "query-string";
 import { twMerge } from "tailwind-merge";
 import { z } from "zod";
-import { v4 as uuidv4 } from 'uuid';
+//import { v4 as uuidv4 } from 'uuid';
 //import { format } from 'date-fns';
+
+// Replace the direct import with a dynamic import
+let queryString: any;
+import('query-string').then(module => {
+  queryString = module;
+});
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -103,11 +108,11 @@ interface UrlQueryParams {
 }
 
 export function formUrlQuery({ params, key, value }: UrlQueryParams) {
-  const currentUrl = qs.parse(params);
+  const currentUrl = queryString.parse(params);
 
   currentUrl[key] = value;
 
-  return qs.stringifyUrl(
+  return queryString.stringifyUrl(
     {
       url: window.location.pathname,
       query: currentUrl,
@@ -225,9 +230,12 @@ export const authFormSchema = (type: string) => z.object({
 })
 
 // Function to generate a unique Taxpoynt ID
-export const generateTaxpoyntId = (): string => {
-  return uuidv4(); // Generates a UUID
-};
+// export const generateTaxpoyntId = (): string => {
+//   return uuidv4(); // Generates a UUID
+// };
+
+// Generate a unique Taxpoynt ID for the user
+  //const taxpoyntId = generateTaxpoyntId();  // Use the function to generate the ID
 
 //Custom Error Class (utils/error.ts)
 export class AppError extends Error {

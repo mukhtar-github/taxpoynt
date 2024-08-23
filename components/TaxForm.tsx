@@ -1,12 +1,29 @@
+import React from 'react';
 import { useForm } from 'react-hook-form';
 import { PDFDownloadLink, Page, Text, View, Document } from '@react-pdf/renderer';
 import { calculateIncomeTax } from '@/lib/utils';
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
+import {
+    Form,
+    FormField,
+    FormItem,
+    FormLabel,
+    FormControl,
+    FormDescription,
+    FormMessage
+} from '@/components/ui/form';
 
 const TaxForm = () => {
-    const { register, handleSubmit, watch } = useForm();
+    const form = useForm({
+        defaultValues: {
+            income: '',
+        },
+    });
+
     const onSubmit = (data: any) => console.log(data);
 
-    const income = watch("income");
+    const income = form.watch("income");
 
     const MyDocument = () => (
         <Document>
@@ -14,20 +31,41 @@ const TaxForm = () => {
                 <View>
                     <Text>Title: Tax Return Form</Text>
                     <Text>Income: {income}</Text>
-                    <Text>Calculated Tax: {calculateIncomeTax(income)}</Text>
+                    <Text>Calculated Tax: {calculateIncomeTax(Number(income))}</Text>
                 </View>
             </Page>
         </Document>
     );
 
     return (
-        <form onSubmit={handleSubmit(onSubmit)}>
-            <input {...register("income")} placeholder="Enter your income" />
-            <button type="submit">Submit</button>
-            <PDFDownloadLink document={<MyDocument />} fileName="tax-return.pdf">
-                {({ blob, url, loading, error }) => (loading ? 'Loading document...' : 'Download now!')}
-            </PDFDownloadLink>
-        </form>
+        <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+                <FormField
+                    control={form.control}
+                    name="income"
+                    render={({ field }) => (
+                        <FormItem>
+                            <FormLabel>Income</FormLabel>
+                            <FormControl>
+                                <Input placeholder="Enter your income" {...field} />
+                            </FormControl>
+                            <FormDescription>
+                                Please enter your annual income.
+                            </FormDescription>
+                            <FormMessage />
+                        </FormItem>
+                    )}
+                />
+                <Button type="submit">Submit</Button>
+                <PDFDownloadLink document={<MyDocument />} fileName="tax-return.pdf">
+                    {({ blob, url, loading, error }) => 
+                        <Button disabled={loading}>
+                            {loading ? 'Loading document...' : 'Download Tax Return'}
+                        </Button>
+                    }
+                </PDFDownloadLink>
+            </form>
+        </Form>
     );
 };
 

@@ -7,9 +7,9 @@ export async function authenticateRequest(req: NextApiRequest, res: NextApiRespo
         res.status(401).json({ error: 'No session token provided' });
         return false;
     }
-
     try {
-        const { account } = createSessionClient(sessionToken);
+        const sessionClient = createSessionClient(sessionToken);
+        const account = (await sessionClient).account;
         await account.get();  // This will throw an error if the session is not valid
         return true;
     } catch (error) {

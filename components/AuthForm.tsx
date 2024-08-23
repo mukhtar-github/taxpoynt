@@ -31,6 +31,7 @@ interface User {
     identification_no: string;
     requiresReauth: boolean;
     reauthUrl: string | null;
+    subscribed_categories: string[];
   }
 
 const AuthForm = ({ type }: { type: string }) => {

@@ -12,8 +12,9 @@ import { cn } from '@/lib/utils'
 import { usePathname } from 'next/navigation'
 import { sidebarLinks } from '@/constants'
 import Footer from "./Footer"
-  
-const MobileNav = ({ user }: MobileNavProps) => {
+import LinkUser from "./LinkUser"
+
+const MobileNav = ({ user }: { user: User, onAccountLinked: (userData: any) => void }) => {
     const pathname = usePathname();
   return (
     <section className="w-full max-w-[264px]">
@@ -61,7 +62,9 @@ const MobileNav = ({ user }: MobileNavProps) => {
                                 )} 
                             )}
 
-                            USER
+                            <LinkUser user={user} onAccountLinked={function (userData: any): void {
+                                  throw new Error("Function not implemented.")
+                              } } />
                         </nav>
                     </SheetClose>
 

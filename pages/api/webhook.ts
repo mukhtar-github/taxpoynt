@@ -24,8 +24,8 @@ async function findUserByBVN(bvn: string): Promise<any> {
     logger.info("Attempting to find user with BVN", { bvn });
     try {
         const users = await database.listDocuments(
-            process.env.APPWRITE_DATABASE_ID!,
-            process.env.APPWRITE_USER_COLLECTION_ID!,
+            process.env.NEXT_PUBLIC_APPWRITE_DATABASE_ID!,
+            process.env.NEXT_PUBLIC_APPWRITE_USER_COLLECTION_ID!,
             [Query.equal('identification_no', bvn)]
         );
         if (users.documents.length > 0) {

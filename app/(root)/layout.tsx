@@ -27,7 +27,9 @@ export default async function RootLayout({
               className='size-[24px] max-xl:size-14'  
             />
             <div>
-              <MobileNav user={loggedIn}/>
+              <MobileNav user={loggedIn} onAccountLinked={function (): void {
+              throw new Error("Function not implemented.");
+            } }/>
             </div>
           </div>
           {children}
