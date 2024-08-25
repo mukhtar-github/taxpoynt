@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { useForm } from 'react-hook-form';
-import { PDFDownloadLink, Page, Text, View, Document } from '@react-pdf/renderer';
+import { Page, Text, View, Document } from '@react-pdf/renderer';
 import { calculateIncomeTax } from '@/lib/utils';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -16,6 +16,12 @@ import {
     FormMessage
 } from '@/components/ui/form';
 import toast from 'react-hot-toast';
+import dynamic from 'next/dynamic';
+
+const PDFDownloadLink = dynamic(
+  () => import('@react-pdf/renderer').then((mod) => mod.PDFDownloadLink),
+  { ssr: false }
+);
 
 const TaxForm = () => {
     const form = useForm({
@@ -69,7 +75,7 @@ const TaxForm = () => {
                     )}
                 />
                 <Button type="submit">Submit</Button>
-                <PDFDownloadLink document={<MyDocument />} fileName="tax-return.pdf">
+                <PDFDownloadLink document={<MyDocument />} fileName="components/TaxForm.tsx">
                     {({ blob, url, loading, error }) => 
                         <Button disabled={loading}>
                             {loading ? 'Loading document...' : 'Download Tax Return'}
