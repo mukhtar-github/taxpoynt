@@ -1,49 +1,55 @@
+'use client'
+
 import { logoutAccount } from '@/lib/actions/user.actions'
-import Image from 'next/image'
 import { useRouter } from 'next/navigation'
-import { Button } from "@/components/ui/button"
 import React from 'react'
+import Image from 'next/image';
 
+interface FooterProps {
+  user: any;
+  type: 'desktop' | 'mobile';
+}
 
-const Footer = ({ user, type='desktop' }: FooterProps) => {
+const Footer: React.FC<FooterProps> = ({ user }) => {
+  const router = useRouter();
 
-    const router = useRouter()
+  const handleLogout = async () => {
+    await logoutAccount();
+    router.push('/sign-in'); // Redirect to login page after logout
+  };
 
-    const handleLogOut = async () => {
-        const loggedOut = await logoutAccount()
+  const getInitials = (name: string) => {
+    return name.split(' ').map(n => n[0]).join('').toUpperCase();
+  };
 
-        if(loggedOut) {
-            router.push('/sign-in')
-        }
+  const getRandomColor = () => {
+    const letters = '0123456789ABCDEF';
+    let color = '#';
+    for (let i = 0; i < 6; i++) {
+      color += letters[Math.floor(Math.random() * 16)];
     }
+    return color;
+  };
 
   return (
-    <footer className='footer'>
-    <div className='flex items-center gap-3'>
-      <div className={type === 'mobile' ? 'footer_name-mobile' : 'footer_name'}>
-        <p className='text-xl font-bold text-grey-700'>
-          {user && user.name[0]}
-        </p>
+    <footer className="sidebar-footer flex justify-between items-center p-4">
+      <div className="user-info flex items-center">
+        <div 
+          className="user-avatar w-10 h-10 rounded-full flex items-center justify-center text-white mr-4"
+          style={{ backgroundColor: getRandomColor() }}
+        >
+          {user?.name ? getInitials(user.name) : 'U'}
+        </div>
+        <div>
+          <p className="user-name">{user?.name || 'User'}</p>
+          <p className="user-email">{user?.email || 'No email'}</p>
+        </div>
       </div>
-      <div className={type === 'mobile' ? 'footer_email-mobile' : 'footer_email'}>
-        <h1 className='text-14 truncate text-grey-700 font-semibold'>
-          {user && user.name}
-        </h1>
-        <p className='text-14 truncate font-normal text-grey-600'>
-          {user && user.email}
-        </p>
-      </div>
-    </div>
-    <Button className='footer_image' onClick={handleLogOut}>
-      <Image
-        src='/icons/logout.svg'
-        width={20}
-        height={20}
-        alt='logout'
-      />
-    </Button>
-  </footer>
-  )
+      <button onClick={handleLogout} className="logout-button">
+        <Image src="/icons/logout.svg" alt="Logout" width={24} height={24} />
+      </button>
+    </footer>
+  );
 }
 
 export default Footer

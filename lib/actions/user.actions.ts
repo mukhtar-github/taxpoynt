@@ -137,12 +137,16 @@ export const linkMonoAccount = async ({ DOCUMENT_ID, authorizationToken }: { DOC
 
 export const getLoggedInUser = async () => {
   try {
-    const { account } = await createSessionClient();
-
-    const user = await account.get();
-
+    const { account, database } = await createAdminClient();
+    const session = await account.getSession('current');
+    const user = await database.getDocument(
+      DATABASE_ID!,
+      USER_COLLECTION_ID!,
+      session.userId
+    );
     return parseStringify(user);
   } catch (error) {
+    console.error('Error getting logged in user:', error);
     return null;
   }
 }

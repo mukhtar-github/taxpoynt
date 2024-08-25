@@ -1,25 +1,22 @@
 "use client"
 
+import { fetchTaxUpdates } from '@/lib/server';
 import React, { useState, useEffect } from 'react';
 
 const TaxUpdates = () => {
   const [updates, setUpdates] = useState<TaxUpdate[]>([]);
 
   useEffect(() => {
-    const fetchUpdates = async () => {
+    const getUpdates = async () => {
       try {
-        const response = await fetch('/api/tax-updates');
-        if (!response.ok) {
-          throw new Error('Failed to fetch tax updates');
-        }
-        const data = await response.json();
-        setUpdates(data);
+        const fetchedUpdates = await fetchTaxUpdates();
+        setUpdates(fetchedUpdates);
       } catch (error) {
         console.error('Error fetching tax updates:', error);
       }
     };
 
-    fetchUpdates();
+    getUpdates();
   }, []);
 
   return (

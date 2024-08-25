@@ -379,4 +379,141 @@
   .sidebar-label {
     @apply text-16 font-semibold text-black-2 max-xl:hidden;
   }
+
+  /* TotalTaxLiability */
+  .total-tax-liability {
+    @apply bg-white rounded-lg shadow-md p-6;
+  }
+
+  .total-tax-liability-header {
+    @apply text-2xl font-bold text-gray-800 mb-4;
+  }
+
+  .total-tax-amount {
+    @apply text-3xl font-bold text-blue-600 mb-2;
+  }
+
+  .tax-breakdown {
+    @apply text-sm text-gray-600;
+  }
+
+  /* RecentTaxReturns */
+  .recent-tax-returns {
+    @apply bg-white rounded-lg shadow-md p-6;
+  }
+
+  .recent-tax-returns-header {
+    @apply text-2xl font-bold text-gray-800 mb-4;
+  }
+
+  .tax-return-list {
+    @apply space-y-4;
+  }
+
+  /* TaxPlanner */
+  .tax-planner {
+    @apply bg-white rounded-lg shadow-md p-6;
+  }
+
+  .tax-planner-header {
+    @apply text-2xl font-bold text-gray-800 mb-4;
+  }
+
+  .tax-planner-form {
+    @apply space-y-4;
+  }
+
+  .tax-planner-results {
+    @apply mt-4 p-4 bg-gray-100 rounded-md;
+  }
+
+  .total-tax-container {
+    display: flex;
+    justify-content: space-between; /* Adjusts the spacing between the two main sections */
+    align-items: flex-start; /* Aligns items at the start of the flex line */
+    padding: 20px; /* Adds padding around the container */
+  }
+
+  .total-tax-liability, .total-balance-chart {
+    flex: 1; /* Allows each section to take equal space */
+    margin-right: 20px; /* Adds spacing between the sections */
+  }
+
+  .doughnut-chart-container {
+    width: 100%;
+    max-width: 400px;
+    height: auto;
+    aspect-ratio: 1;
+  }
+
+  .sidebar-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+  }
+
+  .logout-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+  }
+
+  .tax-dashboard-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+    padding: 20px;
+  }
+
+  @media (max-width: 768px) {
+    .tax-dashboard-container {
+      grid-template-columns: 1fr;
+      padding: 10px;
+    }
+  }
+
+  /* Adjust the search bar container padding */
+  .sidebar .search-bar {
+    margin: 10px 0; /* Adjust top and bottom margin to center the search bar */
+    padding: 0 15px; /* Add horizontal padding if needed */
+  }
+
+  /* Ensure footer text is visible */
+  .sidebar-footer .user-info .user-name,
+  .sidebar-footer .user-info .user-email {
+    color: #333; /* Change color to a darker shade for visibility */
+  }
+
+  /* Example of responsive grid layout for the main content area */
+  .main-content {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 20px;
+  }
+
+  /* Flexbox for aligning items within components */
+  .component {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  /* Media queries for responsive adjustments */
+  @media (max-width: 768px) {
+    .tax-dashboard-container,
+    .main-content {
+      grid-template-columns: 1fr; /* Stack components vertically on smaller screens */
+    }
+
+    .sidebar .search-bar {
+      padding: 0 10px; /* Reduce padding on smaller screens */
+    }
+  }
+
+  /* Consistent margins and paddings */
+  .all-components {
+    margin: 10px;
+    padding: 10px;
+  }
 }

@@ -1,5 +1,4 @@
 // This is a route that allows you to create and fetch tax updates from the database
-
 import { createAdminClient } from '@/lib/appwrite';
 import { NextApiRequest, NextApiResponse } from 'next';
 

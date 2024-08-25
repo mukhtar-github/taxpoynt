@@ -1,5 +1,16 @@
+'use client'
+
 import React from 'react'
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow
+} from "@/components/ui/table"
+import { mockTransactions } from '@/__mocks__/mockData';
+import { useState } from 'react';
 
 interface Transaction {
   id: string
@@ -9,11 +20,13 @@ interface Transaction {
   type: 'credit' | 'debit'
 }
 
-interface TransactionListProps {
-  transactions: Transaction[]
-}
+// interface TransactionListProps {
+//   transactions: Transaction[]
+// }
 
-const TransactionList: React.FC<TransactionListProps> = ({ transactions }) => {
+const TransactionList = () => {
+//const TransactionList: React.FC<TransactionListProps> = ({ transactions }) => {
+  const [transactions, setTransactions] = useState(mockTransactions);
   return (
     <Table>
       <TableHeader>

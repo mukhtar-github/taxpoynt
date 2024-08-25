@@ -2,8 +2,6 @@
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 import { z } from "zod";
-//import { v4 as uuidv4 } from 'uuid';
-//import { format } from 'date-fns';
 
 // Replace the direct import with a dynamic import
 let queryString: any;
@@ -95,7 +93,17 @@ export const formatCurrency = (amount: number, locale: string = 'en-US', currenc
   }).format(amount);
 };
 
-export const parseStringify = (value: any) => JSON.parse(JSON.stringify(value));
+export const parseStringify = (data: any) => {
+  return JSON.parse(JSON.stringify(data, (key, value) => {
+    if (value instanceof Date) {
+      return value.toISOString();
+    }
+    if (typeof value === 'function' || value instanceof Error) {
+      return undefined;
+    }
+    return value;
+  }));
+};
 
 export const removeSpecialCharacters = (value: string) => {
   return value.replace(/[^\w\s]/gi, "");

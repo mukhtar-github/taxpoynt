@@ -1,3 +1,5 @@
+'use client'
+
 import React, { useState } from 'react';
 import { Input } from './ui/input';
 import { Button } from './ui/button';
@@ -70,12 +72,12 @@ const TaxPlanner = () => {
     };
 
     return (
-        <Card className="w-full">
+        <Card className="tax-planner h-full flex flex-col">
             <CardHeader>
-                <CardTitle>Simulate Your Tax Impact</CardTitle>
+                <CardTitle className="tax-planner-header">Simulate Your Tax Impact</CardTitle>
             </CardHeader>
-            <CardContent>
-                <div className="space-y-4">
+            <CardContent className="flex-grow flex flex-col">
+                <div className="tax-planner-form space-y-4 flex-grow">
                     <div>
                         <Input 
                             type="number" 
@@ -97,16 +99,18 @@ const TaxPlanner = () => {
                         {errors.amount && <p className="text-red-500 text-sm mt-1">{errors.amount}</p>}
                     </div>
                     <Button onClick={simulateTaxCalculations} className="w-full">Simulate Taxes</Button>
-                    <div className="mt-4 p-4 bg-gray-100 rounded-md">
+                </div>
+                {taxes && (
+                    <div className="tax-planner-results">
                         <h4 className="font-semibold mb-2">Tax Projections:</h4>
                         <p>Projected VAT: ₦{taxes.vat.toFixed(2)}</p>
                         <p>Projected Income Tax: ₦{taxes.incomeTax.toFixed(2)}</p>
                         <p className="font-semibold mt-2">Total Tax: ₦{(taxes.vat + taxes.incomeTax).toFixed(2)}</p>
+                        <p className="text-sm text-gray-600 mt-2">
+                            Note: This is a simplified simulation. Actual tax calculations may vary based on individual circumstances and current tax laws.
+                        </p>
                     </div>
-                    <p className="text-sm text-gray-600 mt-2">
-                        Note: This is a simplified simulation. Actual tax calculations may vary based on individual circumstances and current tax laws.
-                    </p>
-                </div>
+                )}
             </CardContent>
         </Card>
     );

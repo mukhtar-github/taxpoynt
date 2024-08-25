@@ -9,41 +9,48 @@ import TaxReturnsList from '@/components/TaxReturnsList'
 import TaxPlanner from '@/components/TaxPlanner'
 import RightSidebar from '@/components/RightSidebar'
 import TaxUpdatesAndReminders from '@/components/TaxUpdatesAndReminders'
-
-const getCachedTaxReturns = cache(async (userId: string) => {
-  return await getTaxReturns(userId)
-})
+import { parseStringify } from '@/lib/utils'
+import TaxDashboard from '@/components/TaxDashboard'; // Adjust the path as necessary
+import { mockUser, mockTaxReturns } from '@/__mocks__/mockData'
 
 const Home = async () => {
-  const loggedIn = await getLoggedInUser()
-  const taxReturns = loggedIn ? await getCachedTaxReturns(loggedIn.id) : []
+  //const loggedIn = await getLoggedInUser();
+  //const taxReturns = loggedIn ? await getTaxReturns(loggedIn.id) : [];
+  const loggedIn = mockUser;
+  const taxReturns = mockTaxReturns;
 
   return (
-    <div className='flex'>
-      <section className='flex-grow flex flex-col gap-10 pr-4'>
+    <div className='flex flex-col lg:flex-row gap-8 p-6'>
+      <main className='flex-grow space-y-8'>
         <HeaderBox
-          title={`Welcome ${loggedIn?.name}`}
+          title={`Welcome ${loggedIn?.name || 'User'}`}
           subtext='Access and effectively manage your tax returns for better financial outcomes.'
         />
 
-        <div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
+        <div className='grid grid-cols-1 lg:grid-cols-2 gap-6'>
           <TotalBalanceBox />
-          <Suspense fallback={<Loader2 className='animate-spin' />}>
-            <TaxReturnsList taxReturns={taxReturns as unknown as TaxReturn[]} />
+          <Suspense fallback={<div className='flex justify-center items-center h-full'><Loader2 className='animate-spin' /></div>}>
+            <TaxReturnsList taxReturns={parseStringify(taxReturns)} />
           </Suspense>
         </div>
 
-        {loggedIn && (
-          <TaxUpdatesAndReminders userId={loggedIn.id} />
-        )}
-
-        <div>
-          <h2 className='text-xl font-semibold mb-4'>Tax Planner</h2>
-          <TaxPlanner />
+        <div className="tax-dashboard-wrapper" style={{ padding: '20px' }}>
+          <TaxDashboard />
         </div>
-      </section>
+          {/* {loggedIn && (
+            // <TaxUpdatesAndReminders userId={loggedIn.id} />
+            <TaxUpdatesAndReminders />
+          )} */}
 
-      <RightSidebar user={loggedIn} taxReturns={taxReturns as unknown as TaxReturn[]} />
+        {/* <section>
+          <h2 className='text-2xl font-semibold mb-4'>Tax Planner</h2>
+          <TaxPlanner />
+        </section> */}
+      </main>
+
+      <aside className='w-full lg:w-1/3 xl:w-1/4'>
+        <RightSidebar user={parseStringify(loggedIn)} taxReturns={parseStringify(taxReturns)} />
+      </aside>
     </div>
   )
 }

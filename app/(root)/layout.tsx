@@ -1,39 +1,34 @@
+'use client'
+
 import Sidebar from "@/components/Sidebar";
 import Image from "next/image";
 import MobileNav from "@/components/MobileNav";
-import { getLoggedInUser } from "@/lib/actions/user.actions";
-import { redirect } from "next/navigation";
 
-export default async function RootLayout({
-  children,
-}: Readonly<{
+interface RootLayoutProps {
   children: React.ReactNode;
-}>) {
-  const loggedIn = await getLoggedInUser();
+  initialUser: any;
+}
 
-  //if(!loggedIn) redirect('/sign-in')
-
+export default function RootLayout({ children, initialUser }: RootLayoutProps) {
   return (
     <main className="flex h-screen w-full font-inter">
-        <Sidebar user={loggedIn} />
+      <Sidebar initialUser={initialUser} />
 
-        <div className="flex size-full flex-col">
-          <div className="root-layout">
-            <Image
-              alt='logo' 
-              src='/icons/logo-fav.svg' 
-              width={30}
-              height={30}
-              className='size-[24px] max-xl:size-14'  
-            />
-            <div>
-              <MobileNav user={loggedIn} onAccountLinked={function (): void {
-              throw new Error("Function not implemented.");
-            } }/>
-            </div>
+      <div className="flex size-full flex-col">
+        <div className="root-layout">
+          <Image
+            alt='logo' 
+            src='/icons/logo-fav.svg' 
+            width={30}
+            height={30}
+            className='size-[24px] max-xl:size-14'  
+          />
+          <div>
+            <MobileNav initialUser={initialUser} />
           </div>
-          {children}
         </div>
+        {children}
+      </div>
     </main>
   );
 }

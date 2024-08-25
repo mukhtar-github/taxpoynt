@@ -8,8 +8,8 @@ export async function authenticateRequest(req: NextApiRequest, res: NextApiRespo
         return false;
     }
     try {
-        const sessionClient = createSessionClient(sessionToken);
-        const account = (await sessionClient).account;
+        const sessionClient = await createSessionClient();
+        const account = sessionClient.account;
         await account.get();  // This will throw an error if the session is not valid
         return true;
     } catch (error) {

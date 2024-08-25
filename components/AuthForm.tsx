@@ -12,9 +12,10 @@ import CustomInput from './CustomInput'
 import { authFormSchema } from '@/lib/utils'
 import { Loader2 } from 'lucide-react'
 import { useRouter } from 'next/navigation'
-import { getLoggedInUser, signIn, signUp } from '@/lib/actions/user.actions'
-import LinkUser from './LinkUser'
+import { signIn, signUp } from '@/lib/actions/user.actions'
 import { toast } from 'react-hot-toast' // Assuming you're using react-hot-toast for notifications
+import { AccountLinkWrapper } from './AccountLinkWrapper';
+import { fetchUserData } from '@/lib/server';
 
 // Define the User interface
 interface User {
@@ -40,12 +41,12 @@ const AuthForm = ({ type }: { type: string }) => {
     const router = useRouter()
 
     useEffect(() => {
-        const fetchUserData = async () => {
-            const userData = await getLoggedInUser();
+        const getUserData = async () => {
+            const userData = await fetchUserData();
             setUser(userData);
         };
         
-        fetchUserData();
+        getUserData();
     }, []);
 
     const handleAccountLinked = useCallback((linkedUser: User) => {
@@ -61,7 +62,7 @@ const AuthForm = ({ type }: { type: string }) => {
       let intervalId: NodeJS.Timeout;
       if (user && user.accountId === null) {
         intervalId = setInterval(async () => {
-          const updatedUserData = await getLoggedInUser();
+          const updatedUserData = await fetchUserData();
           if (updatedUserData && updatedUserData.accountId) {
             clearInterval(intervalId);
             handleAccountLinked(updatedUserData);
@@ -161,7 +162,7 @@ const AuthForm = ({ type }: { type: string }) => {
             </header>
             {user && user.accountId === null ? (
                 <div className='flex flex-col gap-4 '>
-                    <LinkUser user={user} onAccountLinked={handleAccountLinked} />
+                    <AccountLinkWrapper user={user} />
                 </div>
             ) : (
                 <>

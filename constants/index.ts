@@ -26,7 +26,7 @@ export const sidebarLinks = [
   },
   {
     imgURL: "/icons/admin.svg",
-    route: "/admin/tax-management",
+    route: "/tax-management",
     label: "Tax Management",
     adminOnly: true,  // Add this flag for admin-only links
   },

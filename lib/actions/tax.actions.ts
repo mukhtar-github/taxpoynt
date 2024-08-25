@@ -2,7 +2,6 @@ import { createAdminClient } from '@/lib/appwrite';
 import { Query } from 'node-appwrite';
 
 // Define types for our tax updates and reminders
-
 export async function getTaxUpdates(): Promise<any[]> {
   try {
     // In a real-world scenario, you would fetch this data from your database
@@ -38,7 +37,6 @@ export async function getTaxReminders(): Promise<any[]> {
 }
 
 // Additional helper functions
-
 export async function markReminderAsComplete(reminderId: string): Promise<boolean> {
   try {
     const { database } = await createAdminClient();

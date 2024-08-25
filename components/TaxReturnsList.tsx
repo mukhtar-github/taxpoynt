@@ -1,3 +1,6 @@
+'use client'
+
+import { parseStringify } from '@/lib/utils';
 import TaxReturnCard from './TaxReturnCard'
 
 interface TaxReturn {
@@ -17,29 +20,23 @@ interface TaxReturnsListProps {
 }
 
 const TaxReturnsList = ({ taxReturns }: TaxReturnsListProps) => {
+  const serializedTaxReturns = parseStringify(taxReturns);
+  
   return (
-    <div>
-        <h2 className='text-xl font-semibold mb-4'>Recent Tax Returns</h2>
-        {taxReturns.length > 0 ? (
-            taxReturns.map((taxReturn) => (
-              <TaxReturnCard 
-                key={taxReturn.$id} 
-                taxReturn={{
-                  $id: taxReturn.$id,
-                  taxReturnId: taxReturn.taxReturnId || '',
-                  taxPeriod: taxReturn.taxPeriod || '',
-                  documentUrl: taxReturn.documentUrl || '',
-                  status: taxReturn.status || '',
-                  currentBalance: taxReturn.currentBalance || 0,
-                  type: taxReturn.type || '',
-                  year: taxReturn.year || '',
-                  dueDate: taxReturn.dueDate || ''
-                }}
-              />
-            ))
+    <div className="recent-tax-returns">
+      <h2 className='recent-tax-returns-header'>Recent Tax Returns</h2>
+      <div className="tax-return-list">
+        {serializedTaxReturns.length > 0 ? (
+          serializedTaxReturns.map((taxReturn: { $id: any; taxReturnId?: string; taxPeriod?: string; documentUrl?: string; status?: string; currentBalance?: number; type?: string; year?: string; dueDate?: string; }) => (
+            <TaxReturnCard 
+              key={taxReturn.$id} 
+              taxReturn={taxReturn as TaxReturn}
+            />
+          ))
         ) : (
-        <p>No recent tax returns found.</p>
+          <p>No recent tax returns found.</p>
         )}
+      </div>
     </div>
   )
 }

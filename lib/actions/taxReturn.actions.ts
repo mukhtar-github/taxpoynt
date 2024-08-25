@@ -1,5 +1,6 @@
 import { createAdminClient } from '@/lib/appwrite'; // Ensure this import points to your Appwrite configuration file
 import { Query } from 'node-appwrite';
+import { parseStringify } from '@/lib/utils'; // Adjust the import path as needed
 
 export async function getTaxReturns(userId: string) {
   if (!userId || typeof userId !== 'string') {
@@ -19,7 +20,7 @@ export async function getTaxReturns(userId: string) {
       ]
     );
 
-    return response.documents;
+    return parseStringify(response.documents);
   } catch (error) {
     console.error('Failed to fetch tax returns:', error);
     throw new Error('Failed to fetch tax returns');

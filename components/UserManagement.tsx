@@ -1,16 +1,17 @@
-"use client"
+'use client'
 
 import React, { useState, useEffect } from 'react';
-import { getAllUsers, updateUserAdminStatus } from '@/lib/actions/admin.actions';
+import { updateUserAdminStatus, bulkUpdateUserAdminStatus } from '@/lib/actions/admin.actions';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Loader2 } from 'lucide-react';
 import { toast, Toaster } from 'react-hot-toast';
 import { Models } from 'node-appwrite';
-
+import { Select } from '@/components/ui/select';
+import { Checkbox } from './ui/checkbox';
+import { fetchUsers } from '@/lib/server';
 const USERS_PER_PAGE = 10;
 
-// Define the User type
 type User = Models.Document;
 
 const UserManagement = () => {
@@ -19,55 +20,114 @@ const UserManagement = () => {
   const [totalPages, setTotalPages] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
+  const [sortBy, setSortBy] = useState('createdAt');
+  const [sortOrder, setSortOrder] = useState('desc');
+  const [selectedUsers, setSelectedUsers] = useState<string[]>([]);
 
   useEffect(() => {
-    fetchUsers();
-  }, [currentPage, searchTerm]);
+    const fetchUsersData = async () => {
+      setIsLoading(true);
+      try {
+        const { users: fetchedUsers, total } = await fetchUsers(currentPage, USERS_PER_PAGE, searchTerm, sortBy, sortOrder as 'asc' | 'desc');
+        setUsers(fetchedUsers);
+        setTotalPages(Math.ceil(total / USERS_PER_PAGE));
+      } catch (error) {
+        console.error('Error fetching users:', error);
+        toast.error('Failed to fetch users');
+      } finally {
+        setIsLoading(false);
+      }
+    };
 
-  const fetchUsers = async () => {
-    setIsLoading(true);
-    try {
-      const { users: fetchedUsers, total } = await getAllUsers(currentPage, USERS_PER_PAGE, searchTerm);
-      setUsers(fetchedUsers);
-      setTotalPages(Math.ceil(total / USERS_PER_PAGE));
-    } catch (error) {
-      console.error('Error fetching users:', error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
+    fetchUsersData();
+  }, [currentPage, searchTerm, sortBy, sortOrder]);
 
   const handleToggleAdmin = async (userId: string, currentStatus: boolean) => {
     try {
       await updateUserAdminStatus(userId, !currentStatus);
       toast.success(`User admin status updated successfully`);
-      fetchUsers();
+      const { users: fetchedUsers } = await fetchUsers(currentPage, USERS_PER_PAGE, searchTerm, sortBy, sortOrder as 'asc' | 'desc');
+      setUsers(fetchedUsers);
     } catch (error) {
       console.error('Error updating user admin status:', error);
       toast.error('Failed to update user admin status');
     }
   };
 
+  const handleBulkAction = async (action: 'makeAdmin' | 'removeAdmin') => {
+    try {
+      await bulkUpdateUserAdminStatus(selectedUsers, action === 'makeAdmin');
+      toast.success(`Bulk action completed successfully`);
+      const { users: fetchedUsers } = await fetchUsers(currentPage, USERS_PER_PAGE, searchTerm, sortBy, sortOrder as 'asc' | 'desc');
+      setUsers(fetchedUsers);
+      setSelectedUsers([]);
+    } catch (error) {
+      console.error('Error performing bulk action:', error);
+      toast.error('Failed to perform bulk action');
+    }
+  };
+
+  const handleSelectUser = (userId: string) => {
+    setSelectedUsers(prev => 
+      prev.includes(userId) ? prev.filter(id => id !== userId) : [...prev, userId]
+    );
+  };
+
+  const handleSelectAll = () => {
+    setSelectedUsers(users.map(user => user.$id));
+  };
+
   return (
     <div className="space-y-4">
       <Toaster />
-      <Input
-        type="text"
-        placeholder="Search users..."
-        value={searchTerm}
-        onChange={(e) => setSearchTerm(e.target.value)}
-      />
+      <div className="flex space-x-2">
+        <Input
+          type="text"
+          placeholder="Search users..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          className="flex-grow"
+        />
+        <Select
+          value={sortBy}
+          onValueChange={(value) => setSortBy(value)}
+        >
+          <option value="createdAt">Created At</option>
+          <option value="name">Name</option>
+          <option value="email">Email</option>
+        </Select>
+        <Button onClick={() => setSortOrder(prev => prev === 'asc' ? 'desc' : 'asc')}>
+          {sortOrder === 'asc' ? '↑' : '↓'}
+        </Button>
+      </div>
       {isLoading ? (
         <div className="flex justify-center">
           <Loader2 className="animate-spin" />
         </div>
       ) : (
         <>
+          <div className="flex justify-between mb-2">
+            <Button onClick={handleSelectAll}>Select All</Button>
+            <div>
+              <Button onClick={() => handleBulkAction('makeAdmin')} disabled={selectedUsers.length === 0}>
+                Make Selected Admin
+              </Button>
+              <Button onClick={() => handleBulkAction('removeAdmin')} disabled={selectedUsers.length === 0}>
+                Remove Selected Admin
+              </Button>
+            </div>
+          </div>
           {users.map((user: any) => (
             <div key={user.$id} className="flex items-center justify-between p-4 border rounded">
-              <div>
-                <p className="font-semibold">{user.name}</p>
-                <p className="text-sm text-gray-500">{user.email}</p>
+              <div className="flex items-center">
+                <Checkbox
+                  checked={selectedUsers.includes(user.$id)}
+                  onCheckedChange={() => handleSelectUser(user.$id)}
+                />
+                <div className="ml-4">
+                  <p className="font-semibold">{user.name}</p>
+                  <p className="text-sm text-gray-500">{user.email}</p>
+                </div>
               </div>
               <Button
                 onClick={() => handleToggleAdmin(user.$id, user.isAdmin)}

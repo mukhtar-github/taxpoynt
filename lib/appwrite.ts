@@ -40,7 +40,7 @@ export async function createAdminClient() {
     }
   };
 }
-  
+
 // The  createSessionClient  function creates a new Appwrite client with the session cookie.
 //The  createAdminClient  function creates a new Appwrite client with the Appwrite API key. 
 

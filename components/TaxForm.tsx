@@ -1,3 +1,5 @@
+'use client'
+
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import { PDFDownloadLink, Page, Text, View, Document } from '@react-pdf/renderer';
@@ -13,6 +15,7 @@ import {
     FormDescription,
     FormMessage
 } from '@/components/ui/form';
+import toast from 'react-hot-toast';
 
 const TaxForm = () => {
     const form = useForm({
@@ -21,7 +24,16 @@ const TaxForm = () => {
         },
     });
 
-    const onSubmit = (data: any) => console.log(data);
+    const onSubmit = async (data: any) => {
+        try {
+            // Submit form data
+            console.log(data);
+            toast.success('Tax form submitted successfully');
+        } catch (error) {
+            console.error('Error submitting tax form:', error);
+            toast.error('Failed to submit tax form. Please try again.');
+        }
+    };
 
     const income = form.watch("income");
 

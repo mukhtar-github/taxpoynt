@@ -2,15 +2,12 @@
 
 import React, { useEffect } from 'react';
 import { toast, Toaster } from 'react-hot-toast';
-import { getTaxUpdates } from '@/lib/actions/tax.actions';
+import { fetchRecentTaxUpdates } from '@/lib/server';
 
 const Notifications = () => {
   useEffect(() => {
     const checkForNewUpdates = async () => {
-      const updates = await getTaxUpdates();
-      const recentUpdates = updates.filter(
-        update => new Date(update.date) > new Date(Date.now() - 24 * 60 * 60 * 1000)
-      );
+      const recentUpdates = await fetchRecentTaxUpdates();
 
       recentUpdates.forEach(update => {
         toast(`New Tax Update: ${update.title}`, {

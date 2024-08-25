@@ -1,12 +1,20 @@
 "use client"
+
 // This is a file that allows admins to create and manage tax updates and reminders
 import React, { useState, useEffect } from 'react';
-import { getTaxUpdates, getTaxReminders, createTaxUpdate, createTaxReminder, deleteTaxUpdate, deleteTaxReminder } from '@/lib/actions/tax.actions';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Select } from '@/components/ui/select';
-//import { TaxUpdate, TaxReminder } from '@/types/tax'; // Assume these types are defined
+import { toast } from 'react-hot-toast';
+import {
+  fetchTaxUpdatesAndReminders,
+  createNewTaxUpdate,
+  createNewTaxReminder,
+  deleteTaxUpdateById,
+  deleteTaxReminderById
+} from '@/lib/server';
+
 
 const AdminTaxManagement = () => {
   const [updates, setUpdates] = useState<TaxUpdate[]>([]);
@@ -19,34 +27,62 @@ const AdminTaxManagement = () => {
   }, []);
 
   const fetchUpdatesAndReminders = async () => {
-    const fetchedUpdates = await getTaxUpdates();
-    const fetchedReminders = await getTaxReminders();
-    setUpdates(fetchedUpdates);
-    setReminders(fetchedReminders);
+    try {
+      const { updates: fetchedUpdates, reminders: fetchedReminders } = await fetchTaxUpdatesAndReminders();
+      setUpdates(fetchedUpdates);
+      setReminders(fetchedReminders);
+    } catch (error) {
+      console.error('Error fetching updates and reminders:', error);
+      toast.error('Failed to fetch updates and reminders');
+    }
   };
 
   const handleCreateUpdate = async (e: React.FormEvent) => {
     e.preventDefault();
-    await createTaxUpdate(newUpdate as Partial<TaxUpdate>);
-    setNewUpdate({ title: '', description: '', category: 'law_change' });
-    fetchUpdatesAndReminders();
+    try {
+      await createNewTaxUpdate(newUpdate as Partial<TaxUpdate>);
+      setNewUpdate({ title: '', description: '', category: 'law_change' });
+      fetchUpdatesAndReminders();
+      toast.success('Tax update created successfully');
+    } catch (error) {
+      console.error('Error creating tax update:', error);
+      toast.error('Failed to create tax update');
+    }
   };
 
   const handleCreateReminder = async (e: React.FormEvent) => {
     e.preventDefault();
-    await createTaxReminder(newReminder as Partial<TaxReminder>);
-    setNewReminder({ title: '', description: '', dueDate: '', priority: 'medium' as 'medium' | 'high' | 'low' });
-    fetchUpdatesAndReminders();
+    try {
+      await createNewTaxReminder(newReminder as Partial<TaxReminder>);
+      setNewReminder({ title: '', description: '', dueDate: '', priority: 'medium' as 'medium' | 'high' | 'low' });
+      fetchUpdatesAndReminders();
+      toast.success('Tax reminder created successfully');
+    } catch (error) {
+      console.error('Error creating tax reminder:', error);
+      toast.error('Failed to create tax reminder');
+    }
   };
 
   const handleDeleteUpdate = async (id: string) => {
-    await deleteTaxUpdate(id);
-    fetchUpdatesAndReminders();
+    try {
+      await deleteTaxUpdateById(id);
+      fetchUpdatesAndReminders();
+      toast.success('Tax update deleted successfully');
+    } catch (error) {
+      console.error('Error deleting tax update:', error);
+      toast.error('Failed to delete tax update');
+    }
   };
 
   const handleDeleteReminder = async (id: string) => {
-    await deleteTaxReminder(id);
-    fetchUpdatesAndReminders();
+    try {
+      await deleteTaxReminderById(id);
+      fetchUpdatesAndReminders();
+      toast.success('Tax reminder deleted successfully');
+    } catch (error) {
+      console.error('Error deleting tax reminder:', error);
+      toast.error('Failed to delete tax reminder');
+    }
   };
 
   return (

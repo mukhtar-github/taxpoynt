@@ -1,11 +1,14 @@
 "use client"
-// This is a file that allows users to create and manage their own reminders
+
 import React, { useState, useEffect } from 'react';
-import { getUserReminders, createUserReminder, deleteUserReminder } from '@/lib/actions/tax.actions';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Select } from '@/components/ui/select';
+import { toast } from 'react-hot-toast';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { fetchUserReminders, createNewUserReminder, deleteUserReminderById } from '@/lib/server';
+
 
 const UserReminders = ({ userId }: { userId: string }) => {
   const [reminders, setReminders] = useState([]);
@@ -16,30 +19,49 @@ const UserReminders = ({ userId }: { userId: string }) => {
   }, []);
 
   const fetchReminders = async () => {
-    const fetchedReminders = await getUserReminders(userId);
-    setReminders(fetchedReminders as React.SetStateAction<never[]>);
+    try {
+      const fetchedReminders = await fetchUserReminders(userId);
+      setReminders(fetchedReminders as React.SetStateAction<never[]>);
+    } catch (error) {
+      console.error('Error fetching reminders:', error);
+      toast.error('Failed to fetch reminders');
+    }
   };
 
   const handleCreateReminder = async (e: React.FormEvent) => {
     e.preventDefault();
-    await createUserReminder(userId, {
-      ...newReminder,
-      priority: newReminder.priority as "high" | "medium" | "low"
-    });
-    setNewReminder({ title: '', description: '', dueDate: '', priority: 'medium' });
-    fetchReminders();
+    try {
+      await createNewUserReminder(userId, {
+        ...newReminder,
+        priority: newReminder.priority as "high" | "medium" | "low"
+      });
+      setNewReminder({ title: '', description: '', dueDate: '', priority: 'medium' });
+      fetchReminders();
+      toast.success('Reminder created successfully');
+    } catch (error) {
+      console.error('Error creating reminder:', error);
+      toast.error('Failed to create reminder');
+    }
   };
 
   const handleDeleteReminder = async (id: string) => {
-    await deleteUserReminder(id);
-    fetchReminders();
+    try {
+      await deleteUserReminderById(id);
+      fetchReminders();
+      toast.success('Reminder deleted successfully');
+    } catch (error) {
+      console.error('Error deleting reminder:', error);
+      toast.error('Failed to delete reminder');
+    }
   };
 
   return (
-    <div className="space-y-8">
-      <div>
-        <h2 className="text-xl font-semibold mb-4">Create Personal Reminder</h2>
-        <form onSubmit={handleCreateReminder} className="space-y-4">
+    <Card className="w-full">
+      <CardHeader>
+        <CardTitle>Your Reminders</CardTitle>
+      </CardHeader>
+      <CardContent>
+        <form onSubmit={handleCreateReminder} className="space-y-4 mb-6">
           <Input
             placeholder="Title"
             value={newReminder.title}
@@ -65,22 +87,21 @@ const UserReminders = ({ userId }: { userId: string }) => {
           </Select>
           <Button type="submit">Create Reminder</Button>
         </form>
-      </div>
 
-      <div>
-        <h2 className="text-xl font-semibold mb-4">Your Reminders</h2>
-        {reminders.map((reminder: any) => (
-          <div key={reminder.$id} className="border p-4 mb-2 flex justify-between items-center">
-            <div>
-              <h3 className="font-semibold">{reminder.title}</h3>
-              <p>{reminder.description}</p>
-              <p>Due: {reminder.dueDate}</p>
+        <div className="space-y-4">
+          {reminders.map((reminder: any) => (
+            <div key={reminder.$id} className="border p-4 rounded-md flex justify-between items-center">
+              <div>
+                <h3 className="font-semibold">{reminder.title}</h3>
+                <p className="text-sm text-gray-600">{reminder.description}</p>
+                <p className="text-xs text-gray-500">Due: {new Date(reminder.dueDate).toLocaleDateString()}</p>
+              </div>
+              <Button onClick={() => handleDeleteReminder(reminder.$id)} variant="destructive">Delete</Button>
             </div>
-            <Button onClick={() => handleDeleteReminder(reminder.$id)} variant="destructive">Delete</Button>
-          </div>
-        ))}
-      </div>
-    </div>
+          ))}
+        </div>
+      </CardContent>
+    </Card>
   );
 };
 

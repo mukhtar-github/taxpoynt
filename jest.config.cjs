@@ -14,6 +14,9 @@ const customJestConfig = {
   transform: {
     '^.+\\.(js|jsx|ts|tsx)$': 'babel-jest',
   },
+  images: {
+    domains: ['ui-avatars.com'],
+  },
 };
 
 module.exports = createJestConfig(customJestConfig);

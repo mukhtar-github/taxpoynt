@@ -7,13 +7,19 @@ import Image from 'next/image'
 import Link from 'next/link'
 import React from 'react'
 import Footer from './Footer'
-import LinkUser from './LinkUser'
+import { AccountLinkWrapper } from './AccountLinkWrapper'
+import { Input } from './ui/input'
 
-const Sidebar = ({ user }: SiderbarProps) => {
+interface SidebarProps {
+  initialUser: any;
+}
+
+const Sidebar = ({ initialUser }: SidebarProps) => {
+    
     const pathname = usePathname();
 
     return (
-        <section className='sidebar'>
+        <section className='sidebar all-components'>
             <nav className='flex flex-col gap-4'>
                 <Link href='/' className='mb-12 cursor-pointer items-center flex gap-2'>
                     <Image 
@@ -25,9 +31,12 @@ const Sidebar = ({ user }: SiderbarProps) => {
                     />
                     <h1 className='sidebar-logo'>Taxpoynt</h1>
                 </Link>
+                <div className="search-bar">
+                    <Input placeholder="Search..." />
+                </div>
                 {sidebarLinks.map((item) => {
                     // Skip rendering admin-only links for non-admin users
-                    if (item.adminOnly && user?.isAdmin !== true) return null;
+                    if (item.adminOnly && initialUser?.isAdmin !== true) return null;
 
                     const isActive = pathname && (pathname === item.route || pathname.startsWith(`${item.route}/`));
                     return (
@@ -47,12 +56,9 @@ const Sidebar = ({ user }: SiderbarProps) => {
                     )
                 })}
 
-                <LinkUser user={user} onAccountLinked={function (): void {
-                    throw new Error('Function not implemented.')
-                }} />
+                <AccountLinkWrapper user={initialUser} />
             </nav>
-
-            <Footer user={user} type='desktop' />
+            <Footer user={initialUser} type='desktop' />
         </section>
     )
 }
