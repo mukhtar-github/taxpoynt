@@ -1,34 +1,34 @@
 export const sidebarLinks = [
   {
     imgURL: "/icons/dashboard.svg",
-    route: "/",
+    route: "/dashboard",
     label: "Dashboard",
   },
   {
     imgURL: "/icons/tax-returns.svg",
-    route: "/tax-returns",
+    route: "/dashboard/tax-returns",
     label: "My Tax Returns",
   },
   {
     imgURL: "/icons/transactions.svg",
-    route: "/transactions",
+    route: "/dashboard/transactions",
     label: "Transactions",
   },
   {
     imgURL: "/icons/documents.svg",
-    route: "/documents",
+    route: "/dashboard/documents",
     label: "Documents",
   },
   {
     imgURL: "/icons/tax-form.svg",
-    route: "/tax-form",
+    route: "/dashboard/tax-form",
     label: "Tax Form",
   },
   {
     imgURL: "/icons/admin.svg",
-    route: "/tax-management",
+    route: "/dashboard/tax-management",
     label: "Tax Management",
-    adminOnly: true,  // Add this flag for admin-only links
+    adminOnly: true,  // Keep this flag for admin-only links
   },
 ];
 

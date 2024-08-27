@@ -3,6 +3,7 @@ import { Inter, IBM_Plex_Serif } from "next/font/google";
 import "./globals.css";
 import { Toaster } from 'react-hot-toast';
 import Notifications from "@/components/Notifications";
+import { getLoggedInUser } from '@/lib/actions/user.actions'
 
 const inter = Inter({ subsets: ["latin"], variable: '--font-inter' });
 const ibmPlexSerif = IBM_Plex_Serif({
@@ -19,11 +20,13 @@ export const metadata: Metadata = {
   }
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+}: {
+  children: React.ReactNode
+}) {
+  const user = await getLoggedInUser()
+
   return (
     <html lang="en">
       <body className={`${inter.variable} ${ibmPlexSerif.variable}`}>

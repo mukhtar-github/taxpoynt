@@ -21,7 +21,7 @@ const Documents = async () => {
   return (
     <div className="p-6">
       <h1 className="text-2xl font-bold mb-6">My Documents</h1>
-      <DocumentList documents={documents} />
+      <DocumentList documents={documents as any} />
     </div>
   )
 }

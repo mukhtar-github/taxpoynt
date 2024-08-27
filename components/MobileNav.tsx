@@ -15,7 +15,7 @@ import Footer from "./Footer"
 import { AccountLinkWrapper } from "./AccountLinkWrapper"
 import { useState } from 'react';
 
-const MobileNav = ({ initialUser }: { initialUser: any }) => {
+const MobileNav = ({ initialUser }: { initialUser?: any }) => {
     const [user, setUser] = useState(initialUser);
     const pathname = usePathname();
     return (
@@ -44,31 +44,44 @@ const MobileNav = ({ initialUser }: { initialUser: any }) => {
                     <div className="mobilenav-sheet component">
                         <SheetClose asChild>
                             <nav className="flex h-full flex-col gap-6 pt-16 text-white">
-                                {sidebarLinks.map((item) => {
-                                    const isActive = pathname === item.route || pathname?.startsWith(`${item.route}/`);
-                                    return (
-                                        <SheetClose asChild key={item.route}>
-                                            <Link href={item.route} className={cn('mobilenav-sheet_close w-full', {'bg-bank-gradient': isActive})}>
-                                                <Image 
+                                {user ? (
+                                    sidebarLinks.map((item) => {
+                                        const isActive = pathname === item.route || pathname?.startsWith(`${item.route}/`);
+                                        return (
+                                            <SheetClose asChild key={item.route}>
+                                                <Link href={item.route} className={cn('mobilenav-sheet_close w-full', {'bg-bank-gradient': isActive})}>
+                                                    <Image 
                                                         alt={item.label} 
                                                         src={item.imgURL} 
                                                         width={20}
                                                         height={20}
                                                         className={cn({'brightness-[3] invert-0': isActive})}
                                                     />
-                                                <p className={cn('text-16 font-semibold text-black-2', {'text-white': isActive})}>
-                                                    {item.label}
-                                                </p>
+                                                    <p className={cn('text-16 font-semibold text-black-2', {'text-white': isActive})}>
+                                                        {item.label}
+                                                    </p>
+                                                </Link>
+                                            </SheetClose>
+                                        ) 
+                                    })
+                                ) : (
+                                    <>
+                                        <SheetClose asChild>
+                                            <Link href="/auth/sign-in" className="mobilenav-sheet_close w-full">
+                                                <p className="text-16 font-semibold text-black-2">Sign In</p>
                                             </Link>
                                         </SheetClose>
-                                    )} 
+                                        <SheetClose asChild>
+                                            <Link href="/auth/sign-up" className="mobilenav-sheet_close w-full">
+                                                <p className="text-16 font-semibold text-black-2">Sign Up</p>
+                                            </Link>
+                                        </SheetClose>
+                                    </>
                                 )}
-
-                                <AccountLinkWrapper user={user} />
+                                {user && <AccountLinkWrapper user={user} />}
                             </nav>
                         </SheetClose>
-                        {/* <Footer user={user} type='mobile' /> */}
-                        <Footer user={user} />
+                        <Footer user={user} type={user ? 'mobile' : 'public'} />
                     </div>
                 </SheetContent>
             </Sheet>

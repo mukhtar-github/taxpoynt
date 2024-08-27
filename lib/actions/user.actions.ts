@@ -14,13 +14,18 @@ const {
 
 export const signIn = async ({ email, password }: signInProps) => {
   try {
-    // Mutation / Database query / Make a fetch request
     const { account } = await createAdminClient();
-
     const response = await account.createEmailPasswordSession(email, password);
+    
+    cookies().set("auth_token", response.secret, {
+      path: "/",
+      httpOnly: true,
+      sameSite: "strict",
+      secure: true,
+      maxAge: 60 * 60 * 24 * 7, // 1 week
+    });
 
     return parseStringify(response);
-
   } catch (error) {
     console.error('Error', error) 
   }

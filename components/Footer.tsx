@@ -7,7 +7,7 @@ import Image from 'next/image';
 
 interface FooterProps {
   user: any;
-  type: 'desktop' | 'mobile';
+  type: 'desktop' | 'mobile' | 'public';
 }
 
 const Footer: React.FC<FooterProps> = ({ user }) => {
