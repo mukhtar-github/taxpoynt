@@ -33,7 +33,7 @@ const Home = () => {
         <section className='hero-section'>
           <h2 className='hero-title'>Simplify Your Tax Management</h2>
           <p className='hero-subtitle'>Effortlessly manage your taxes with Taxpoynt's intuitive tools and expert guidance.</p>
-          <Link href='/auth/sign-up'>
+          <Link href='/sign-up'>
             <Button size='lg'>Get Started</Button>
           </Link>
         </section>

@@ -2,7 +2,6 @@ import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 
 export function middleware(request: NextRequest) {
-    console.log('middleware')
   const path = request.nextUrl.pathname
   const isPublicPath = path === '/' || path === '/auth/sign-in' || path === '/auth/sign-up'
 
@@ -17,9 +16,6 @@ export function middleware(request: NextRequest) {
   }
 }
 
-// export const config = {
-//   matcher: ['/', '/dashboard/:path*', '/auth/:path*'],
-// }
 export const config = {
-    matcher: ['/((?!api|_next/static|_next/image|favicon.ico).*)'],
-  }
+  matcher: ['/', '/dashboard/:path*', '/auth/:path*'],
+}
