@@ -17,10 +17,10 @@ const Home = () => {
           <h1 className='text-3xl font-bold'>Taxpoynt</h1>
         </div>
         <nav className='hidden md:flex'>
-          <Link href='/auth/sign-in'>
+          <Link href='/sign-in'>
             <Button variant='outline' className='mr-2'>Sign In</Button>
           </Link>
-          <Link href='/auth/sign-up'>
+          <Link href='/sign-up'>
             <Button>Sign Up</Button>
           </Link>
         </nav>
