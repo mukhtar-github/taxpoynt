@@ -8,7 +8,6 @@ export default function RootLayout({
     return (
       <main className="flex min-h-screen w-full justify-between font-inter">
         {children}
-        <p>Debug: Auth layout rendered</p>
         <div className="auth-asset">
           <div>
             <Image
