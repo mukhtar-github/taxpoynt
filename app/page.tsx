@@ -17,10 +17,10 @@ const Home = () => {
           <h1 className='text-3xl font-bold'>Taxpoynt</h1>
         </div>
         <nav className='hidden md:flex'>
-          <Link href='/sign-in'>
+          <Link href='/(auth)/sign-in'>
             <Button variant='outline' className='mr-2'>Sign In</Button>
           </Link>
-          <Link href='/sign-up'>
+          <Link href='/(auth)/sign-up'>
             <Button>Sign Up</Button>
           </Link>
         </nav>
@@ -33,7 +33,7 @@ const Home = () => {
         <section className='hero-section'>
           <h2 className='hero-title'>Simplify Your Tax Management</h2>
           <p className='hero-subtitle'>Effortlessly manage your taxes with Taxpoynt's intuitive tools and expert guidance.</p>
-          <Link href='/sign-up'>
+          <Link href='/(auth)/sign-up'>
             <Button size='lg'>Get Started</Button>
           </Link>
         </section>
