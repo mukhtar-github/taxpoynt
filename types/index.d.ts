@@ -8,14 +8,14 @@ declare type SearchParamProps = {
 // ========================================
 
 declare type SignUpParams = {
-  first_name: string;
-  last_name: string;
-  business_name: string;
+  firstName: string;
+  lastName: string;
+  businessName: string;
   address: string;
   state: string;
-  business_reg_date: string;
+  businessRegDate: string;
   phone: string;
-  identification_no: string;
+  identificationNo: string;
   email: string;
   password: string;
 };
@@ -25,31 +25,62 @@ declare type LoginUser = {
   password: string;
 };
 
-declare type User = {
+export interface User {
   $id: string;
   email: string;
   accountId: string | null;
-  first_name: string;
-  last_name: string;
-  business_name: string;
+  firstName: string;
+  lastName: string;
+  businessName: string;
   address: string;
   state: string;
-  business_reg_date: string;
+  businessRegDate: string;
   phone: string;
-  identification_no: string;
+  identificationNo: string;
   requiresReauth: boolean;
   reauthUrl: string | null;
-  taxpoyntId: string;
   name: string;
-  subscribed_categories: string[];
+  subscribedCategories: string[];
   isAdmin: boolean;
-} | null;
+}
 
 declare type NewUserParams = {
   userId: string;
   email: string;
   name: string;
   password: string;
+};
+
+declare type UserContextType = {
+  user: User | null;
+};
+
+declare type UserProviderProps = {
+  children: ReactNode;
+  user: User | null;
+}
+
+declare type DashboardLayoutProps = {
+  children: React.ReactNode;
+  user: User; // Define UserType based on your user structure
+}
+
+declare interface LinkUserProps {
+  onAccountLinked?: () => Promise<void>;
+  account: {
+    id: string;
+    name: string;
+    // Add other necessary plain properties
+  };
+  database: {
+    dbName: string;
+    // Add other necessary plain properties
+  };
+  users: Array<{
+    id: string;
+    username: string;
+    // Add other necessary plain properties
+  }>;
 };
 
 declare type Transaction = {
@@ -80,21 +111,8 @@ declare type MonoTransactionsResponse = {
 }
 
 declare type MonoApiResponse<T> = {
-  forEach(arg0: (transaction: { income: number; amount: number; }) => void): unknown;
   data: T;
   hasNewData: boolean;
-}
-
-declare type TaxReturn = {
-  $id: string;
-  taxReturnId: string;
-  taxPeriod: string;
-  documentUrl: string;
-  status: string;
-  currentBalance: number;
-  type: string;
-  year: string;
-  dueDate: string;
 }
 
 declare type TaxReturnsListProps = {
@@ -118,22 +136,7 @@ declare type DocumentListProps = {
 }
 
 interface TaxUpdatesAndRemindersProps {
-  userId: string;
-}
-
-interface TaxUpdate {
-  date: string | number | Date;
-  category: ReactNode;
-  $id: string;
-  title: string;
-  description: string;
-}
-
-interface Reminder {
-  $id: string;
-  title: string;
-  description: string;
-  dueDate: string;
+  // No userId needed
 }
 
 declare type TaxUpdate = {
@@ -162,106 +165,55 @@ declare type TaxRemindersListProps = {
   taxReminders: TaxReminder[];
 }
 
+declare type UserReminder = {
+  $id: string;
+  userId: string;
+  reminderType: string;
+  reminderDate: string;
+  reminderStatus: string;
+  reminderFrequency: string;
+  reminderMessage: string;
+};
+
 declare type Account = {
   id: string;
-  availableBalance: number;
-  currentBalance: number;
-  officialName: string;
-  mask: string;
-  institutionId: string;
-  name: string;
-  type: string;
-  subtype: string;
-  appwriteItemId: string;
-  sharableId: string;
-};
-
-declare type Transaction = {
-  id: string;
-  $id: string;
-  name: string;
-  paymentChannel: string;
-  type: string;
-  accountId: string;
-  amount: number;
-  pending: boolean;
-  category: string;
-  date: string;
-  image: string;
-  type: string;
-  $createdAt: string;
-  channel: string;
-  senderBankId: string;
-  receiverBankId: string;
-};
-
-declare type Bank = {
-  $id: string;
-  accountId: string;
-  bankId: string;
-  accessToken: string;
-  fundingSourceUrl: string;
   userId: string;
-  sharableId: string;
-};
-
-declare type AccountTypes =
-  | "depository"
-  | "credit"
-  | "loan "
-  | "investment"
-  | "other";
-
-declare type Category = "Food and Drink" | "Travel" | "Transfer";
-
-declare type CategoryCount = {
+  balance: number;
+  accountId: string;
+  bvn: string;
   name: string;
-  count: number;
-  totalCount: number;
-};
-
-declare type Receiver = {
-  firstName: string;
-  lastName: string;
-};
-
-declare type TransferParams = {
-  sourceFundingSourceUrl: string;
-  destinationFundingSourceUrl: string;
-  amount: string;
-};
-
-declare type AddFundingSourceParams = {
-  dwollaCustomerId: string;
-  processorToken: string;
-  bankName: string;
-};
-
-declare type NewDwollaCustomerParams = {
-  firstName: string;
-  lastName: string;
-  email: string;
   type: string;
-  address1: string;
-  city: string;
-  state: string;
-  postalCode: string;
-  dateOfBirth: string;
-  ssn: string;
+  currency: string;
+  accountNumber: string;
+  bankCode: string;
+  institutionName: string;
 };
 
-declare interface CreditCardProps {
-  // account: Account;
-  taxReturn: TaxReturn;
-  userName: string;
-  showBalance?: boolean;
-}
+declare type TaxType = {
+  $id: string;
+  name: string;
+  description: string;
+  taxRate: number;
+  filingFrequency: 'annual' | 'quarterly' | 'monthly';
+  documentationRequired: string[];
+};
 
-declare interface BankInfoProps {
-  account: Account;
-  appwriteItemId?: string;
-  type: "full" | "card";
-}
+declare type TaxReturn = {
+  $id: string;
+  userId: string;
+  taxTypeId: string;
+  taxYear: string;
+  taxPeriod: string;
+  status: 'draft' | 'submitted' | 'processing' | 'completed';
+  filingDate: string | null;
+  dueDate: string;
+  documentUrl: string | null;
+  currentBalance: number;
+};
+
+declare type TaxReturnCardProps = {
+  taxReturn: TaxReturn;
+};
 
 declare interface HeaderBoxProps {
   type?: "title" | "greeting";
@@ -298,21 +250,6 @@ declare interface MonoLinkProps {
   // openMonoWidget: () => void;
 }
 
-// declare interface PlaidLinkProps {
-//   user: User;
-//   variant?: "primary" | "ghost";
-//   dwollaCustomerId?: string;
-// }
-
-// declare type User = sdk.Models.Document & {
-//   accountId: string;
-//   email: string;
-//   name: string;
-//   items: string[];
-//   accessToken: string;
-//   image: string;
-// };
-
 declare interface AuthFormProps {
   type: "sign-in" | "sign-up";
 }
@@ -347,11 +284,10 @@ declare interface FooterProps {
   type?: "desktop" | "mobile";
 }
 
-declare interface RightSidebarProps {
+declare type RightSidebarProps = {
   user: User;
-  transactions: Transaction[];
-  taxReturns: Agency[] & TaxReturn[];
-  // banks: Bank[] & Account[];
+  // transactions: Transaction[]; // Removed Transaction reference
+  taxReturns: TaxReturn[];
 }
 
 declare interface SiderbarProps {
@@ -360,13 +296,13 @@ declare interface SiderbarProps {
 
 declare interface RecentTransactionsProps {
   accounts: Account[];
-  transactions: Transaction[];
+  // transactions: Transaction[]; // Removed Transaction reference
   appwriteItemId: string;
   page: number;
 }
 
 declare interface TransactionHistoryTableProps {
-  transactions: Transaction[];
+  // transactions: Transaction[]; // Removed Transaction reference
   page: number;
 }
 
@@ -401,6 +337,7 @@ declare interface getAccountsProps {
 
 declare interface getAccountProps {
   appwriteItemId: string;
+  accountId: string;
 }
 
 declare interface getInstitutionProps {
@@ -409,6 +346,7 @@ declare interface getInstitutionProps {
 
 declare interface getTransactionsProps {
   accessToken: string;
+  accountId: string;
 }
 
 // declare interface CreateFundingSourceOptions {
@@ -475,6 +413,16 @@ declare interface getBankProps {
 
 declare interface getBankByAccountIdProps {
   accountId: string;
+}
+
+declare interface addBankAccountProps {
+  userId: string;
+  accessToken: string;
+  institutionId: string;
+}
+
+declare interface removeBankAccountProps {
+  appwriteItemId: string;
 }
 
 // mono-connect.d.ts

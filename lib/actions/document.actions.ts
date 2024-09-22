@@ -1,4 +1,4 @@
-import { createAdminClient } from '@/lib/appwrite';
+import { createAdminClient } from "@/lib/appwrite";
 import { Query } from 'node-appwrite';
 
 interface Document {

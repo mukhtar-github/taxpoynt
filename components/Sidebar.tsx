@@ -1,22 +1,58 @@
 "use client"
 
+import React from 'react'
 import { sidebarLinks } from '@/constants'
-import { cn } from '@/lib/utils'
+import { cn, sanitizeAccount, sanitizeDatabase, sanitizeUsers } from '@/lib/utils'
 import { usePathname } from 'next/navigation'
 import Image from 'next/image'
 import Link from 'next/link'
-import React from 'react'
 import Footer from './Footer'
-import { AccountLinkWrapper } from './AccountLinkWrapper'
 import { Input } from './ui/input'
+import { useRouter } from 'next/navigation'
+import toast from 'react-hot-toast'
+import LinkUser from './LinkUser'
+import { useUser } from 'hooks/useUser'
 
-interface SidebarProps {
-  initialUser: any;
-}
+function Sidebar(props) {
+    const { user, setUser } = useUser();
+    const router = useRouter()
+    const pathname = usePathname()
 
-const Sidebar = ({ initialUser }: SidebarProps) => {
-    
-    const pathname = usePathname();
+    // Sanitize props
+    const sanitizedAccount = sanitizeAccount(props.account);
+    const sanitizedDatabase = sanitizeDatabase(props.database);
+    const sanitizedUsers = sanitizeUsers(props.users);
+
+    const handleAccountLinked = async () => {
+        try {
+            // Fetch user data from API endpoint
+            const response = await fetch('/api/user', {
+                method: 'GET',
+                credentials: 'include', // Ensure cookies are included
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to fetch user data');
+            }
+
+            const updatedUser = await response.json();
+
+            // Update local state
+            setUser(updatedUser);
+
+            // Refresh the current route to reflect changes across the app
+            router.refresh();
+
+            console.log('Account linked successfully');
+
+            // Show a success notification
+            toast.success('Account linked successfully');
+        } catch (error) {
+            console.error('Error linking account:', error);
+            // Show an error notification
+            toast.error('Failed to link account. Please try again.');
+        }
+    };
 
     return (
         <section className='sidebar all-components'>
@@ -36,9 +72,18 @@ const Sidebar = ({ initialUser }: SidebarProps) => {
                 </div>
                 {sidebarLinks.map((item) => {
                     // Skip rendering admin-only links for non-admin users
-                    if (item.adminOnly && initialUser?.isAdmin !== true) return null;
+                    if (item.adminOnly && user?.isAdmin !== true) return null;
 
-                    const isActive = pathname && (pathname === item.route || pathname.startsWith(`${item.route}/`));
+                    // Determine if the link is active
+                    let isActive = false;
+                    if (item.route === "/") {
+                        isActive = pathname === "/";
+                    } else {
+                        isActive = pathname
+                            ? pathname === item.route || pathname.startsWith(`${item.route}/`)
+                            : false;
+                    }
+
                     return (
                         <Link href={item.route} key={item.label} className={cn('sidebar-link', {'bg-bank-gradient': isActive})}>
                             <div className='relative size-6'>
@@ -55,10 +100,11 @@ const Sidebar = ({ initialUser }: SidebarProps) => {
                         </Link>
                     )
                 })}
-
-                <AccountLinkWrapper user={initialUser} />
+                <LinkUser
+                    onAccountLinked={handleAccountLinked}
+                />
             </nav>
-            <Footer user={initialUser} type='desktop' />
+            <Footer user={user} type='desktop' />
         </section>
     )
 }

@@ -1,31 +1,46 @@
 {
   "compilerOptions": {
-    "lib": ["dom", "dom.iterable", "esnext"],
-    "allowJs": true,
-    "skipLibCheck": true,
-    "strict": true,
-    "noEmit": true,
+    "module": "CommonJS",
     "esModuleInterop": true,
-    "module": "esnext",
-    //"moduleResolution": "bundler",
+    "target": "ESNext",
+    "jsx": "preserve",
+    "allowJs": true,
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
+    "skipLibCheck": true,
+    "strict": false,
+    "noEmit": true,
+    "incremental": true,
     "moduleResolution": "node",
     "resolveJsonModule": true,
     "isolatedModules": true,
-    "jsx": "preserve",
-    "incremental": true,
     "plugins": [
       {
         "name": "next"
       }
     ],
+    "strictNullChecks": true,
+    "baseUrl": ".",
     "paths": {
-      "@/*": ["./*"]
+      "@/components/*": ["components/*"],
+      "@/constants": ["constants/index"],  // Adjust according to your file structure
+      "@/lib/*": ["lib/*"],
+      // Add other aliases if needed
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "app/InitialDataWrapper.tsx"],
-  "exclude": ["node_modules"]
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    ".next/types/**/*.ts"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
 }
-
 // {
 //   "compilerOptions": {
 //     "lib": ["dom", "dom.iterable", "esnext"],
@@ -50,7 +65,6 @@
 //       "@/*": ["./*"]
 //     }
 //   },
-//   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
+//   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "app/InitialDataWrapper.tsx"],
 //   "exclude": ["node_modules"]
 // }
-

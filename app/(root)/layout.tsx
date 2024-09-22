@@ -1,17 +1,17 @@
-import { getLoggedInUser } from '@/lib/actions/user.actions'
+import React from 'react';
 import Sidebar from "@/components/Sidebar";
-import Image from "next/image";
 import MobileNav from "@/components/MobileNav";
+import Image from "next/image";
+import { useUser } from 'hooks/useUser';
 
-export default async function DashboardLayout({
+export default function DashboardLayout({
   children,
-}: {
-  children: React.ReactNode
-}) {
-  const user = await getLoggedInUser()
+}: DashboardLayoutProps) {
+  const { user } = useUser(); // Use the hook to get the user
+
   return (
     <div className="flex h-screen w-full font-inter">
-      <Sidebar initialUser={user} />
+      {user && <Sidebar />}
       <div className="flex-1 flex flex-col overflow-hidden">
         <div className="root-layout">
           <Image
@@ -22,7 +22,7 @@ export default async function DashboardLayout({
             className='size-[24px] max-xl:size-14'  
           />
           <div>
-            <MobileNav initialUser={user} />
+            {user && <MobileNav />}
           </div>
         </div>
         <main className="flex-1 overflow-auto">

@@ -3,16 +3,16 @@ import type { NextRequest } from 'next/server'
 
 export function middleware(request: NextRequest) {
   const path = request.nextUrl.pathname
-  const isPublicPath = path === '/' || path === '/auth/sign-in' || path === '/auth/sign-up'
+  const isPublicPath = path === '/' || path === '/sign-in' || path === '/sign-up'
 
-  const token = request.cookies.get('auth_token')?.value || ''
+  const token = request.cookies.get('appwrite-session')?.value || ''
 
   if (isPublicPath && token) {
     return NextResponse.redirect(new URL('/dashboard', request.url))
   }
 
   if (!isPublicPath && !token) {
-    return NextResponse.redirect(new URL('/auth/sign-in', request.url))
+    return NextResponse.redirect(new URL('/sign-in', request.url))
   }
 }
 

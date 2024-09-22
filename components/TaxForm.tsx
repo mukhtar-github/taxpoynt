@@ -2,37 +2,40 @@
 
 import React from 'react';
 import { useForm } from 'react-hook-form';
-import { Page, Text, View, Document } from '@react-pdf/renderer';
-import { calculateIncomeTax } from '@/lib/utils';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import {
-    Form,
-    FormField,
-    FormItem,
-    FormLabel,
-    FormControl,
-    FormDescription,
-    FormMessage
-} from '@/components/ui/form';
+import { FormField, FormItem, FormLabel, FormControl, FormDescription, FormMessage } from '@/components/ui/form';
 import toast from 'react-hot-toast';
 import dynamic from 'next/dynamic';
+import TaxReturnDocument from './TaxReturnDocument';
 
 const PDFDownloadLink = dynamic(
   () => import('@react-pdf/renderer').then((mod) => mod.PDFDownloadLink),
   { ssr: false }
 );
 
+// Define schema and type
+const formSchema = z.object({
+  income: z.string().min(1, 'Income is required').refine((val) => !isNaN(Number(val)), {
+    message: 'Income must be a valid number',
+  }),
+});
+
+type FormValues = z.infer<typeof formSchema>;
+
 const TaxForm = () => {
-    const form = useForm({
-        defaultValues: {
-            income: '',
-        },
+    const form = useForm<FormValues>({
+        resolver: zodResolver(formSchema),
+        defaultValues: { income: '' },
     });
 
-    const onSubmit = async (data: any) => {
+    const income = form.watch("income");
+
+    const onSubmit = async (data: FormValues) => {
         try {
-            // Submit form data
+            // Submit form data (replace with actual API call)
             console.log(data);
             toast.success('Tax form submitted successfully');
         } catch (error) {
@@ -40,50 +43,35 @@ const TaxForm = () => {
             toast.error('Failed to submit tax form. Please try again.');
         }
     };
-
-    const income = form.watch("income");
-
-    const MyDocument = () => (
-        <Document>
-            <Page size="A4">
-                <View>
-                    <Text>Title: Tax Return Form</Text>
-                    <Text>Income: {income}</Text>
-                    <Text>Calculated Tax: {calculateIncomeTax(Number(income))}</Text>
-                </View>
-            </Page>
-        </Document>
-    );
-
     return (
-        <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-                <FormField
-                    control={form.control}
-                    name="income"
-                    render={({ field }) => (
-                        <FormItem>
-                            <FormLabel>Income</FormLabel>
-                            <FormControl>
-                                <Input placeholder="Enter your income" {...field} />
-                            </FormControl>
-                            <FormDescription>
-                                Please enter your annual income.
-                            </FormDescription>
-                            <FormMessage />
-                        </FormItem>
-                    )}
-                />
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+            <FormField
+                control={form.control}
+                name="income"
+                render={({ field }) => (
+                    <FormItem>
+                        <FormLabel>Income</FormLabel>
+                        <FormControl>
+                            <Input placeholder="Enter your annual income" {...field} />
+                        </FormControl>
+                        <FormDescription>
+                            Please enter your annual income.
+                        </FormDescription>
+                        <FormMessage />
+                    </FormItem>
+                )}
+            />
+            <div className="flex space-x-4">
                 <Button type="submit">Submit</Button>
-                <PDFDownloadLink document={<MyDocument />} fileName="components/TaxForm.tsx">
-                    {({ blob, url, loading, error }) => 
-                        <Button disabled={loading}>
+                <PDFDownloadLink document={<TaxReturnDocument income={income} />} fileName="tax_return.pdf">
+                    {({ loading }) => 
+                        <Button disabled={loading || !income}>
                             {loading ? 'Loading document...' : 'Download Tax Return'}
                         </Button>
                     }
                 </PDFDownloadLink>
-            </form>
-        </Form>
+            </div>
+        </form>
     );
 };
 

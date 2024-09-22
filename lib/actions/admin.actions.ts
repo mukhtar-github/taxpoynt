@@ -1,9 +1,8 @@
-import { createAdminClient } from '@/lib/appwrite';
-import { Query } from 'node-appwrite';
+import { Query } from "node-appwrite";
+import { createAdminClient } from "../appwrite";
 
 export async function setUserAsAdmin(userId: string, email: string) {
   try {
-    // Check if this is the first user
     const adminClient = await createAdminClient();
     const userCount = await adminClient.database.listDocuments(
       process.env.NEXT_PUBLIC_APPWRITE_DATABASE_ID!,
@@ -18,6 +17,7 @@ export async function setUserAsAdmin(userId: string, email: string) {
 
     // Set isAdmin to true if either condition is met
     const isAdmin = isFirstUser || isAdminDomain;
+
     // Update the user document
     await adminClient.database.updateDocument(
       process.env.NEXT_PUBLIC_APPWRITE_DATABASE_ID!,

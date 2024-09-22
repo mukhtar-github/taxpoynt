@@ -8,30 +8,45 @@ import { Select } from '@/components/ui/select';
 import { toast } from 'react-hot-toast';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { fetchUserReminders, createNewUserReminder, deleteUserReminderById } from '@/lib/server';
+import { useUser } from 'hooks/useUser';
 
-
-const UserReminders = ({ userId }: { userId: string }) => {
+const UserReminders = () => {
+  const { user, error } = useUser(); // Destructure 'error' from useUser
   const [reminders, setReminders] = useState([]);
   const [newReminder, setNewReminder] = useState({ title: '', description: '', dueDate: '', priority: 'medium' });
+  const [isLoading, setIsLoading] = useState(true); // Track loading state
 
   useEffect(() => {
+    if (error) {
+      console.error('Error fetching user:', error);
+      toast.error('Failed to load user data');
+      setIsLoading(false);
+      return;
+    }
+
+    if (!user) {
+      return;
+    }
+
     fetchReminders();
-  }, []);
+  }, [user, error]);
 
   const fetchReminders = async () => {
     try {
-      const fetchedReminders = await fetchUserReminders(userId);
+      const fetchedReminders = await fetchUserReminders(user.id);
       setReminders(fetchedReminders as React.SetStateAction<never[]>);
     } catch (error) {
       console.error('Error fetching reminders:', error);
       toast.error('Failed to fetch reminders');
+    } finally {
+      setIsLoading(false);
     }
   };
 
   const handleCreateReminder = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      await createNewUserReminder(userId, {
+      await createNewUserReminder(user.id, {
         ...newReminder,
         priority: newReminder.priority as "high" | "medium" | "low"
       });
@@ -54,6 +69,14 @@ const UserReminders = ({ userId }: { userId: string }) => {
       toast.error('Failed to delete reminder');
     }
   };
+
+  if (isLoading) {
+    return <p>Loading...</p>;
+  }
+
+  if (error) {
+    return <p>Error loading user data.</p>;
+  }
 
   return (
     <Card className="w-full">

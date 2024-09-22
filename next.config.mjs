@@ -17,6 +17,11 @@ const nextConfig = {
         }
         return config;
     },
+    env: {
+        MONO_API_URL: process.env.MONO_API_URL,
+        MONO_API_URL_TRANSACTIONS: process.env.MONO_API_URL_TRANSACTIONS,
+        // ... other environment variables ...
+    },
 };
 
 export default withSentryConfig(

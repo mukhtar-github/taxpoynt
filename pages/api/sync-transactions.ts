@@ -1,16 +1,22 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { syncAccountTransactions } from '@/lib/actions/transaction.actions';
-import { authenticateRequest } from '@/lib/middleware/authMiddleware';
+import { withUserSession } from '@/lib/middleware/userSession';
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-    if (!await authenticateRequest(req, res)) return;
+interface ExtendedNextApiRequest extends NextApiRequest {
+    user?: { id: string };
+}
 
+async function handler(req: ExtendedNextApiRequest, res: NextApiResponse) {
     if (req.method === 'POST') {
         const { accountId, realTime = false } = req.body;
-        const userId = (req as any).user.id;  // Assuming your auth middleware adds user info to the request
+        const userId = req.user?.id;  // Access user ID from the extended request object
         
         if (!accountId) {
             return res.status(400).json({ error: 'Account ID is required' });
+        }
+
+        if (!userId) {
+            return res.status(401).json({ error: 'User not authenticated' });
         }
 
         try {
@@ -24,4 +30,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         res.setHeader('Allow', ['POST']);
         res.status(405).end(`Method ${req.method} Not Allowed`);
     }
+}
+
+export default function syncTransactionsRoute(req: NextApiRequest, res: NextApiResponse) {
+    return withUserSession(req, res, () => handler(req as ExtendedNextApiRequest, res));
 }

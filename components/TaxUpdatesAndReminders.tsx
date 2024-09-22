@@ -1,13 +1,16 @@
-"use client"
+"use client";
 
 import React, { useEffect, useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import UserReminders from './UserReminders';
 import { fetchTaxUpdatesAndReminders } from '@/lib/server';
+import { useUser } from 'hooks/useUser';
+import toast from 'react-hot-toast';
 
-const TaxUpdatesAndReminders: React.FC<TaxUpdatesAndRemindersProps> = ({ userId }) => {
+const TaxUpdatesAndReminders: React.FC = () => {
+  const { user } = useUser();
   const [updates, setUpdates] = useState<TaxUpdate[]>([]);
-  const [generalReminders, setGeneralReminders] = useState<Reminder[]>([]);
+  const [generalReminders, setGeneralReminders] = useState<TaxReminder[]>([]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -15,13 +18,17 @@ const TaxUpdatesAndReminders: React.FC<TaxUpdatesAndRemindersProps> = ({ userId 
         const { updates: taxUpdates, reminders: taxReminders } = await fetchTaxUpdatesAndReminders();
         setUpdates(taxUpdates);
         setGeneralReminders(taxReminders);
-      } catch (error) {
+      } catch (error: any) {
         console.error('Error fetching tax updates and reminders:', error);
-        // You might want to add a toast notification here
+        toast.error(`Error fetching tax updates and reminders: ${error.message}`);
       }
     };
     fetchData();
   }, []);
+
+  if (!user) {
+    return <p>Loading...</p>; // Or any fallback UI
+  }
 
   return (
     <>
@@ -53,8 +60,8 @@ const TaxUpdatesAndReminders: React.FC<TaxUpdatesAndRemindersProps> = ({ userId 
                 <p>No general reminders at the moment.</p>
               ) : (
                 <ul className="list-disc pl-5 space-y-2">
-                  {generalReminders.map((reminder: Reminder) => (
-                    <li key={reminder.$id}>
+                  {generalReminders.map((reminder: TaxReminder) => (
+                    <li key={reminder.id}>
                       <p className="font-medium">{reminder.title}</p>
                       <p className="text-sm text-gray-600">{reminder.description}</p>
                       <p className="text-xs text-gray-500">Due: {new Date(reminder.dueDate).toLocaleDateString()}</p>
@@ -66,7 +73,7 @@ const TaxUpdatesAndReminders: React.FC<TaxUpdatesAndRemindersProps> = ({ userId 
           </div>
         </CardContent>
       </Card>
-      <UserReminders userId={userId} />
+      <UserReminders />
     </>
   );
 };

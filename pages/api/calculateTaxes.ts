@@ -1,32 +1,33 @@
 import { getMonoTransactions } from '@/lib/actions/transaction.actions';
-import { calculateIncomeTax, calculateVAT } from '@/lib/utils';
+import { calculateVAT, calculateIncomeTax } from '@/lib/utils'; // Ensure these functions are correctly imported
 import type { NextApiRequest, NextApiResponse } from 'next';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-    if (req.method === 'POST') {
-        try {
-            const { accountId, realTime } = req.body; // Extract accountId and realTime from request body
-            if (!accountId) {
-                return res.status(400).json({ error: 'accountId is required' });
-            }
-            const transactions = await getMonoTransactions(accountId, 1, realTime); // Fetch transactions from Mono
-            let totalIncome = 0;
-            let totalAmount = 0;
-
-            // Aggregate transaction amounts
-            transactions.forEach((transaction: { income: number; amount: number; }) => {
-                totalIncome += transaction.income;
-                totalAmount += transaction.amount;
-            });
-
-            const vat = calculateVAT(totalAmount);
-            const incomeTax = calculateIncomeTax(totalIncome);
-
-            return res.status(200).json({ vat, incomeTax });
-        } catch (error) {
-            return res.status(500).json({ error: 'Failed to fetch transactions or calculate taxes' });
-        }
-    } else {
+    if (req.method !== 'POST') {
         return res.status(405).json({ error: 'Method Not Allowed' });
+    }
+
+    try {
+        const { accountId, start, end } = req.body;
+
+        if (!accountId) {
+            return res.status(400).json({ error: 'Account ID is required' });
+        }
+
+        const transactionsResponse = await getMonoTransactions(accountId, start, end);
+        const transactions = transactionsResponse.data.data;
+
+        const totalAmount = transactions.reduce((sum, txn) => sum + txn.amount, 0);
+        const totalIncome = transactions
+            .filter(txn => txn.type === 'credit')
+            .reduce((sum, txn) => sum + txn.amount, 0);
+
+        const vat = calculateVAT(totalAmount);
+        const incomeTax = calculateIncomeTax(totalIncome);
+
+        return res.status(200).json({ vat, incomeTax });
+    } catch (error) {
+        console.error('Error calculating taxes:', error);
+        return res.status(500).json({ error: 'Failed to fetch transactions or calculate taxes' });
     }
 }

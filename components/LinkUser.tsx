@@ -4,9 +4,19 @@ import { useState, useCallback, useEffect } from "react";
 import { Button } from './ui/button';
 import { toast } from 'react-hot-toast';
 import { linkAccount, reauthorizeAccount } from '@/lib/server';
+import Image from 'next/image';
+import { CONNECT_BANK_OPTION } from '@/constants';
+import { useRouter, usePathname } from 'next/navigation';
+import { useUser } from 'hooks/useUser';
 
-function LinkUser({ user, onAccountLinked }: { user: any; onAccountLinked: (userData: any) => void }) {
-  const [scriptLoaded, setScriptLoaded] = useState(false);
+interface LinkUserProps {
+  onAccountLinked: (user: User) => void;
+}
+
+function LinkUser({ onAccountLinked }: LinkUserProps) {
+  const { user } = useUser();
+  const router = useRouter();
+  const pathname = usePathname();
   const [loading, setLoading] = useState(false);
   const [isAccountLinked, setIsAccountLinked] = useState(false);
 
@@ -23,34 +33,28 @@ function LinkUser({ user, onAccountLinked }: { user: any; onAccountLinked: (user
     }
   }, [user]);
 
-  const showSuccessMessage = (message: string) => toast.success(message);
-  const showErrorMessage = (message: string) => toast.error(message);
-
-  const updateAccountLinkState = useCallback((isLinked: boolean, userData: any = null) => {
-    setIsAccountLinked(isLinked);
-    if (userData) {
-      onAccountLinked(userData);
-    }
-  }, [onAccountLinked]);
-
   const handleLinkAccount = useCallback(async (authorizationCode: string) => {
     setLoading(true);
     try {
       const data = await linkAccount(authorizationCode);
       if (data.success) {
-        updateAccountLinkState(true, data.user);
-        showSuccessMessage('Account linked successfully');
+        setIsAccountLinked(true);
+        toast.success('Account linked successfully');
+        if (pathname !== '/dashboard') {
+          router.push('/dashboard');
+        }
+        onAccountLinked(data.user); // Remove the conditional check
       } else {
         throw new Error(data.message || 'Failed to link account');
       }
     } catch (error) {
       console.error('Error linking account:', error);
-      showErrorMessage(error instanceof Error ? error.message : 'An error occurred while linking the account');
-      updateAccountLinkState(false);
+      toast.error(error instanceof Error ? error.message : 'An error occurred while linking the account');
+      setIsAccountLinked(false);
     } finally {
       setLoading(false);
     }
-  }, [updateAccountLinkState]);
+  }, [router, pathname, onAccountLinked]);
 
   const openMonoWidget = useCallback(async () => {
     const MonoConnect = (await import("@mono.co/connect.js")).default;
@@ -61,10 +65,9 @@ function LinkUser({ user, onAccountLinked }: { user: any; onAccountLinked: (user
       onClose: () => {
         console.log("Widget closed");
         if (!loading) {
-          showErrorMessage('Account linking was cancelled.');
+          toast.error('Account linking was cancelled.');
         }
       },
-      onLoad: () => setScriptLoaded(true),
       onSuccess: ({ code }: { code: string }) => handleLinkAccount(code),
     });
 
@@ -76,16 +79,17 @@ function LinkUser({ user, onAccountLinked }: { user: any; onAccountLinked: (user
     try {
       const data = await reauthorizeAccount(user.$id);
       if (data.success) {
-        showSuccessMessage('Re-authorization successful');
-        onAccountLinked({ ...user, requiresReauth: false });
+        toast.success('Re-authorization successful');
+        setIsAccountLinked(true);
+        router.push('/dashboard'); // Redirect to Dashboard after re-authorization
       } else {
         throw new Error(data.message || 'Failed to re-authorize');
       }
     } catch (error) {
       console.error('Error re-authorizing:', error);
-      showErrorMessage(error instanceof Error ? error.message : 'An error occurred during re-authorization');
+      toast.error(error instanceof Error ? error.message : 'An error occurred during re-authorization');
     }
-  }, [user, onAccountLinked]);
+  }, [user, router]);
 
   if (!user) {
     return null; // or some loading indicator
@@ -104,15 +108,21 @@ function LinkUser({ user, onAccountLinked }: { user: any; onAccountLinked: (user
   }
 
   return (
-    <>
-      <Button
-        onClick={openMonoWidget}
-        className='plaidlink-primary'
-        disabled={loading}
-      >
-        {loading ? 'Linking...' : 'Connect Bank Account'}
-      </Button>
-    </>
+    <Button
+      onClick={openMonoWidget}
+      className='plaidlink-default'
+      disabled={loading}
+    >
+      <Image 
+        src={CONNECT_BANK_OPTION.icon}
+        alt="connect bank"
+        width={24}
+        height={24}
+      />
+      <p className='text-[16px] font-semibold text-black-2'>
+        {loading ? 'Linking...' : CONNECT_BANK_OPTION.label}
+      </p>
+    </Button>
   );
 }
 

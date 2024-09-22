@@ -9,19 +9,20 @@ import {
   FormMessage,
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
+import { Controller, Control } from 'react-hook-form';
 
 interface CustomInputProps {
-  form: any
-  name: string
-  label: string
-  placeholder: string
-  type: string
+  control: Control<any>;
+  name: string;
+  label: string;
+  placeholder: string;
+  type: string;
 }
 
-const CustomInput = ({form, name, label, placeholder, type}: CustomInputProps) => {
+const CustomInput = ({control, name, label, placeholder, type}: CustomInputProps) => {
   return (
-    <FormField
-      control={form.control}
+    <Controller
+      control={control}
       name={name}
       render={({ field }) => (
         <div className='form-item'>

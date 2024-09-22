@@ -1,5 +1,5 @@
 // lib/logger.ts
-type LogLevel = 'info' | 'error' | 'debug';
+type LogLevel = 'info' | 'warn' | 'error' | 'debug';
 
 interface LogMessage {
   level: LogLevel;
@@ -8,6 +8,10 @@ interface LogMessage {
 }
 
 class Logger {
+  warn(message: string, data?: any) {
+    this.log({ level: 'warn', message, data });
+  }
+  
   log({ level, message, data }: LogMessage) {
     const timestamp = new Date().toISOString();
     if (data) {

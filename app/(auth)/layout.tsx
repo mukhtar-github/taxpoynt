@@ -1,4 +1,5 @@
 import Image from "next/image";
+import React from 'react';
 
 export default function RootLayout({
     children,
@@ -12,7 +13,7 @@ export default function RootLayout({
           <div>
             <Image
               alt='Auth image' 
-              src='/icons/auth-image.svg' 
+              src='/icons/auth.svg' 
               width={1000}
               height={2000}  
             />

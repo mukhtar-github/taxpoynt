@@ -93,17 +93,33 @@ export const formatCurrency = (amount: number, locale: string = 'en-US', currenc
   }).format(amount);
 };
 
-export const parseStringify = (data: any) => {
-  return JSON.parse(JSON.stringify(data, (key, value) => {
-    if (value instanceof Date) {
-      return value.toISOString();
-    }
-    if (typeof value === 'function' || value instanceof Error) {
-      return undefined;
-    }
-    return value;
-  }));
-};
+export function parseStringify<T>(data: T): T {
+  return JSON.parse(JSON.stringify(data));
+}
+
+export function encryptId(id: string) {
+  return btoa(id);
+}
+
+export function decryptId(id: string) {
+  return atob(id);
+}
+
+// {{ Ensure schema validations match the User type }}
+export const authFormSchema = (type: string) => z.object({
+  // signup
+  firstName: type === 'sign-in' ? z.string().optional() : z.string().min(3),
+  lastName: type === 'sign-in' ? z.string().optional() : z.string().min(3),
+  businessName: type === 'sign-in' ? z.string().optional() : z.string().min(3),
+  address: type === 'sign-in' ? z.string().optional() : z.string().max(50),
+  state: type === 'sign-in' ? z.string().optional() : z.string().min(3),
+  businessRegDate: type === 'sign-in' ? z.string().optional() : z.string().date(),
+  phone: type === 'sign-in' ? z.string().optional() : z.string().max(15),
+  identificationNo: type === 'sign-in' ? z.string().optional() : z.string().min(3),
+  // both signup and login
+  email: z.string().email(),
+  password: z.string().min(8),
+});
 
 export const removeSpecialCharacters = (value: string) => {
   return value.replace(/[^\w\s]/gi, "");
@@ -129,73 +145,6 @@ export function formUrlQuery({ params, key, value }: UrlQueryParams) {
   );
 }
 
-export function getAccountTypeColors(type: AccountTypes) {
-  switch (type) {
-    case "depository":
-      return {
-        bg: "bg-blue-25",
-        lightBg: "bg-blue-100",
-        title: "text-blue-900",
-        subText: "text-blue-700",
-      };
-
-    case "credit":
-      return {
-        bg: "bg-success-25",
-        lightBg: "bg-success-100",
-        title: "text-success-900",
-        subText: "text-success-700",
-      };
-
-    default:
-      return {
-        bg: "bg-green-25",
-        lightBg: "bg-green-100",
-        title: "text-green-900",
-        subText: "text-green-700",
-      };
-  }
-}
-
-export function countTransactionCategories(
-  transactions: Transaction[]
-): CategoryCount[] {
-  const categoryCounts: { [category: string]: number } = {};
-  let totalCount = 0;
-
-  // Iterate over each transaction
-  transactions &&
-    transactions.forEach((transaction) => {
-      // Extract the category from the transaction
-      const category = transaction.category;
-
-      // If the category exists in the categoryCounts object, increment its count
-      if (categoryCounts.hasOwnProperty(category)) {
-        categoryCounts[category]++;
-      } else {
-        // Otherwise, initialize the count to 1
-        categoryCounts[category] = 1;
-      }
-
-      // Increment total count
-      totalCount++;
-    });
-
-  // Convert the categoryCounts object to an array of objects
-  const aggregatedCategories: CategoryCount[] = Object.keys(categoryCounts).map(
-    (category) => ({
-      name: category,
-      count: categoryCounts[category],
-      totalCount,
-    })
-  );
-
-  // Sort the aggregatedCategories array by count in descending order
-  aggregatedCategories.sort((a, b) => b.count - a.count);
-
-  return aggregatedCategories;
-}
-
 export function extractCustomerIdFromUrl(url: string) {
   // Split the URL string by '/'
   const parts = url.split("/");
@@ -206,14 +155,6 @@ export function extractCustomerIdFromUrl(url: string) {
   return customerId;
 }
 
-export function encryptId(id: string) {
-  return btoa(id);
-}
-
-export function decryptId(id: string) {
-  return atob(id);
-}
-
 export const getTransactionStatus = (date: Date) => {
   const today = new Date();
   const twoDaysAgo = new Date(today);
@@ -222,30 +163,6 @@ export const getTransactionStatus = (date: Date) => {
   return date > twoDaysAgo ? "Processing" : "Success";
 };
 
-export const authFormSchema = (type: string) => z.object({
-  // signup
-  first_name: type === 'sign-in' ? z.string().optional() : z.string().min(3),
-  last_name: type === 'sign-in' ? z.string().optional() : z.string().min(3),
-  business_name: type === 'sign-in' ? z.string().optional() : z.string().min(3),
-  address: type === 'sign-in' ? z.string().optional() : z.string().max(50),
-  state: type === 'sign-in' ? z.string().optional() : z.string().min(3),
-  business_reg_date:  type === 'sign-in' ? z.string().optional() : z.string().date().min(3),
-  phone: type === 'sign-in' ? z.string().optional() : z.string().max(15),
-  identification_no: type === 'sign-in' ? z.string().optional() : z.string().min(3),
-  // both signup and login
-  email: z.string().email(),
-  password: z.string().min(8),
-})
-
-// Function to generate a unique Taxpoynt ID
-// export const generateTaxpoyntId = (): string => {
-//   return uuidv4(); // Generates a UUID
-// };
-
-// Generate a unique Taxpoynt ID for the user
-  //const taxpoyntId = generateTaxpoyntId();  // Use the function to generate the ID
-
-//Custom Error Class (utils/error.ts)
 export class AppError extends Error {
     public readonly statusCode: number;
     public readonly isOperational: boolean;
@@ -263,7 +180,6 @@ export class AppError extends Error {
 }
 
 // utils/taxCalculator.ts
-
 export function calculateVAT(amount: number): number {
     const VAT_RATE = 0.075;  // 7.5%
     return amount * VAT_RATE;
@@ -311,11 +227,28 @@ export const getMonoSecretKey = (): string => {
   return monoSecretKey;
 };
 
-//Test code for uuid
-// const generateUUID = () => {
-//   const uuid = uuidv4();
-//   console.log("Generated UUID:", uuid);
-//   return uuid;
-//   };
-  
-//   generateUUID();
+export const getEnvVariable = (key: string): string => {
+  const value = process.env[key];
+  console.log(`Environment Variable ${key}:`, value); // Temporary debug log
+  if (!value) {
+    throw new Error(`Environment variable ${key} is not defined.`);
+  }
+  return value;
+};
+
+export const sanitizeAccount = (account) => ({
+  id: account.id,
+  name: account.name,
+  // Add other necessary plain properties
+});
+
+export const sanitizeDatabase = (database) => ({
+  dbName: database.dbName,
+  // Add other necessary plain properties
+});
+
+export const sanitizeUsers = (users) => users.map(user => ({
+  id: user.id,
+  username: user.username,
+  // Add other necessary plain properties
+}));

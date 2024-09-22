@@ -2,6 +2,7 @@ import React from 'react'
 import { getDocuments } from '@/lib/actions/document.actions'
 import { getLoggedInUser } from '@/lib/actions/user.actions'
 import DocumentList from '@/components/DocumentList'
+import HeaderBox from '@/components/HeaderBox'  // Add this import
 
 interface Document {
   $id: string;
@@ -20,7 +21,11 @@ const Documents = async () => {
 
   return (
     <div className="p-6">
-      <h1 className="text-2xl font-bold mb-6">My Documents</h1>
+      <HeaderBox 
+        type="title"
+        title="My Documents"
+        subtext="View and manage all your uploaded documents"
+      />
       <DocumentList documents={documents as any} />
     </div>
   )

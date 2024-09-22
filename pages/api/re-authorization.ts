@@ -1,12 +1,14 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { updateUserReauthStatus } from '@/lib/actions/user.actions';
+import { withUserSession, ExtendedNextApiRequest } from '@/lib/middleware/userSession';
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+async function handler(req: ExtendedNextApiRequest, res: NextApiResponse) {
   if (req.method === 'POST') {
-    const { userId } = req.body;
+    // Get the authenticated user's ID from the session
+    const userId = req.user?.id;
 
     if (!userId) {
-      return res.status(400).json({ error: 'User ID is required' });
+      return res.status(401).json({ error: 'User not authenticated' });
     }
 
     try {
@@ -25,4 +27,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     res.setHeader('Allow', ['POST']);
     res.status(405).end(`Method ${req.method} Not Allowed`);
   }
+}
+
+export default function reAuthorizationRoute(req: NextApiRequest, res: NextApiResponse) {
+  return withUserSession(req, res, () => handler(req as ExtendedNextApiRequest, res));
 }

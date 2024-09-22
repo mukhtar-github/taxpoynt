@@ -1,5 +1,4 @@
 import { getTaxReturns } from '@/lib/actions/taxReturn.actions'
-import { getLoggedInUser } from '@/lib/actions/user.actions'
 import { Loader2 } from 'lucide-react'
 import { Suspense } from 'react'
 import HeaderBox from '@/components/HeaderBox'
@@ -8,16 +7,18 @@ import TaxReturnsList from '@/components/TaxReturnsList'
 import RightSidebar from '@/components/RightSidebar'
 import { parseStringify } from '@/lib/utils'
 import TaxDashboard from '@/components/TaxDashboard'
+import { useUser } from 'hooks/useUser'
 
-const Dashboard = async () => {
-    const loggedIn = await getLoggedInUser();
-    const taxReturns = loggedIn ? await getTaxReturns(loggedIn.id) : [];
+const Dashboard = async ({ userId }: { userId: string }) => {
+    // Use the useUser hook
+    const loggedIn = useUser();
+    const taxReturns = loggedIn ? await getTaxReturns(userId) : [];
   
     return (
         <div className='dashboard-container'>
           <main className='dashboard-main'>
             <HeaderBox
-              title={`Welcome ${loggedIn?.name || 'User'}`}
+              title={`Welcome ${loggedIn?.firstName || 'User'}`}
               subtext='Access and effectively manage your tax returns for better financial outcomes.'
             />
     
@@ -29,12 +30,12 @@ const Dashboard = async () => {
             </div>
     
             <div className="dashboard-wrapper" style={{ padding: '20px' }}>
-              <TaxDashboard />
+              <TaxDashboard userId={loggedIn?.id} />
             </div>
           </main>
     
           <aside className='dashboard-sidebar'>
-            <RightSidebar user={parseStringify(loggedIn)} taxReturns={parseStringify(taxReturns)} />
+            <RightSidebar taxReturns={parseStringify(taxReturns)} />
           </aside>
         </div>
       )

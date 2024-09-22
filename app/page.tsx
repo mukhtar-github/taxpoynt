@@ -17,10 +17,10 @@ const Home = () => {
           <h1 className='text-3xl font-bold'>Taxpoynt</h1>
         </div>
         <nav className='hidden md:flex'>
-          <Link href='/(auth)/sign-in'>
+          <Link href='/sign-in'>
             <Button variant='outline' className='mr-2'>Sign In</Button>
           </Link>
-          <Link href='/(auth)/sign-up'>
+          <Link href='/sign-up'>
             <Button>Sign Up</Button>
           </Link>
         </nav>
@@ -33,7 +33,7 @@ const Home = () => {
         <section className='hero-section'>
           <h2 className='hero-title'>Simplify Your Tax Management</h2>
           <p className='hero-subtitle'>Effortlessly manage your taxes with Taxpoynt's intuitive tools and expert guidance.</p>
-          <Link href='/(auth)/sign-up'>
+          <Link href='/sign-up'>
             <Button size='lg'>Get Started</Button>
           </Link>
         </section>
@@ -45,7 +45,7 @@ const Home = () => {
             description='Complete and submit your tax returns with our user-friendly interface.'
           />
           <FeatureCard 
-            icon='/icons/dollar-circle.svg'
+            icon='/icons/tax-engine.svg'
             title='Real-time Calculations'
             description='Get instant updates on your tax liability as you input your information.'
           />

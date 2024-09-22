@@ -9,9 +9,7 @@ import {
   TableHeader,
   TableRow
 } from "@/components/ui/table"
-import { mockTransactions } from '@/__mocks__/mockData';
-import { useState } from 'react';
-
+                                  
 interface Transaction {
   id: string
   date: string
@@ -20,13 +18,11 @@ interface Transaction {
   type: 'credit' | 'debit'
 }
 
-// interface TransactionListProps {
-//   transactions: Transaction[]
-// }
+interface TransactionListProps {
+  transactions: Transaction[]
+}
 
-const TransactionList = () => {
-//const TransactionList: React.FC<TransactionListProps> = ({ transactions }) => {
-  const [transactions, setTransactions] = useState(mockTransactions);
+const TransactionList: React.FC<TransactionListProps> = ({ transactions }) => {
   return (
     <Table>
       <TableHeader>

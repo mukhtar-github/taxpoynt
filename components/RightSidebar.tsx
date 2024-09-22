@@ -3,37 +3,24 @@
 import Link from 'next/link'
 import React from 'react'
 import TaxReturnCard from './TaxReturnCard'
+import { useUser } from 'hooks/useUser'
 
-interface RightSidebarProps {
-  user: {
-    name?: string;
-    email?: string;
-  };
-  taxReturns: Array<{
-    $id: string;
-    taxReturnId: string;
-    taxPeriod: string;
-    documentUrl: string;
-    status: string;
-    currentBalance: number;
-    type: string;
-    year: string;
-    dueDate: string;
-  }>;
-}
+// Move useUser inside the component
+const RightSidebar = ({ taxReturns }: { taxReturns: TaxReturn[] }) => {
+  const { user } = useUser()
 
-const RightSidebar = ({ user, taxReturns }: RightSidebarProps) => {
-  const serializedTaxReturns = taxReturns.map(taxReturn => ({
+  const serializedTaxReturns = taxReturns.map((taxReturn) => ({
     $id: taxReturn.$id,
-    taxReturnId: taxReturn.taxReturnId,
     taxPeriod: taxReturn.taxPeriod,
     documentUrl: taxReturn.documentUrl,
     status: taxReturn.status,
     currentBalance: taxReturn.currentBalance,
-    type: taxReturn.type,
-    year: taxReturn.year,
     dueDate: taxReturn.dueDate,
-  }));
+    userId: taxReturn.userId,           // Added
+    taxTypeId: taxReturn.taxTypeId,     // Added
+    taxYear: taxReturn.taxYear,         // Added
+    filingDate: taxReturn.filingDate,   // Added
+  }))
 
   return (
     <aside className='right-sidebar bg-gray-50 p-6 rounded-lg shadow-md all-components'>
@@ -42,12 +29,14 @@ const RightSidebar = ({ user, taxReturns }: RightSidebarProps) => {
         <div className='profile -mt-12 flex items-center space-x-4'>
           <div className='profile-img bg-white rounded-full p-2 shadow-lg'>
             <span className='text-4xl font-bold text-blue-500 bg-blue-100 rounded-full w-16 h-16 flex items-center justify-center'>
-              {user?.name?.[0] || 'U'}
+              {user?.firstName ? user.firstName[0] : 'U'}
             </span>
           </div>
           <div className='profile-details'>
-            <h1 className='profile-name text-2xl font-bold text-gray-800'>{user?.name || 'User'}</h1>
-            <p className='profile-email text-sm text-gray-600'>{user?.email || 'No email'}</p>
+            <h1 className='profile-name text-2xl font-bold text-gray-800'>
+              {user?.firstName || ''} {user?.lastName || ''}
+            </h1>
+            <p className='profile-email text-sm text-gray-600'>{user?.email || ''}</p>
           </div>
         </div>
       </section>
@@ -62,7 +51,10 @@ const RightSidebar = ({ user, taxReturns }: RightSidebarProps) => {
                 taxReturn={taxReturn}
               />
             ))}
-            <Link href="/tax-returns" className="text-blue-500 hover:underline text-sm font-medium">
+            <Link
+              href="/tax-returns"
+              className="text-blue-500 hover:underline text-sm font-medium"
+            >
               View All Tax Returns
             </Link>
           </div>

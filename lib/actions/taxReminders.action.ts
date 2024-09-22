@@ -1,5 +1,13 @@
 import { createAdminClient } from '@/lib/appwrite';
 
+// Add this interface at the top of the file
+interface TaxReminder {
+  title: string;
+  description: string;
+  dueDate: Date;
+  priority: 'low' | 'medium' | 'high';
+}
+
 // This is a file that generates reminders for tax updates
 export async function generateReminders() {
   const { database } = await createAdminClient();
@@ -38,11 +46,10 @@ export async function generateReminders() {
   }
 }
 
-function generateUserReminders(user: any) {
-  // Implement your reminder generation logic here
-  // This is just a simple example
+// Update the function signature
+function generateUserReminders(user: any): TaxReminder[] {
   const currentDate = new Date();
-  const reminders = [];
+  const reminders: TaxReminder[] = [];
 
   if (user.isVATRegistered) {
     reminders.push({

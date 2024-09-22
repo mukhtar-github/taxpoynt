@@ -4,9 +4,13 @@ import axios from 'axios';
 import { getMonoSecretKey } from '@/lib/utils';
 import { createAdminClient } from '@/lib/appwrite';
 import { ID } from 'node-appwrite';
+import { getEnvVariable } from '@/lib/utils';
 
-const MONO_API_BASE_URL = 'https://api.withmono.com/v2';
-const { NEXT_PUBLIC_APPWRITE_DATABASE_ID, NEXT_PUBLIC_APPWRITE_TRANSACTION_COLLECTION_ID } = process.env;
+// Retrieve and validate the MONO_API_URL_TRANSACTIONS environment variable
+const MONO_API_BASE_URL = getEnvVariable('MONO_API_URL_TRANSACTIONS');
+
+const NEXT_PUBLIC_APPWRITE_DATABASE_ID = getEnvVariable('NEXT_PUBLIC_APPWRITE_DATABASE_ID');
+const NEXT_PUBLIC_APPWRITE_TRANSACTION_COLLECTION_ID = getEnvVariable('NEXT_PUBLIC_APPWRITE_TRANSACTION_COLLECTION_ID');
 
 interface MonoTransaction {
     id: string;
@@ -38,7 +42,11 @@ interface MonoApiResponse<T> {
     hasNewData: boolean;
 }
 
-export const getMonoTransactions = async (accountId: string, page: number = 1, realTime: boolean = false): Promise<MonoApiResponse<MonoTransactionsResponse>> => {
+export const getMonoTransactions = async (
+    accountId: string,
+    page: number = 1,
+    realTime: boolean = false
+): Promise<MonoApiResponse<MonoTransactionsResponse>> => {
     try {
         const response = await axios.get<MonoTransactionsResponse>(`${MONO_API_BASE_URL}/accounts/${accountId}/transactions`, {
             headers: {
@@ -77,8 +85,8 @@ export const saveTransaction = async (transaction: MonoTransaction, userId: stri
     try {
         const { database } = await createAdminClient();
         const savedTransaction = await database.createDocument(
-            NEXT_PUBLIC_APPWRITE_DATABASE_ID!,
-            NEXT_PUBLIC_APPWRITE_TRANSACTION_COLLECTION_ID!,
+            NEXT_PUBLIC_APPWRITE_DATABASE_ID,
+            NEXT_PUBLIC_APPWRITE_TRANSACTION_COLLECTION_ID,
             ID.unique(),
             {
                 monoId: transaction.id,
@@ -89,8 +97,8 @@ export const saveTransaction = async (transaction: MonoTransaction, userId: stri
                 balance: transaction.balance,
                 date: transaction.date,
                 currency: transaction.currency,
-                userId: userId,
-                accountId: accountId,
+                userId,
+                accountId,
             }
         );
         console.log('Saved transaction:', savedTransaction.$id);

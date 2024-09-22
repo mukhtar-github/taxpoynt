@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import { createSessionClient } from '@/lib/appwrite';
+import { createSessionClient } from "../appwrite";
 
 export async function authenticateRequest(req: NextApiRequest, res: NextApiResponse): Promise<boolean> {
     const sessionToken = req.cookies['appwrite-session'];
@@ -9,6 +9,9 @@ export async function authenticateRequest(req: NextApiRequest, res: NextApiRespo
     }
     try {
         const sessionClient = await createSessionClient();
+        if (!sessionClient) {
+            throw new Error('Failed to create session client');
+        }
         const account = sessionClient.account;
         await account.get();  // This will throw an error if the session is not valid
         return true;

@@ -1,8 +1,9 @@
 "use server";
 import axios from 'axios';
+import { getEnvVariable } from '@/lib/utils';
 
 const authenticateAccount = async (authorizationToken: string, p0: string, p1: string): Promise<string> => {
-  const MONO_API_URL = 'https://api.withmono.com/account/auth';
+  const MONO_API_URL = getEnvVariable('MONO_API_URL');
 
   try {
     const response = await axios.post(MONO_API_URL, {
@@ -10,7 +11,7 @@ const authenticateAccount = async (authorizationToken: string, p0: string, p1: s
     }, {
       headers: {
         'Content-Type': 'application/json',
-        'mono-sec-key': process.env.MONO_SECRET_KEY, // Ensure you have your Mono secret key in your environment variables
+        'mono-sec-key': getEnvVariable('MONO_SECRET_KEY'), // Ensure you have your Mono secret key in your environment variables
       },
     });
 

@@ -1,34 +1,34 @@
 export const sidebarLinks = [
   {
     imgURL: "/icons/dashboard.svg",
-    route: "/dashboard",
+    route: "/",
     label: "Dashboard",
   },
   {
     imgURL: "/icons/tax-returns.svg",
-    route: "/dashboard/tax-returns",
+    route: "/tax-returns",
     label: "My Tax Returns",
   },
   {
     imgURL: "/icons/transactions.svg",
-    route: "/dashboard/transactions",
+    route: "/transactions",
     label: "Transactions",
   },
   {
     imgURL: "/icons/documents.svg",
-    route: "/dashboard/documents",
+    route: "/documents",
     label: "Documents",
   },
   {
     imgURL: "/icons/tax-form.svg",
-    route: "/dashboard/tax-form",
+    route: "/tax-form",
     label: "Tax Form",
   },
   {
     imgURL: "/icons/admin.svg",
-    route: "/dashboard/tax-management",
+    route: "/tax-management",
     label: "Tax Management",
-    adminOnly: true,  // Keep this flag for admin-only links
+    adminOnly: true,  // Admin-only link
   },
 ];
 
@@ -145,4 +145,9 @@ export const transactionCategoryStyles = {
     textColor: "text-blue-700",
     chipBackgroundColor: "bg-inherit",
   },
+};
+
+export const CONNECT_BANK_OPTION = {
+  label: "Connect Bank Account",
+  icon: "/icons/connect-bank.svg",
 };

@@ -1,0 +1,46 @@
+declare namespace NodeJS {
+  interface ProcessEnv {
+    // TAXPOYNT
+    TAXPOYNT_PUBLIC_SITE_URL: string;
+    TAXPOYNT_PUBLIC_API_URL: string;
+    TAXPOYNT_PUBLIC_WEBSITE_URL: string;
+
+    // APPWRITE
+    NEXT_PUBLIC_APPWRITE_ENDPOINT: string;
+    NEXT_PUBLIC_APPWRITE_PROJECT: string;
+    NEXT_PUBLIC_APPWRITE_KEY: string;
+    NEXT_PUBLIC_APPWRITE_DATABASE_ID: string;
+    NEXT_PUBLIC_APPWRITE_USER_COLLECTION_ID: string;
+    NEXT_PUBLIC_APPWRITE_USER_DOCUMENT_ID: string;
+    NEXT_PUBLIC_APPWRITE_TRANSACTION_COLLECTION_ID: string;
+    NEXT_PUBLIC_APPWRITE_TAX_RETURN_COLLECTION_ID: string;
+    NEXT_PUBLIC_APPWRITE_TAX_UPDATES_COLLECTION_ID: string;
+    NEXT_PUBLIC_APPWRITE_TAX_REMINDERS_COLLECTION_ID: string;
+    NEXT_PUBLIC_APPWRITE_USER_REMINDERS_COLLECTION_ID: string;
+
+    // MONO
+    MONO_APP_ID: string;
+    MONO_SECRET_KEY: string;
+    MONO_PUBLIC_KEY: string;
+    MONO_ENV: string;
+    MONO_PRODUCTS: string;
+    MONO_WEBHOOK_SEC: string;
+    MONO_API_URL: string;
+    MONO_API_URL_TRANSACTIONS: string;
+    MONO_WEBHOOK_URL: string;
+
+    // VERCEL
+    VERCEL_TOKEN: string;
+    ORG_ID: string;
+    PROJECT_ID: string;
+
+    // SENTRY
+    SENTRY_AUTH_TOKEN: string;
+    SENTRY_ORG: string;
+    SENTRY_PROJECT: string;
+    SENTRY_CLIENT_SECRET: string;
+    SENTRY_SUPPRESS_GLOBAL_ERROR_HANDLER_FILE_WARNING: string;
+
+    // Add any additional environment variables below
+  }
+}
