@@ -1,6 +1,5 @@
-import '../lib/sentry.server.config';  // Initialize Sentry for server
-import '../lib/sentry.client.config';  // Initialize Sentry for client
 import type { AppProps } from 'next/app';
+import * as Sentry from '@sentry/nextjs';
 
 function MyApp({ Component, pageProps }: AppProps) {
   return <Component {...pageProps} />;

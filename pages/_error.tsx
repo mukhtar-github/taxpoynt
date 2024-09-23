@@ -1,12 +1,26 @@
 import { NextPageContext } from 'next';
-import App, { AppProps, AppContext } from 'next/app';
+import * as Sentry from '@sentry/nextjs';
 
-function MyError({ res, err, pathname, query }: NextPageContext) {
-  // Your error handling logic
+interface ErrorProps {
+  statusCode?: number;
 }
 
-MyError.getInitialProps = async ({ res, err, pathname, query, AppTree }: NextPageContext) => {
-  return { res, err, pathname, query, AppTree };
+const ErrorPage = ({ statusCode }: ErrorProps) => {
+  return (
+    <p>
+      {statusCode
+        ? `An error ${statusCode} occurred on server`
+        : 'An error occurred on client'}
+    </p>
+  );
 };
 
-export default MyError;
+ErrorPage.getInitialProps = async ({ res, err }: NextPageContext) => {
+  const statusCode = res ? res.statusCode : err ? err.statusCode : 404;
+  if (err) {
+    Sentry.captureException(err);
+  }
+  return { statusCode };
+};
+
+export default ErrorPage;
