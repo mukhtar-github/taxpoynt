@@ -11,6 +11,7 @@ import { CookieSerializeOptions } from 'cookie';
 import { Account } from 'node-appwrite';
 import { NextApiRequest } from 'next';
 import { SignUpParams } from "types";
+import axios from 'axios';
 
 const DATABASE_ID = getEnvVariable('NEXT_PUBLIC_APPWRITE_DATABASE_ID');
 const USER_COLLECTION_ID = getEnvVariable('NEXT_PUBLIC_APPWRITE_USER_COLLECTION_ID');
@@ -258,3 +259,13 @@ export async function updateUserReauthStatus({
     throw new Error('Failed to update user reauth status');
   }
 }
+
+export const fetchUserData = async () => {
+  try {
+    const response = await axios.get(`${process.env.NEXT_PUBLIC_APPWRITE_API_URL}/user`);
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching user data:', error);
+    throw error;
+  }
+};
