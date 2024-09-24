@@ -3,8 +3,6 @@
 import React, { createContext, useState, ReactNode, Dispatch, SetStateAction, useContext } from 'react';
 import { User } from 'types'; // Ensure this import exists and is correct
 
-// Removed the local interface User declaration
-
 // Updated UserContextType to use the imported User
 export interface UserContextType {
     user: User | null;
@@ -25,5 +23,5 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     );
 };
 
-// Optional: If you prefer to define the `useUser` hook in a separate file, consider removing it from here
+// Create a custom hook for easier context consumption
 export const useUserHook = () => useContext(UserContext);

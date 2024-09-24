@@ -45,7 +45,8 @@
     "tailwind-merge": "^2.3.0",
     "tailwindcss-animate": "^1.0.7",
     "uuid": "^9.0.0",
-    "zod": "^3.23.8"
+    "zod": "^3.23.8",
+    "rimraf": "^4.1.2"
   },
   "devDependencies": {
     "@babel/plugin-transform-private-methods": "^7.25.4",
@@ -57,7 +58,6 @@
     "node-mocks-http": "^1.15.1",
     "postcss": "^8",
     "querystring": "^0.2.1",
-    "rimraf": "^4.1.2",
     "tailwindcss": "^3.4.1",
     "typescript": "^5"
   }
