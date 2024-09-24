@@ -1,19 +1,14 @@
 'use client';
 
-import { createAdminClient } from '@/lib/appwrite';
-import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import React, { createContext, useState, ReactNode, Dispatch, SetStateAction, useContext } from 'react';
+import { User } from 'types'; // Ensure this import exists and is correct
 
-interface User {
-    id: string;
-    email: string;
-    firstName: string;
-    lastName: string;
-    // Add other necessary fields here
-}
+// Removed the local interface User declaration
 
-interface UserContextType {
+// Updated UserContextType to use the imported User
+export interface UserContextType {
     user: User | null;
-    setUser: (user: User | null) => void;
+    setUser: Dispatch<SetStateAction<User | null>>;
 }
 
 // Initialize the context with default values
@@ -23,31 +18,6 @@ export const UserContext = createContext<UserContextType | undefined>(undefined)
 export const UserProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
     const [user, setUser] = useState<User | null>(null);
 
-    useEffect(() => {
-        const fetchUser = async () => {
-            try {
-                const client = await createAdminClient();
-                const userData = await client.account.get();
-
-                // **Serialize userData into a plain object**
-                const plainUserData: User = {
-                    id: userData.$id,
-                    email: userData.email,
-                    firstName: userData.name,
-                    lastName: userData.name,
-                    // Add other necessary fields here
-                };
-
-                setUser(plainUserData);
-            } catch (error) {
-                console.error('Error fetching user data:', error);
-                setUser(null);
-            }
-        };
-
-        fetchUser();
-    }, []);
-
     return (
         <UserContext.Provider value={{ user, setUser }}>
             {children}
@@ -55,4 +25,5 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     );
 };
 
-export const useUser = () => useContext(UserContext);
+// Optional: If you prefer to define the `useUser` hook in a separate file, consider removing it from here
+export const useUserHook = () => useContext(UserContext);

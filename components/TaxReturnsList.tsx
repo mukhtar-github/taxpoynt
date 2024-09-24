@@ -1,44 +1,25 @@
 'use client'
 
-import { parseStringify } from '@/lib/utils';
-import TaxReturnCard from './TaxReturnCard'
-
-interface TaxReturn {
-  $id: string;
-  taxReturnId: string;
-  taxPeriod: string;
-  documentUrl: string;
-  status: string;
-  currentBalance: number;
-  type: string;
-  year: string;
-  dueDate: string;
-}
+import React from 'react';
+import { TaxReturn } from 'types';
 
 interface TaxReturnsListProps {
   taxReturns: TaxReturn[];
 }
 
-const TaxReturnsList = ({ taxReturns }: TaxReturnsListProps) => {
-  const serializedTaxReturns = parseStringify(taxReturns);
-  
+const TaxReturnsList: React.FC<TaxReturnsListProps> = ({ taxReturns }) => {
   return (
-    <div className="recent-tax-returns">
-      <h2 className='recent-tax-returns-header'>Recent Tax Returns</h2>
-      <div className="tax-return-list">
-        {serializedTaxReturns.length > 0 ? (
-          serializedTaxReturns.map((taxReturn: { $id: any; taxReturnId?: string; taxPeriod?: string; documentUrl?: string; status?: string; currentBalance?: number; type?: string; year?: string; dueDate?: string; }) => (
-            <TaxReturnCard 
-              key={taxReturn.$id} 
-              taxReturn={taxReturn as TaxReturn}
-            />
-          ))
-        ) : (
-          <p>No recent tax returns found.</p>
-        )}
-      </div>
+    <div>
+      {taxReturns.map((taxReturn) => (
+        <div key={taxReturn.taxReturnId}>
+          {/* Render tax return details here */}
+          <p>Tax Period: {taxReturn.taxPeriod}</p>
+          <p>Status: {taxReturn.status}</p>
+          {/* Add more fields as needed */}
+        </div>
+      ))}
     </div>
-  )
-}
+  );
+};
 
-export default TaxReturnsList
+export default TaxReturnsList;

@@ -1,12 +1,19 @@
-import React from 'react';
-import TaxUpdatesAndReminders from './TaxUpdatesAndReminders';
-import TaxPlanner from './TaxPlanner';
+'use client';
 
-const TaxDashboard = () => {
+import React from 'react';
+
+interface TaxDashboardProps {
+  userId: string;
+}
+
+const TaxDashboard: React.FC<TaxDashboardProps> = ({ userId }) => {
+  // Your component logic here
+
   return (
-    <div className="tax-dashboard-container grid grid-cols-1 md:grid-cols-2 gap-6">
-      <TaxUpdatesAndReminders />
-      <TaxPlanner />
+    <div>
+      {/* Example usage of userId */}
+      <h2>User ID: {userId}</h2>
+      {/* Render tax dashboard based on userId */}
     </div>
   );
 };

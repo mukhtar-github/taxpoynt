@@ -1,28 +1,24 @@
-import { createAdminClient } from '@/lib/appwrite'; // Ensure this import points to your Appwrite configuration file
-import { Query } from 'node-appwrite';
-import { parseStringify } from '@/lib/utils'; // Adjust the import path as needed
+import { Query, Models } from 'node-appwrite';
+import { createAdminClient } from "@/lib/appwrite";
+import { getEnvVariable } from '@/lib/utils';
+import { TaxReturn } from 'types';
+import { transformDocumentToTaxReturn } from '@/lib/utils/transform';
 
-export async function getTaxReturns(userId: string) {
-  if (!userId || typeof userId !== 'string') {
-    throw new Error('Invalid user ID');
-  }
+export const getTaxReturns = async (userId: string): Promise<TaxReturn[]> => {
+  // Initialize the Appwrite client and get the database instance
+  const { database } = await createAdminClient();
+  
+  const DATABASE_ID = getEnvVariable('NEXT_PUBLIC_APPWRITE_DATABASE_ID');
+  const TAX_RETURN_COLLECTION_ID = getEnvVariable('NEXT_PUBLIC_APPWRITE_TAX_RETURN_COLLECTION_ID');
 
-  try {
-    const { database } = await createAdminClient();
-    const response = await database.listDocuments(
-      process.env.NEXT_PUBLIC_APPWRITE_DATABASE_ID!,
-      process.env.NEXT_PUBLIC_APPWRITE_TAX_RETURN_COLLECTION_ID!,
-      [
-        Query.equal('userId', userId),
-        Query.orderDesc('year'),
-        Query.orderDesc('taxPeriod'),
-        Query.limit(5)
-      ]
-    );
+  const taxReturnDocuments = await database.listDocuments(
+    DATABASE_ID,
+    TAX_RETURN_COLLECTION_ID,
+    [Query.equal('userId', [userId])]
+  );
 
-    return parseStringify(response.documents);
-  } catch (error) {
-    console.error('Failed to fetch tax returns:', error);
-    throw new Error('Failed to fetch tax returns');
-  }
-}
+  // Transform Documents to TaxReturns
+  const taxReturns: TaxReturn[] = taxReturnDocuments.documents.map(transformDocumentToTaxReturn);
+
+  return taxReturns;
+};

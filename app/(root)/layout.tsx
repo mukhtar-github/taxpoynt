@@ -3,6 +3,7 @@ import Sidebar from "@/components/Sidebar";
 import MobileNav from "@/components/MobileNav";
 import Image from "next/image";
 import { useUser } from 'hooks/useUser';
+import { DashboardLayoutProps } from 'types';
 
 export default function DashboardLayout({
   children,

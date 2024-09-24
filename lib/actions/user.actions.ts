@@ -12,6 +12,9 @@ import { Account } from 'node-appwrite';
 import { NextApiRequest } from 'next';
 import { SignUpParams } from "types";
 import axios from 'axios';
+import { Models } from 'node-appwrite';
+import { TaxReturn } from 'types';
+import { transformDocumentToTaxReturn } from '@/lib/utils/transform';
 
 const DATABASE_ID = getEnvVariable('NEXT_PUBLIC_APPWRITE_DATABASE_ID');
 const USER_COLLECTION_ID = getEnvVariable('NEXT_PUBLIC_APPWRITE_USER_COLLECTION_ID');
@@ -24,7 +27,7 @@ const COOKIE_OPTIONS: CookieSerializeOptions = {
   maxAge: 60 * 60 * 24 * 7, // 7 days
 };
 
-export const getUserInfo = async ({ userId }: { userId: string }) => {
+export const getUserInfo = async ({ userId }: { userId: string }): Promise<Models.Document> => {
   try {
     const { database } = await createAdminClient();
 
@@ -260,12 +263,17 @@ export async function updateUserReauthStatus({
   }
 }
 
-export const fetchUserData = async () => {
+export const fetchTaxReturnData = async (): Promise<TaxReturn[]> => {
   try {
-    const response = await axios.get(`${process.env.NEXT_PUBLIC_APPWRITE_API_URL}/user`);
-    return response.data;
+    const response = await axios.get(`${process.env.NEXT_PUBLIC_APPWRITE_API_URL}/taxReturns`);
+    const documents: Models.Document[] = response.data; // Adjust based on your API response structure
+
+    // Transform Documents to TaxReturns
+    const taxReturns: TaxReturn[] = documents.map(transformDocumentToTaxReturn);
+
+    return taxReturns;
   } catch (error) {
-    console.error('Error fetching user data:', error);
+    console.error('Error fetching tax return data:', error);
     throw error;
   }
 };

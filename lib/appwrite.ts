@@ -29,15 +29,9 @@ export async function createAdminClient() {
 		.setKey(getEnvVariable('NEXT_PUBLIC_APPWRITE_KEY'));
 
 	return {
-		get account() {
-			return new Account(client);
-		},
-		get database() {
-			return new Databases(client);
-		},
-		get users() {
-			return new Users(client);
-		},
+		account: new Account(client),
+		database: new Databases(client),
+		users: new Users(client),
 	};
 }
 
