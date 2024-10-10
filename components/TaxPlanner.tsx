@@ -4,15 +4,15 @@ import React, { useState } from 'react';
 import { Input } from './ui/input';
 import { Button } from './ui/button';
 import toast from 'react-hot-toast';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
 
-const TaxPlanner = () => {
-    const [income, setIncome] = useState(0);
-    const [amount, setAmount] = useState(0);
-    const [taxes, setTaxes] = useState({ vat: 0, incomeTax: 0 });
-    const [errors, setErrors] = useState({ income: '', amount: '' });
+const TaxPlanner: React.FC = () => {
+    const [income, setIncome] = useState<number>(0);
+    const [amount, setAmount] = useState<number>(0);
+    const [taxes, setTaxes] = useState<{ vat: number; incomeTax: number }>({ vat: 0, incomeTax: 0 });
+    const [errors, setErrors] = useState<{ income: string; amount: string }>({ income: '', amount: '' });
 
-    const validateInput = (value: number, type: string) => {
+    const validateInput = (value: number, type: keyof typeof errors): boolean => {
         if (value < 0) {
             setErrors(prev => ({ ...prev, [type]: 'Value cannot be negative' }));
             return false;
@@ -22,15 +22,15 @@ const TaxPlanner = () => {
         }
     };
 
-    const handleIncomeChange = (e: { target: { value: string | number; }; }) => {
-        const value = +e.target.value;
+    const handleIncomeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const value = Number(e.target.value);
         if (validateInput(value, 'income')) {
             setIncome(value);
         }
     };
 
-    const handleAmountChange = (e: { target: { value: string | number; }; }) => {
-        const value = +e.target.value;
+    const handleAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const value = Number(e.target.value);
         if (validateInput(value, 'amount')) {
             setAmount(value);
         }
@@ -54,19 +54,18 @@ const TaxPlanner = () => {
             // Calculate progressive income tax
             let incomeTax = 0;
             let remainingIncome = income;
+
             for (const bracket of incomeTaxRates) {
-                if (income > bracket.threshold) {
-                    incomeTax += (bracket.threshold - (incomeTaxRates[incomeTaxRates.indexOf(bracket) - 1]?.threshold || 0)) * bracket.rate;
-                } else {
-                    incomeTax += remainingIncome * bracket.rate;
-                    break;
-                }
-                remainingIncome -= bracket.threshold;
+                const taxableIncome = Math.min(remainingIncome, bracket.threshold);
+                incomeTax += taxableIncome * bracket.rate;
+                remainingIncome -= taxableIncome;
+                if (remainingIncome <= 0) break;
             }
 
             setTaxes({ vat, incomeTax });
             toast.success('Tax calculations completed successfully!');
         } catch (error) {
+            console.error('Failed to perform tax calculations:', error);
             toast.error('Failed to perform tax calculations.');
         }
     };

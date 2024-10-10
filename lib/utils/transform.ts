@@ -1,10 +1,19 @@
 import { Models } from 'node-appwrite';
-import { TaxReturn } from 'types'; // Adjust the import path as needed
+import { TaxUpdate, TaxReminder } from '@/types'; // Updated import path
 
-export const transformDocumentToTaxReturn = (doc: Models.Document): TaxReturn => ({
-  taxReturnId: doc.taxReturnId, // Ensure 'taxReturnId' exists in your Document
-  taxPeriod: doc.taxPeriod,     // Ensure 'taxPeriod' exists in your Document
-  documentUrl: doc.documentUrl, // Ensure 'documentUrl' exists in your Document
-  status: doc.status,           // Ensure 'status' exists in your Document
-  // Map additional properties as needed
+export const transformDocumentToTaxUpdate = (doc: Models.Document): TaxUpdate => ({
+  $id: doc.$id as string,
+  title: doc.title as string,
+  description: doc.description as string,
+  date: doc.date as string,
+  category: doc.category as 'law_change' | 'new_regulation' | 'deadline_extension',
+});
+
+export const transformDocumentToTaxReminder = (doc: Models.Document): TaxReminder => ({
+  id: doc.id as string,
+  title: doc.title as string,
+  dueDate: doc.dueDate as string,
+  description: doc.description as string,
+  priority: doc.priority as 'high' | 'medium' | 'low',
+  completed: doc.completed as boolean,
 });

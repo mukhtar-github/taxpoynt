@@ -15,6 +15,7 @@ import axios from 'axios';
 import { Models } from 'node-appwrite';
 import { TaxReturn } from 'types';
 import { transformDocumentToTaxReturn } from '@/lib/utils/transform';
+import { User, TaxReminder } from '@/types';
 
 const DATABASE_ID = getEnvVariable('NEXT_PUBLIC_APPWRITE_DATABASE_ID');
 const USER_COLLECTION_ID = getEnvVariable('NEXT_PUBLIC_APPWRITE_USER_COLLECTION_ID');
@@ -110,23 +111,27 @@ export const signUp = async ({ password, ...userData }: SignUpParams) => {
   }
 };
 
-export async function getLoggedInUser(userId: string) {
+export async function getLoggedInUser(userId: string): Promise<User | null> {
   // Your implementation to fetch user data using userId
-  // For example:
-  const user = await getUserInfo({ userId });
-  return user;
+  try {
+    const user = await getUserInfo({ userId });
+    return user as User;
+  } catch (error) {
+    console.error('Error fetching logged in user:', error);
+    return null;
+  }
 }
 
 const USER_REMINDERS_COLLECTION_ID = getEnvVariable('NEXT_PUBLIC_APPWRITE_USER_REMINDERS_COLLECTION_ID');
 
-export async function getUserReminders(userId: string) {
+export async function getUserReminders(userId: string): Promise<TaxReminder[]> {
   const { database } = await createAdminClient();
   const reminders = await database.listDocuments(
     DATABASE_ID,
     USER_REMINDERS_COLLECTION_ID,
     [Query.equal('userId', userId)]
   );
-  return parseStringify(reminders);
+  return reminders.documents as TaxReminder[];
 }
 
 export const logoutAccount = async (req: NextApiRequest) => {
@@ -151,7 +156,7 @@ export const updateUserWithMonoAccountId = async ({
 }: {
   DOCUMENT_ID: string;
   accountId: string;
-}) => {
+}): Promise<User> => {
   try {
     const { database } = await createAdminClient();
 
@@ -162,7 +167,7 @@ export const updateUserWithMonoAccountId = async ({
       { accountId }
     );
 
-    return parseStringify(updatedUserDocument);
+    return updatedUserDocument as User;
   } catch (error) {
     console.error('Error updating user with Mono Account ID', error);
     throw error;

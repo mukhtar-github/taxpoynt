@@ -1,17 +1,17 @@
 // This is a scheduled job that fetches tax updates from an external API and saves them to the database
 
 import axios from 'axios';
-import { createAdminClient } from '@/lib/appwrite';
+import { createAdminClient } from 'lib/appwrite';
+import { TaxUpdate } from 'types/';
 
-export async function fetchTaxUpdates() {
+export async function fetchTaxUpdates(): Promise<void> {
   const { database } = await createAdminClient();
-  
+
   try {
     // Fetch updates from external API
-    const response = await axios.get('https://api.tax-authority.gov/updates');
-    const updates = response.data;
+    const response = await axios.get(`${process.env.EXTERNAL_API_URL}/tax-updates`);
+    const updates: TaxUpdate[] = response.data;
 
-    // Save each update to the database
     for (const update of updates) {
       await database.createDocument(
         process.env.NEXT_PUBLIC_APPWRITE_DATABASE_ID!,
@@ -20,8 +20,8 @@ export async function fetchTaxUpdates() {
         {
           title: update.title,
           description: update.description,
+          date: update.date,
           category: update.category,
-          date: update.date
         }
       );
     }

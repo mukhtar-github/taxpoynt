@@ -2,6 +2,7 @@
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 import { z } from "zod";
+import { User } from '@/types/index.d.ts';
 
 // Replace the direct import with a dynamic import
 let queryString: any;
@@ -105,21 +106,24 @@ export function decryptId(id: string) {
   return atob(id);
 }
 
-// {{ Ensure schema validations match the User type }}
-export const authFormSchema = (type: string) => z.object({
-  // signup
-  firstName: type === 'sign-in' ? z.string().optional() : z.string().min(3),
-  lastName: type === 'sign-in' ? z.string().optional() : z.string().min(3),
-  businessName: type === 'sign-in' ? z.string().optional() : z.string().min(3),
-  address: type === 'sign-in' ? z.string().optional() : z.string().max(50),
-  state: type === 'sign-in' ? z.string().optional() : z.string().min(3),
-  businessRegDate: type === 'sign-in' ? z.string().optional() : z.string().date(),
-  phone: type === 'sign-in' ? z.string().optional() : z.string().max(15),
-  identificationNo: type === 'sign-in' ? z.string().optional() : z.string().min(3),
-  // both signup and login
-  email: z.string().email(),
-  password: z.string().min(8),
-});
+// Ensure schema validations match the User type
+export const authFormSchema = (type: string) =>
+  z.object({
+    // signup
+    firstName: type === 'sign-in' ? z.string().optional() : z.string().min(3),
+    lastName: type === 'sign-in' ? z.string().optional() : z.string().min(3),
+    businessName: type === 'sign-in' ? z.string().optional() : z.string().min(3),
+    address: type === 'sign-in' ? z.string().optional() : z.string().max(50),
+    state: type === 'sign-in' ? z.string().optional() : z.string().min(3),
+    businessRegDate: type === 'sign-in' ? z.string().optional() : z.string().refine((val) => !isNaN(Date.parse(val)), {
+      message: 'Invalid date format',
+    }),
+    phone: type === 'sign-in' ? z.string().optional() : z.string().max(15),
+    identificationNo: type === 'sign-in' ? z.string().optional() : z.string().min(3),
+    // both signup and login
+    email: z.string().email(),
+    password: z.string().min(8),
+  });
 
 export const removeSpecialCharacters = (value: string) => {
   return value.replace(/[^\w\s]/gi, "");

@@ -23,19 +23,17 @@
       }
     ],
     "strictNullChecks": true,
-    "baseUrl": ".",
+    "baseUrl": "./",
     "paths": {
-      "@/components/*": ["components/*"],
-      "@/constants": ["constants/index"],  // Adjust according to your file structure
-      "@/lib/*": ["lib/*"],
-      // Add other aliases if needed
+      "@/*": ["src/*"],
+      "@/types": ["types/index.ts"]
     }
   },
   "include": [
     "next-env.d.ts",
     "**/*.ts",
     "**/*.tsx",
-    ".next/types/**/*.ts"
+    "types/**/*.ts"
   ],
   "exclude": [
     "node_modules"

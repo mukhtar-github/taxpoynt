@@ -3,12 +3,11 @@
 import React, { useState, useEffect } from 'react';
 import AnimatedCounter from './AnimatedCounter';
 import DoughnutChart from './DoughnutChart';
-import { Loader2 } from 'lucide-react'; // Import a loading spinner
+import { Loader2 } from 'lucide-react'; // Ensure Loader2 is imported
 
-
-const TotalBalanceBox = () => {
-    const [taxDetails, setTaxDetails] = useState({ total: 0, vat: 0, incomeTax: 0 });
-    const [isLoading, setIsLoading] = useState(true);
+const TotalBalanceBox: React.FC = () => {
+    const [taxDetails, setTaxDetails] = useState<{ total: number; vat: number; incomeTax: number }>({ total: 0, vat: 0, incomeTax: 0 });
+    const [isLoading, setIsLoading] = useState<boolean>(true);
 
     const fetchTaxLiability = async () => {
         setIsLoading(true);
@@ -25,8 +24,8 @@ const TotalBalanceBox = () => {
             const data = await response.json();
             
             // Ensure vat and incomeTax are numbers, defaulting to 0 if invalid
-            const vat = Number(data.vat) || 0;
-            const incomeTax = Number(data.incomeTax) || 0;
+            const vat: number = Number(data.vat) || 0;
+            const incomeTax: number = Number(data.incomeTax) || 0;
             
             setTaxDetails({
                 total: vat + incomeTax,

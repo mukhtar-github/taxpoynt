@@ -46,7 +46,9 @@
     "tailwindcss-animate": "^1.0.7",
     "uuid": "^9.0.0",
     "zod": "^3.23.8",
-    "rimraf": "^4.1.2"
+    "rimraf": "^4.1.2",
+    "@types/node-appwrite": "^13.0.0",
+    "@types/react-hot-toast": "^2.4.0"
   },
   "devDependencies": {
     "@babel/plugin-transform-private-methods": "^7.25.4",

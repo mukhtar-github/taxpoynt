@@ -1,5 +1,7 @@
 /* eslint-disable no-unused-vars */
 
+import { ReactNode } from "react";
+
 declare type SearchParamProps = {
   params: { [key: string]: string };
   searchParams: { [key: string]: string | string[] | undefined };
@@ -25,24 +27,14 @@ declare type LoginUser = {
   password: string;
 };
 
-export interface User {
+declare type User = {
   $id: string;
-  email: string;
-  accountId: string | null;
   firstName: string;
   lastName: string;
-  businessName: string;
-  address: string;
-  state: string;
-  businessRegDate: string;
-  phone: string;
-  identificationNo: string;
-  requiresReauth: boolean;
-  reauthUrl: string | null;
-  name: string;
-  subscribedCategories: string[];
-  isAdmin: boolean;
-}
+  email: string;
+  accountId?: string;
+  // Add other necessary properties
+};
 
 declare type NewUserParams = {
   userId: string;
@@ -81,7 +73,7 @@ declare interface LinkUserProps {
     username: string;
     // Add other necessary plain properties
   }>;
-};
+}
 
 declare type Transaction = {
   monoId: string;
@@ -98,17 +90,16 @@ declare type Transaction = {
 }
 
 declare type MonoTransactionsResponse = {
-  status: string;
-  message: string;
-  timestamp: string;
-  data: MonoTransaction[];
-  meta: {
-      total: number;
-      page: number;
-      previous: string | null;
-      next: string | null;
-  };
-}
+  // Define the structure of the MonoTransactionsResponse interface
+  // based on the actual response from the Mono API
+  // Example:
+  // id: string;
+  // amount: number;
+  // type: string;
+  // date: string;
+  // narration: string;
+  // balance: number;
+};
 
 declare type MonoApiResponse<T> = {
   data: T;
@@ -140,13 +131,12 @@ interface TaxUpdatesAndRemindersProps {
 }
 
 declare type TaxUpdate = {
-  $id: Key | null | undefined;
-  id: string;
+  $id: string;
   title: string;
   description: string;
   date: string;
   category: 'law_change' | 'new_regulation' | 'deadline_extension';
-}
+};
 
 declare type TaxUpdatesListProps = {
   taxUpdates: TaxUpdate[];
@@ -159,7 +149,7 @@ declare type TaxReminder = {
   description: string;
   priority: 'high' | 'medium' | 'low';
   completed: boolean;
-}
+};
 
 declare type TaxRemindersListProps = {
   taxReminders: TaxReminder[];
@@ -256,7 +246,7 @@ declare interface AuthFormProps {
 
 declare interface BankDropdownProps {
   accounts: Account[];
-  setValue?: UseFormSetValue<any>;
+  setValue?: (name: string, value: any) => void;
   otherStyles?: string;
 }
 
@@ -313,14 +303,9 @@ declare interface CategoryBadgeProps {
 declare interface TransactionTableProps {
   transactions: Transaction[];
 }
-
 declare interface CategoryProps {
-  category: CategoryCount;
+  category: string; // Changed from CategoryCount to string
 }
-
-// declare interface DoughnutChartProps {
-//   accounts: Account[];
-// }
 
 declare interface DoughnutChartProps {
   taxTypes: TaxType[];
@@ -424,14 +409,20 @@ declare interface addBankAccountProps {
 declare interface removeBankAccountProps {
   appwriteItemId: string;
 }
-
 // mono-connect.d.ts
-declare interface MonoConnectOptions {
+declare module 'mono.co/connect.js' {
+  export interface MonoConnectOptions {
     key: string;
-    onSuccess: (data: any) => void;
-    onClose: () => void;
+    onClose?: () => void;
+    onSuccess: (publicToken: string) => void;
+    onEvent?: (eventName: string, data?: any) => void;
     onLoad?: () => void;
   }
 
-// mono-connect.d.ts
-declare module '@mono.co/connect.js';
+  export class MonoConnect {
+    constructor(options: MonoConnectOptions);
+    open(): void;
+    close(): void;
+    reauthorise(reauth_token: string): void;
+  }
+}

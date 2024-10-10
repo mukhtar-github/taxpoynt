@@ -14,13 +14,13 @@ import {
   deleteTaxUpdateById,
   deleteTaxReminderById
 } from '@/lib/server';
-
+import { TaxUpdate, TaxReminder } from '@/types/index.d.ts';
 
 const AdminTaxManagement = () => {
   const [updates, setUpdates] = useState<TaxUpdate[]>([]);
   const [reminders, setReminders] = useState<TaxReminder[]>([]);
-  const [newUpdate, setNewUpdate] = useState({ title: '', description: '', category: 'law_change' });
-  const [newReminder, setNewReminder] = useState({ title: '', description: '', dueDate: '', priority: 'medium' });
+  const [newUpdate, setNewUpdate] = useState<Partial<TaxUpdate>>({ title: '', description: '', category: 'law_change' });
+  const [newReminder, setNewReminder] = useState<Partial<TaxReminder>>({ title: '', description: '', dueDate: '', priority: 'medium' });
 
   useEffect(() => {
     fetchUpdatesAndReminders();
@@ -40,7 +40,7 @@ const AdminTaxManagement = () => {
   const handleCreateUpdate = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      await createNewTaxUpdate(newUpdate as Partial<TaxUpdate>);
+      await createNewTaxUpdate(newUpdate);
       setNewUpdate({ title: '', description: '', category: 'law_change' });
       fetchUpdatesAndReminders();
       toast.success('Tax update created successfully');
@@ -53,8 +53,8 @@ const AdminTaxManagement = () => {
   const handleCreateReminder = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      await createNewTaxReminder(newReminder as Partial<TaxReminder>);
-      setNewReminder({ title: '', description: '', dueDate: '', priority: 'medium' as 'medium' | 'high' | 'low' });
+      await createNewTaxReminder(newReminder);
+      setNewReminder({ title: '', description: '', dueDate: '', priority: 'medium' });
       fetchUpdatesAndReminders();
       toast.success('Tax reminder created successfully');
     } catch (error) {
