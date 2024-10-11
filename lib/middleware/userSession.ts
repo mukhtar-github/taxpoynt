@@ -2,7 +2,7 @@ import { NextApiRequest, NextApiResponse, NextApiHandler } from 'next';
 import { createSessionClient } from "../appwrite";
 import jwt from 'jsonwebtoken'; // Import JWT to validate the token format
 import { getEnvVariable } from "../utils"; // Import your utility function
-import { Account } from 'node-appwrite'; // Import Account from Appwrite
+import { Account } from 'appwrite'; // Import Account from Appwrite
 
 // Extend NextApiRequest to include user property
 export interface ExtendedNextApiRequest extends NextApiRequest {
