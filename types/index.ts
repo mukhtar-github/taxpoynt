@@ -68,15 +68,8 @@ export interface SignUpParams {
 }
 
 export interface User {
-  isAdmin: boolean;
-  reauthUrl: any;
-  requiresReauth: any;
   id: string;
-  firstName: string;
-  lastName: string;
-  email: string;
-  accountId?: string;
-  // Add any other required properties here
+  // ... other user properties ...
 }
 
 // **Add the DashboardLayoutProps interface**

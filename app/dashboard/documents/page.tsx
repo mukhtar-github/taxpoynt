@@ -18,8 +18,13 @@ interface Document {
 
 const Documents = async () => {
   const { user } = useUser();
-  const loggedIn = user as unknown as User;
+  const loggedIn = user as User; // Removed unnecessary 'unknown' type assertion
+
+  // Ensure that 'getDocuments' returns plain objects
   const documents: Document[] = loggedIn ? await getDocuments(loggedIn.id) : []
+
+  // Serialize documents to plain objects if necessary
+  const serializedDocuments = JSON.parse(JSON.stringify(documents));
 
   return (
     <div className="p-6">
@@ -29,7 +34,7 @@ const Documents = async () => {
         title="My Documents"
         subtext="View and manage all your uploaded documents"
       />
-      <DocumentList documents={documents as any} />
+      <DocumentList documents={serializedDocuments} /> {/* Pass serialized data */}
     </div>
   )
 }

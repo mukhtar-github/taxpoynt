@@ -17,7 +17,7 @@ export async function createSessionClient(req: NextApiRequest) {
 	client
 		.setEndpoint(getEnvVariable('NEXT_PUBLIC_APPWRITE_ENDPOINT'))
 		.setProject(getEnvVariable('NEXT_PUBLIC_APPWRITE_PROJECT'))
-		.setSession(sessionToken); // Ensure the session token is set
+		// .setKey(getEnvVariable('NEXT_PUBLIC_APPWRITE_KEY')); // ❌ Remove this line
 
 	return client;
 }
@@ -25,7 +25,7 @@ export async function createSessionClient(req: NextApiRequest) {
 const client = new Client()
 	.setEndpoint(getEnvVariable('NEXT_PUBLIC_APPWRITE_ENDPOINT'))
 	.setProject(getEnvVariable('NEXT_PUBLIC_APPWRITE_PROJECT'));
-// Remove .setKey as it's not a function in the current Appwrite SDK version
+// .setKey(getEnvVariable('NEXT_PUBLIC_APPWRITE_KEY')); // ❌ Ensure this line is removed
 
 const createAdminClient = () => {
 	return {
