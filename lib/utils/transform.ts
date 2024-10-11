@@ -17,3 +17,23 @@ export const transformDocumentToTaxReminder = (doc: Models.Document): TaxReminde
   priority: doc.priority as 'high' | 'medium' | 'low',
   completed: doc.completed as boolean,
 });
+
+// Add the export for `transformDocumentToTaxReturn`
+export function transformDocumentToTaxReturn(document: Document): TaxReturn {
+  // Implement the transformation logic here
+  return {
+    $id: document.$id,
+    userId: document.userId,
+    taxTypeId: "exampleTaxTypeId",
+    taxYear: "2023",
+    taxPeriod: "Q4",
+    status: "draft",
+    filingDate: null,
+    dueDate: "2024-01-31",
+    documentUrl: document.fileUrl,
+    currentBalance: 0,
+    // Add other necessary transformations
+  };
+}
+
+// ... other exports ...

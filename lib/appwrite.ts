@@ -28,9 +28,15 @@ const client = new Client()
 // .setKey(getEnvVariable('NEXT_PUBLIC_APPWRITE_KEY')); // ❌ Ensure this line is removed
 
 const createAdminClient = () => {
+	const adminClient = new Client();
+	adminClient
+		.setEndpoint(getEnvVariable('NEXT_PUBLIC_APPWRITE_ENDPOINT'))
+		.setProject(getEnvVariable('NEXT_PUBLIC_APPWRITE_PROJECT'))
+		.setKey(getEnvVariable('APPWRITE_KEY')); // Use server-side key
+
 	return {
-		account: new Account(client),
-		// If you need to set a key for admin operations, use the appropriate method or SDK capabilities.
+		account: new Account(adminClient),
+		// Add other services as needed
 	};
 }
 

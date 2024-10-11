@@ -77,3 +77,7 @@ export interface DashboardLayoutProps {
   children: React.ReactNode;
   // Add any other props required by your layout here
 }
+
+// Ensure all other interfaces are correctly exported
+export interface TaxReturn { /* ... */ }
+export interface Document { /* ... */ }
