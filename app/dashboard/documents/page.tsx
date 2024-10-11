@@ -4,6 +4,7 @@ import DocumentList from 'components/DocumentList'
 import HeaderBox from 'components/HeaderBox'  // Add this import
 import { User } from 'types'
 import { useUser } from 'hooks/useUser';
+
 interface Document {
   $id: string;
   name: string;

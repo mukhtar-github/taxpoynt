@@ -25,10 +25,17 @@
     "strictNullChecks": true,
     "baseUrl": "./",
     "paths": {
-      "@/*": ["src/*"],
-      "@/types": ["types/index.ts"]
+      "@/*": [
+        "src/*"
+      ],
+      "@/types": [
+        "types/index.ts"
+      ]
     },
-    "typeRoots": ["./types", "./node_modules/@types"]
+    "typeRoots": [
+      "./types",
+      "./node_modules/@types"
+    ]
   },
   "include": [
     "next-env.d.ts",
@@ -36,7 +43,8 @@
     "**/*.tsx",
     "types/**/*.ts",
     "types/**/*.d.ts",
-    "src/**/*"
+    "src/**/*",
+    ".next/types/**/*.ts"
   ],
   "exclude": [
     "node_modules"

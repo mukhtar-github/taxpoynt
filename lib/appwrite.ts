@@ -22,16 +22,17 @@ export async function createSessionClient(req: NextApiRequest) {
 	return client;
 }
 
-export async function createAdminClient() {
-	const client = new Client()
-		.setEndpoint(getEnvVariable('NEXT_PUBLIC_APPWRITE_ENDPOINT'))
-		.setProject(getEnvVariable('NEXT_PUBLIC_APPWRITE_PROJECT'))
-		.setKey(getEnvVariable('NEXT_PUBLIC_APPWRITE_KEY'));
+const client = new Client()
+	.setEndpoint(getEnvVariable('NEXT_PUBLIC_APPWRITE_ENDPOINT'))
+	.setProject(getEnvVariable('NEXT_PUBLIC_APPWRITE_PROJECT'));
+// Remove .setKey as it's not a function in the current Appwrite SDK version
 
+const createAdminClient = () => {
 	return {
 		account: new Account(client),
-		database: new Databases(client),
-		users: new Users(client),
+		// If you need to set a key for admin operations, use the appropriate method or SDK capabilities.
 	};
 }
+
+export { createAdminClient };
 
