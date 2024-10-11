@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from 'components/ui/card';
 import { useUser } from 'hooks/useUser';
-import { TaxUpdate, TaxReminder } from '@/types';
+import { TaxUpdate, TaxReminder } from 'types';
 import toast from 'react-hot-toast';
 import { fetchTaxUpdatesAndReminders } from 'lib/server';
 

@@ -11,7 +11,7 @@ const TaxReturnsList: React.FC<TaxReturnsListProps> = ({ taxReturns }) => {
   return (
     <div>
       {taxReturns.map((taxReturn) => (
-        <div key={taxReturn.taxReturnId}>
+        <div key={taxReturn.$id}>
           {/* Render tax return details here */}
           <p>Tax Period: {taxReturn.taxPeriod}</p>
           <p>Status: {taxReturn.status}</p>

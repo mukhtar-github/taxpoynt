@@ -1,13 +1,13 @@
 "use server";
 import { NextApiRequest, NextApiResponse } from 'next';
-import { updateUserWithMonoAccountId, updateUserReauthStatus } from '@/lib/actions/user.actions';
-import { errorHandler } from '@/lib/middleware/errorHandler';
-import { Query } from 'node-appwrite';
-import { logger } from '@/lib/logger';
-import { initiateReauthorization } from '@/lib/actions/transaction.actions';
-import { createAdminClient } from '@/lib/appwrite';
-import { getEnvVariable } from '@/lib/utils';
-import { withUserSession } from '@/lib/middleware/userSession';
+import { updateUserWithMonoAccountId, updateUserReauthStatus } from 'lib/actions/user.actions';
+import { errorHandler } from 'lib/middleware/errorHandler';
+import { Query } from 'appwrite';
+import { logger } from 'lib/logger';
+import { initiateReauthorization } from 'lib/actions/transaction.actions';
+import { createAdminClient } from 'lib/appwrite';
+import { getEnvVariable } from 'lib/utils';
+import { withUserSession } from 'lib/middleware/userSession';
 
 const secret = getEnvVariable('MONO_WEBHOOK_SEC');
 

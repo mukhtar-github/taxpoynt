@@ -4,7 +4,7 @@ import React from 'react';
 import CustomInput from "./CustomInput";
 import { UseFormReturn } from 'react-hook-form';
 import { z } from 'zod';
-import { authFormSchema } from '@/lib/utils';
+import { authFormSchema } from 'lib/utils';
 
 type SignUpFieldsProps = {
   form: UseFormReturn<z.infer<ReturnType<typeof authFormSchema>>>;

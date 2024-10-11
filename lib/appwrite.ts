@@ -1,6 +1,6 @@
 "use server";
 
-import { Client, Account, Databases, Users } from "node-appwrite";
+import { Client, Account, Databases, Users } from "appwrite";
 import { getEnvVariable } from "./utils"; // Adjust the path based on your project structure
 import { NextApiRequest } from "next"; // Add this import
 

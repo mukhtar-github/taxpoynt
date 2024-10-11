@@ -28,6 +28,9 @@ declare type LoginUser = {
 };
 
 declare type User = {
+  reauthUrl: any;
+  requiresReauth: any;
+  id: any;
   $id: string;
   firstName: string;
   lastName: string;
@@ -44,7 +47,9 @@ declare type NewUserParams = {
 };
 
 declare type UserContextType = {
-  user: User | null;
+  user: User;
+  setUser: (user: User) => void;
+  // Add other properties as needed
 };
 
 declare type UserProviderProps = {

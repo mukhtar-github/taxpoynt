@@ -1,26 +1,21 @@
 'use server';
 
-import { ID, Query } from "node-appwrite";
-import { createAdminClient, createSessionClient } from "@/lib/appwrite";
+import { ID, Query, Account, Models } from "appwrite";
+import { createAdminClient, createSessionClient } from "lib/appwrite";
 import { cookies } from "next/headers";
 import { parseStringify } from "../utils";
 import { setUserAsAdmin } from "./admin.actions";
 import authenticateAccount from "../mono";
 import { getEnvVariable } from '../utils';
-import { CookieSerializeOptions } from 'cookie';
-import { Account } from 'node-appwrite';
 import { NextApiRequest } from 'next';
-import { SignUpParams } from "types";
+import { SignUpParams, User, TaxReminder, Document, TaxReturn } from "types/index";
 import axios from 'axios';
-import { Models } from 'node-appwrite';
-import { TaxReturn } from 'types';
-import { transformDocumentToTaxReturn } from '@/lib/utils/transform';
-import { User, TaxReminder } from '@/types';
+import { SerializeOptions } from "cookie";
 
 const DATABASE_ID = getEnvVariable('NEXT_PUBLIC_APPWRITE_DATABASE_ID');
 const USER_COLLECTION_ID = getEnvVariable('NEXT_PUBLIC_APPWRITE_USER_COLLECTION_ID');
 
-const COOKIE_OPTIONS: CookieSerializeOptions = {
+const COOKIE_OPTIONS: SerializeOptions = {
   path: "/dashboard",
   httpOnly: true,
   sameSite: "strict",
@@ -115,7 +110,7 @@ export async function getLoggedInUser(userId: string): Promise<User | null> {
   // Your implementation to fetch user data using userId
   try {
     const user = await getUserInfo({ userId });
-    return user as User;
+    return user as unknown as User;
   } catch (error) {
     console.error('Error fetching logged in user:', error);
     return null;
@@ -271,10 +266,9 @@ export async function updateUserReauthStatus({
 export const fetchTaxReturnData = async (): Promise<TaxReturn[]> => {
   try {
     const response = await axios.get(`${process.env.NEXT_PUBLIC_APPWRITE_API_URL}/taxReturns`);
-    const documents: Models.Document[] = response.data; // Adjust based on your API response structure
-
+    const documents: Document[] = response.data; // Adjust based on your API response structure
     // Transform Documents to TaxReturns
-    const taxReturns: TaxReturn[] = documents.map(transformDocumentToTaxReturn);
+    const taxReturns: TaxReturn[] = documents.map((doc: Document) => transformDocumentToTaxReturn(doc, 0, documents));
 
     return taxReturns;
   } catch (error) {
@@ -282,3 +276,7 @@ export const fetchTaxReturnData = async (): Promise<TaxReturn[]> => {
     throw error;
   }
 };
+
+function transformDocumentToTaxReturn(value: Document, index: number, array: Document[]): TaxReturn {
+  throw new Error("Function not implemented.");
+}

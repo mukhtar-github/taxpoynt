@@ -1,6 +1,6 @@
 import React from 'react';
 import { Page, Text, View, Document } from '@react-pdf/renderer';
-import { calculateIncomeTax } from '@/lib/utils';
+import { calculateIncomeTax } from 'lib/utils';
 
 interface TaxReturnDocumentProps {
   income: string;

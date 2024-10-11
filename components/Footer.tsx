@@ -1,17 +1,25 @@
 'use client'
 
-import { logoutAccount } from '@/lib/actions/user.actions';
 import { useRouter } from 'next/navigation';
 import React from 'react';
 import Image from 'next/image';
 import { useUser } from '../hooks/useUser';
+import { logoutAccount } from 'lib/actions/user.actions';
+import { NextApiRequest } from 'next';
+import { User } from 'types';
 
-const Footer = () => {
-  const { user } = useUser();
+interface FooterProps {
+  user: User | null;
+  type: 'mobile' | 'public';
+}
+
+const Footer: React.FC<FooterProps> = () => {
+  const { user: userProp } = useUser();
   const router = useRouter();
-
   const handleLogout = async () => {
-    await logoutAccount();
+    if (userProp) {
+      await logoutAccount({ query: { id: userProp.id } } as unknown as NextApiRequest);
+    }
     router.push('/sign-in');
   };
 
@@ -28,8 +36,8 @@ const Footer = () => {
     return color;
   };
 
-  const displayName = user?.firstName || user?.name || 'User';
-  const displayInitials = user?.firstName ? getInitials(user.firstName) : (user?.name ? getInitials(user.name) : 'U');
+  const displayName = userProp?.firstName || 'User';
+  const displayInitials = userProp?.firstName ? getInitials(userProp.firstName) : 'U';
 
   return (
     <footer className="sidebar-footer flex justify-between items-center p-4">
@@ -42,7 +50,7 @@ const Footer = () => {
         </div>
         <div>
           <p className="user-name">{displayName}</p>
-          <p className="user-email">{user?.email || 'No email'}</p>
+          <p className="user-email">{userProp?.email || 'No email'}</p>
         </div>
       </div>
       <button onClick={handleLogout} className="logout-button">

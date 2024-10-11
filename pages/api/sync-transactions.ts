@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { syncAccountTransactions } from '@/lib/actions/transaction.actions';
-import { withUserSession } from '@/lib/middleware/userSession';
+import { syncAccountTransactions } from 'lib/actions/transaction.actions';
+import { withUserSession } from 'lib/middleware/userSession';
 
 interface ExtendedNextApiRequest extends NextApiRequest {
     user?: { id: string };

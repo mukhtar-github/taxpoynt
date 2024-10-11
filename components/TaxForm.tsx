@@ -4,12 +4,13 @@ import React from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
-import { FormField, FormItem, FormLabel, FormControl, FormDescription, FormMessage } from '@/components/ui/form';
+import { Input } from 'components/ui/input';
+import { Button } from 'components/ui/button';
+import { FormField, FormItem, FormLabel, FormControl, FormDescription, FormMessage } from 'components/ui/form';
 import toast from 'react-hot-toast';
 import dynamic from 'next/dynamic';
 import TaxReturnDocument from './TaxReturnDocument';
+import { BlobProvider } from '@react-pdf/renderer';
 
 const PDFDownloadLink = dynamic(
   () => import('@react-pdf/renderer').then((mod) => mod.PDFDownloadLink),
@@ -48,7 +49,7 @@ const TaxForm = () => {
             <FormField
                 control={form.control}
                 name="income"
-                render={({ field }) => (
+                render={({ field }: { field: any }) => (
                     <FormItem>
                         <FormLabel>Income</FormLabel>
                         <FormControl>
@@ -63,13 +64,11 @@ const TaxForm = () => {
             />
             <div className="flex space-x-4">
                 <Button type="submit">Submit</Button>
-                <PDFDownloadLink document={<TaxReturnDocument income={income} />} fileName="tax_return.pdf">
-                    {({ loading }) => 
-                        <Button disabled={loading || !income}>
-                            {loading ? 'Loading document...' : 'Download Tax Return'}
-                        </Button>
-                    }
-                </PDFDownloadLink>
+                <BlobProvider document={<TaxReturnDocument income={income} />}>
+                    {({ loading }) => (
+                        loading ? <div>Loading...</div> : <span>Document Ready</span>
+                    )}
+                </BlobProvider>
             </div>
         </form>
     );

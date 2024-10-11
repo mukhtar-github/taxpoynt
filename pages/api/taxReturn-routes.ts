@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { getTaxReturns } from '@/lib/actions/taxReturn.actions';
+import { getTaxReturns } from 'lib/actions/taxReturn.actions';
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);

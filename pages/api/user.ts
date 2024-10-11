@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { createAdminClient } from "../../lib/appwrite";
 import { parseStringify } from '../../lib/utils';
-import { withUserSession, ExtendedNextApiRequest } from '@/lib/middleware/userSession';
+import { withUserSession, ExtendedNextApiRequest } from 'lib/middleware/userSession';
 
 const {
   NEXT_PUBLIC_APPWRITE_DATABASE_ID: DATABASE_ID,

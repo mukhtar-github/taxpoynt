@@ -1,5 +1,4 @@
-const HeaderBox = ({ type = 'title', title, subtext,
-    user }: HeaderBoxProps) => {
+const HeaderBox = ({ type = 'title', title, subtext, user }: { type?: 'title' | 'greeting', title: string, subtext: string, user: string }) => {
   return (
     <div className="header-box">
         <h1 className="header-box-title">

@@ -1,6 +1,7 @@
 "use server";
+
 import axios from 'axios';
-import { getEnvVariable } from '@/lib/utils';
+import { getEnvVariable } from 'lib/utils';
 
 const authenticateAccount = async (authorizationToken: string, p0: string, p1: string): Promise<string> => {
   const MONO_API_URL = getEnvVariable('MONO_API_URL');

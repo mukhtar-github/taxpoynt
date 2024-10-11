@@ -4,7 +4,7 @@ import React from 'react'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from './ui/table'
 import { Button } from './ui/button'
 
-const DocumentList = ({ documents }: DocumentListProps) => {
+const DocumentList = ({ documents }: { documents: any[] }) => {
   return (
     <Table>
       <TableHeader>

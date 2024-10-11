@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import getMonoTransactions from '@/lib/mono';
-import { withUserSession } from '@/lib/middleware/userSession';
+import getMonoTransactions from 'lib/mono';
+import { withUserSession } from 'lib/middleware/userSession';
 
 interface ExtendedNextApiRequest extends NextApiRequest {
     user?: { id: string };

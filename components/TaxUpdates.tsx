@@ -1,6 +1,7 @@
 "use client"
 
-import { fetchTaxUpdates } from '@/lib/server';
+import { fetchTaxUpdates } from 'lib/server';
+import { TaxUpdate } from 'types';
 import React, { useState, useEffect } from 'react';
 
 const TaxUpdates = () => {

@@ -1,4 +1,4 @@
-import { Query } from "node-appwrite";
+import { Query } from "appwrite";
 import { createAdminClient } from "../appwrite";
 
 export async function setUserAsAdmin(userId: string, email: string) {

@@ -5,12 +5,12 @@ import {
     SheetClose,
     SheetContent,
     SheetTrigger,
-} from "@/components/ui/sheet"
+} from "components/ui/sheet"
 import Image from "next/image"
 import Link from "next/link"
-import { cn } from '@/lib/utils'
+import { cn } from 'lib/utils'
 import { usePathname } from 'next/navigation'
-import { sidebarLinks } from '@/constants'
+import { sidebarLinks } from 'constants/index'
 import Footer from "./Footer"
 import LinkUser from "./LinkUser"
 import { useUser } from 'hooks/useUser'

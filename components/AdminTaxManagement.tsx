@@ -2,10 +2,10 @@
 
 // This is a file that allows admins to create and manage tax updates and reminders
 import React, { useState, useEffect } from 'react';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
-import { Select } from '@/components/ui/select';
+import { Button } from 'components/ui/button';
+import { Input } from 'components/ui/input';
+import { Textarea } from 'components/ui/textarea';
+import { Select } from 'components/ui/select';
 import { toast } from 'react-hot-toast';
 import {
   fetchTaxUpdatesAndReminders,
@@ -13,8 +13,8 @@ import {
   createNewTaxReminder,
   deleteTaxUpdateById,
   deleteTaxReminderById
-} from '@/lib/server';
-import { TaxUpdate, TaxReminder } from '@/types/index.d.ts';
+} from 'lib/server';
+import { TaxUpdate, TaxReminder } from 'types/index';
 
 const AdminTaxManagement = () => {
   const [updates, setUpdates] = useState<TaxUpdate[]>([]);
@@ -102,7 +102,7 @@ const AdminTaxManagement = () => {
           />
           <Select
             value={newUpdate.category}
-            onValueChange={(value) => setNewUpdate({ ...newUpdate, category: value })}
+            onValueChange={(value: string) => setNewUpdate({ ...newUpdate, category: value as 'law_change' | 'new_regulation' | 'deadline_extension' })}
           >
             <option value="law_change">Law Change</option>
             <option value="new_regulation">New Regulation</option>
@@ -132,7 +132,7 @@ const AdminTaxManagement = () => {
           />
           <Select
             value={newReminder.priority}
-            onValueChange={(value) => setNewReminder({ ...newReminder, priority: value })}
+            onValueChange={(value: string) => setNewReminder({ ...newReminder, priority: value as 'high' | 'medium' | 'low' })}
           >
             <option value="high">High</option>
             <option value="medium">Medium</option>

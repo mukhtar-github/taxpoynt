@@ -1,13 +1,13 @@
 "use client"
 
 import React, { useState, useEffect } from 'react';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
-import { Select } from '@/components/ui/select';
+import { Button } from 'components/ui/button';
+import { Input } from 'components/ui/input';
+import { Textarea } from 'components/ui/textarea';
+import { Select } from 'components/ui/select';
 import { toast } from 'react-hot-toast';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { fetchUserReminders, createNewUserReminder, deleteUserReminderById } from '@/lib/server';
+import { Card, CardContent, CardHeader, CardTitle } from 'components/ui/card';
+import { fetchUserReminders, createNewUserReminder, deleteUserReminderById } from 'lib/server';
 import { useUser } from 'hooks/useUser';
 
 const UserReminders = () => {

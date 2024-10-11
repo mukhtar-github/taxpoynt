@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { updateUserReauthStatus } from '@/lib/actions/user.actions';
-import { withUserSession, ExtendedNextApiRequest } from '@/lib/middleware/userSession';
+import { updateUserReauthStatus } from 'lib/actions/user.actions';
+import { withUserSession, ExtendedNextApiRequest } from 'lib/middleware/userSession';
 
 async function handler(req: ExtendedNextApiRequest, res: NextApiResponse) {
   if (req.method === 'POST') {

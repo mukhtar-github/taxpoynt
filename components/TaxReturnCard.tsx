@@ -1,6 +1,6 @@
 'use client'
 
-import { formatAmount } from '@/lib/utils'
+import { formatAmount } from 'lib/utils'
 import Link from 'next/link'
 import React from 'react'
 

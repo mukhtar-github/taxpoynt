@@ -1,16 +1,15 @@
 'use client'
 
 import React, { useState, useEffect } from 'react';
-import { updateUserAdminStatus, bulkUpdateUserAdminStatus } from '@/lib/actions/admin.actions';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
+import { updateUserAdminStatus, bulkUpdateUserAdminStatus } from 'lib/actions/admin.actions';
+import { Button } from 'components/ui/button';
+import { Input } from 'components/ui/input';
 import { Loader2 } from 'lucide-react';
 import { toast, Toaster } from 'react-hot-toast';
-import { Select } from '@/components/ui/select';
-import { Checkbox } from '@/components/ui/checkbox';
-import { fetchUsers } from '@/lib/server';
+import { Select } from 'components/ui/select';
+import { Checkbox } from 'components/ui/checkbox';
+import { fetchUsers } from 'lib/server';
 import { useUser } from 'hooks/useUser';
-//import { useUser } from '@/lib/hooks/useUser';
 
 const USERS_PER_PAGE = 10;
 

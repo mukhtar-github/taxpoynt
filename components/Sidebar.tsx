@@ -1,8 +1,8 @@
 "use client"
 
 import React from 'react'
-import { sidebarLinks } from '@/constants'
-import { cn, sanitizeAccount, sanitizeDatabase, sanitizeUsers } from '@/lib/utils'
+import { sidebarLinks } from 'constants/index'
+import { cn, sanitizeAccount, sanitizeDatabase, sanitizeUsers } from 'lib/utils'
 import { usePathname } from 'next/navigation'
 import Image from 'next/image'
 import Link from 'next/link'
@@ -12,16 +12,15 @@ import { useRouter } from 'next/navigation'
 import toast from 'react-hot-toast'
 import LinkUser from './LinkUser'
 import { useUser } from 'hooks/useUser'
+import { User } from 'types'
 
-function Sidebar(props) {
-    const { user, setUser } = useUser();
+interface SidebarProps {
+    user: User | null;
+}
+
+function Sidebar({ user }: SidebarProps) {
     const router = useRouter()
     const pathname = usePathname()
-
-    // Sanitize props
-    const sanitizedAccount = sanitizeAccount(props.account);
-    const sanitizedDatabase = sanitizeDatabase(props.database);
-    const sanitizedUsers = sanitizeUsers(props.users);
 
     const handleAccountLinked = async () => {
         try {
@@ -36,9 +35,6 @@ function Sidebar(props) {
             }
 
             const updatedUser = await response.json();
-
-            // Update local state
-            setUser(updatedUser);
 
             // Refresh the current route to reflect changes across the app
             router.refresh();
@@ -104,7 +100,7 @@ function Sidebar(props) {
                     onAccountLinked={handleAccountLinked}
                 />
             </nav>
-            <Footer user={user} type='desktop' />
+            <Footer user={user} type='mobile' />
         </section>
     )
 }

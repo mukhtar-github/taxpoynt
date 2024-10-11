@@ -4,6 +4,7 @@ import Link from 'next/link'
 import React from 'react'
 import TaxReturnCard from './TaxReturnCard'
 import { useUser } from 'hooks/useUser'
+import { TaxReturn } from 'types'
 
 // Move useUser inside the component
 const RightSidebar = ({ taxReturns }: { taxReturns: TaxReturn[] }) => {

@@ -1,8 +1,8 @@
-import { Query, Models } from 'node-appwrite';
-import { createAdminClient } from "@/lib/appwrite";
-import { getEnvVariable } from '@/lib/utils';
-import { TaxReturn } from '@/types'; // Updated import path
-import { transformDocumentToTaxReturn } from '@/lib/utils/transform';
+import { Query, Models } from 'appwrite';
+import { createAdminClient } from "lib/appwrite";
+import { getEnvVariable } from 'lib/utils';
+import { TaxReturn } from 'types/index'; // Updated import path
+import { transformDocumentToTaxReturn } from 'lib/utils/transform';
 
 export const getTaxReturns = async (userId: string): Promise<TaxReturn[]> => {
   const { database } = await createAdminClient();

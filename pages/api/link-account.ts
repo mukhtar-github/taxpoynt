@@ -1,7 +1,7 @@
-import { linkMonoAccount } from '@/lib/actions/user.actions';
+import { linkMonoAccount } from 'lib/actions/user.actions';
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { errorHandler } from '@/lib/middleware/errorHandler';
-import { withUserSession } from '@/lib/middleware/userSession';
+import { errorHandler } from 'lib/middleware/errorHandler';
+import { withUserSession } from 'lib/middleware/userSession';
 
 interface ExtendedNextApiRequest extends NextApiRequest {
     user: {

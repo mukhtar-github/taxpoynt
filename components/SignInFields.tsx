@@ -2,7 +2,7 @@ import React from 'react';
 import { UseFormReturn } from 'react-hook-form';
 import { z } from 'zod';
 import CustomInput from './CustomInput';
-import { authFormSchema } from '@/lib/utils';
+import { authFormSchema } from 'lib/utils';
 
 type SignInFieldsProps = {
   form: UseFormReturn<z.infer<ReturnType<typeof authFormSchema>>>;

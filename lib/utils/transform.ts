@@ -1,5 +1,5 @@
-import { Models } from 'node-appwrite';
-import { TaxUpdate, TaxReminder } from '@/types'; // Updated import path
+import { TaxUpdate, TaxReminder } from 'types/index';
+import { Models } from 'appwrite';
 
 export const transformDocumentToTaxUpdate = (doc: Models.Document): TaxUpdate => ({
   $id: doc.$id as string,

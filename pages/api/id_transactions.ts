@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { getMonoTransactions } from '@/lib/actions/transaction.actions';
-import { withUserSession, ExtendedNextApiRequest } from '@/lib/middleware/userSession';
+import { getMonoTransactions } from 'lib/actions/transaction.actions';
+import { withUserSession, ExtendedNextApiRequest } from 'lib/middleware/userSession';
 
 async function handler(req: ExtendedNextApiRequest, res: NextApiResponse) {
     if (req.method === 'GET') {

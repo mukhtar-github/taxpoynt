@@ -1,5 +1,6 @@
 import { useContext } from 'react';
-import { UserContext, UserContextType } from '../context/UserContext'; // Ensure the path is correct
+import { UserContext } from '../context/UserContext'; // Ensure the path is correct
+import { UserContextType } from '../types/index.d';
 
 // Create the useUser hook
 export function useUser(): UserContextType {
@@ -7,5 +8,5 @@ export function useUser(): UserContextType {
     if (!context) {
         throw new Error('useUser must be used within a UserProvider');
     }
-    return context;
+    return context as unknown as UserContextType;
 }

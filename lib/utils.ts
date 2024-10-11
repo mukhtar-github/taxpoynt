@@ -2,7 +2,7 @@
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 import { z } from "zod";
-import { User } from '@/types/index.d.ts';
+import { User } from 'types/index';
 
 // Replace the direct import with a dynamic import
 let queryString: any;
@@ -240,18 +240,18 @@ export const getEnvVariable = (key: string): string => {
   return value;
 };
 
-export const sanitizeAccount = (account) => ({
+export const sanitizeAccount = (account: any) => ({
   id: account.id,
   name: account.name,
   // Add other necessary plain properties
 });
 
-export const sanitizeDatabase = (database) => ({
+export const sanitizeDatabase = (database: any) => ({
   dbName: database.dbName,
   // Add other necessary plain properties
 });
 
-export const sanitizeUsers = (users) => users.map(user => ({
+export const sanitizeUsers = (users: any[]) => users.map(user => ({
   id: user.id,
   username: user.username,
   // Add other necessary plain properties

@@ -1,20 +1,23 @@
 import React from 'react';
-import AdminTaxManagement from '@/components/AdminTaxManagement';
-import { getLoggedInUser } from '@/lib/actions/user.actions';
+import AdminTaxManagement from 'components/AdminTaxManagement';
 import { redirect } from 'next/navigation';
-import UserManagement from '@/components/UserManagement';
-import HeaderBox from '@/components/HeaderBox';  // Add this import
+import UserManagement from 'components/UserManagement';
+import HeaderBox from 'components/HeaderBox';  // Add this import
+import { useUser } from 'hooks/useUser';
+import { User } from 'types';
 
 const AdminTaxManagementPage = async () => {
-  const user = await getLoggedInUser();
+  const { user } = useUser();
+  const loggedIn = user as unknown as User;
   
-  if (!user || !user.isAdmin) {
+  if (!loggedIn || !loggedIn.isAdmin) {
     redirect('/');
   }
 
   return (
     <div className="container mx-auto p-4">
       <HeaderBox 
+        user={loggedIn.id}
         type="title"
         title="Admin Dashboard"
         subtext="Manage taxes and users"

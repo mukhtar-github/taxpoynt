@@ -1,6 +1,6 @@
 import React from 'react';
-import Sidebar from "@/components/Sidebar";
-import MobileNav from "@/components/MobileNav";
+import Sidebar from "components/Sidebar";
+import MobileNav from "components/MobileNav";
 import Image from "next/image";
 import { useUser } from 'hooks/useUser';
 import { DashboardLayoutProps } from 'types';
@@ -12,7 +12,7 @@ export default function DashboardLayout({
 
   return (
     <div className="flex h-screen w-full font-inter">
-      {user && <Sidebar />}
+      {user && <Sidebar user={null} />}
       <div className="flex-1 flex flex-col overflow-hidden">
         <div className="root-layout">
           <Image

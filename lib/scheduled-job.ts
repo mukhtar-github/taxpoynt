@@ -2,7 +2,7 @@
 
 import axios from 'axios';
 import { createAdminClient } from 'lib/appwrite';
-import { TaxUpdate } from 'types/';
+import { TaxUpdate } from 'types/index';
 
 export async function fetchTaxUpdates(): Promise<void> {
   const { database } = await createAdminClient();

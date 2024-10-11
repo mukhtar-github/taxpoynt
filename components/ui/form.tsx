@@ -5,8 +5,8 @@ import { Slot } from "@radix-ui/react-slot"
 import { Controller, FormProvider, Path, useFormContext, UseFormReturn } from "react-hook-form"
 import { ControllerProps, FieldValues } from "react-hook-form"
 
-import { cn } from "@/lib/utils"
-import { Label } from "@/components/ui/label"
+import { cn } from "lib/utils"
+import { Label } from "components/ui/label"
 
 const Form = React.forwardRef<HTMLFormElement, React.FormHTMLAttributes<HTMLFormElement> & { form: UseFormReturn<any> }>(
   ({ form, className, ...props }, ref) => (

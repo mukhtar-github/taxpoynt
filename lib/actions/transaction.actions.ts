@@ -3,9 +3,9 @@
 import axios from 'axios';
 import { getMonoSecretKey } from 'lib/utils';
 import { createAdminClient } from 'lib/appwrite';
-import { ID } from 'node-appwrite';
+import { ID } from 'appwrite';
 import { getEnvVariable } from 'lib/utils';
-import { Transaction } from 'types';
+import { Transaction } from 'types/index';
 
 // Retrieve and validate the MONO_API_URL_TRANSACTIONS environment variable
 const MONO_API_BASE_URL = getEnvVariable('MONO_API_URL_TRANSACTIONS');

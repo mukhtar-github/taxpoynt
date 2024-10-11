@@ -1,6 +1,6 @@
 import axios from 'axios';
-import { getLoggedInUser, getUserReminders } from '@/lib/actions/user.actions';
-import { getAllUsers } from '@/lib/actions/admin.actions';
+import { getLoggedInUser, getUserReminders } from 'lib/actions/user.actions';
+import { getAllUsers } from 'lib/actions/admin.actions';
 import { 
     createTaxUpdate,
     createTaxReminder,
@@ -9,9 +9,9 @@ import {
     deleteTaxUpdate,
     deleteTaxReminder,
     deleteUserReminder,
-} from '@/lib/actions/tax.actions';
-import { logger } from '@/lib/logger';
-import { TaxUpdate, TaxReminder } from '@/types';
+} from 'lib/actions/tax.actions';
+import { logger } from 'lib/logger';
+import { TaxUpdate, TaxReminder } from 'types/index';
 
 // Add this utility function
 function safeSerialize<T>(obj: T): T {

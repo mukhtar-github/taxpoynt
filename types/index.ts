@@ -68,6 +68,9 @@ export interface SignUpParams {
 }
 
 export interface User {
+  isAdmin: boolean;
+  reauthUrl: any;
+  requiresReauth: any;
   id: string;
   firstName: string;
   lastName: string;

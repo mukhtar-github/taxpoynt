@@ -1,20 +1,13 @@
-"use client";
-
 import React from 'react';
 import { DashboardLayoutProps } from 'types';
-import Sidebar from "@/components/Sidebar";
-import MobileNav from "@/components/MobileNav";
-import Image from "next/image";
-import { useUser } from 'hooks/useUser';
-//import { UserProvider } from '@/context/UserContext'; // Ensure correct path
 import "./globals.css";
 import { Toaster } from 'react-hot-toast';
-import Notifications from '@/components/Notifications';
 
 export const dynamic = 'force-dynamic';
 
 import { Inter, IBM_Plex_Serif } from "next/font/google";
 import { UserProvider } from 'context/UserContext';
+import Notifications from 'components/Notifications';
 
 const inter = Inter({ subsets: ["latin"], variable: '--font-inter' });
 const ibmPlexSerif = IBM_Plex_Serif({

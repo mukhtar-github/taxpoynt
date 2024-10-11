@@ -3,11 +3,12 @@
 import { useState, useCallback, useEffect } from "react";
 import { Button } from './ui/button';
 import { toast } from 'react-hot-toast';
-import { linkAccount, reauthorizeAccount } from '@/lib/server';
+import { linkAccount, reauthorizeAccount } from 'lib/server';
 import Image from 'next/image';
-import { CONNECT_BANK_OPTION } from '@/constants';
 import { useRouter, usePathname } from 'next/navigation';
 import { useUser } from 'hooks/useUser';
+import { User } from 'types';
+import { getEnvVariable } from "lib/utils";
 
 interface LinkUserProps {
   onAccountLinked: (user: User) => void;
@@ -57,10 +58,17 @@ function LinkUser({ onAccountLinked }: LinkUserProps) {
   }, [router, pathname, onAccountLinked]);
 
   const openMonoWidget = useCallback(async () => {
-    const MonoConnect = (await import("@mono.co/connect.js")).default;
+    const MonoConnect = (await import('@mono.co/connect.js')).default
+
+    const monoPublicKey = getEnvVariable('NEXT_PUBLIC_MONO_PUBLIC_KEY');
+    if (!monoPublicKey) {
+      console.error('Mono public key is not set.');
+      toast.error('Internal configuration error. Please contact support.');
+      return;
+    }
 
     const monoInstance = new MonoConnect({
-      key: 'live_pk_iwv8vjj1xslj0ii24zls',
+      key: monoPublicKey,
       scope: 'auth',
       onClose: () => {
         console.log("Widget closed");
@@ -77,7 +85,7 @@ function LinkUser({ onAccountLinked }: LinkUserProps) {
 
   const handleReauthorization = useCallback(async () => {
     try {
-      const data = await reauthorizeAccount(user.$id);
+      const data = await reauthorizeAccount(user?.id || '');
       if (data.success) {
         toast.success('Re-authorization successful');
         setIsAccountLinked(true);
@@ -114,13 +122,13 @@ function LinkUser({ onAccountLinked }: LinkUserProps) {
       disabled={loading}
     >
       <Image 
-        src={CONNECT_BANK_OPTION.icon}
+        src="/icons/connect-bank.svg"
         alt="connect bank"
         width={24}
         height={24}
       />
       <p className='text-[16px] font-semibold text-black-2'>
-        {loading ? 'Linking...' : CONNECT_BANK_OPTION.label}
+        {loading ? 'Linking...' : 'Connect Bank'}
       </p>
     </Button>
   );

@@ -1,6 +1,6 @@
 "use server";
 
-import { ID, Query } from 'node-appwrite';
+import { ID, Query } from 'appwrite';
 import { createAdminClient } from "../appwrite";
 import { parseStringify } from "../utils";
 import { updateUserWithMonoAccountId } from "./user.actions";

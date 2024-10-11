@@ -1,9 +1,9 @@
 import React from 'react'
-import { getDocuments } from '@/lib/actions/document.actions'
-import { getLoggedInUser } from '@/lib/actions/user.actions'
-import DocumentList from '@/components/DocumentList'
-import HeaderBox from '@/components/HeaderBox'  // Add this import
-
+import { getDocuments } from 'lib/actions/document.actions'
+import DocumentList from 'components/DocumentList'
+import HeaderBox from 'components/HeaderBox'  // Add this import
+import { User } from 'types'
+import { useUser } from 'hooks/useUser';
 interface Document {
   $id: string;
   name: string;
@@ -16,12 +16,14 @@ interface Document {
 }
 
 const Documents = async () => {
-  const loggedIn = await getLoggedInUser()
+  const { user } = useUser();
+  const loggedIn = user as unknown as User;
   const documents: Document[] = loggedIn ? await getDocuments(loggedIn.id) : []
 
   return (
     <div className="p-6">
       <HeaderBox 
+        user={loggedIn.id}
         type="title"
         title="My Documents"
         subtext="View and manage all your uploaded documents"

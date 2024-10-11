@@ -1,5 +1,5 @@
-import { createAdminClient } from "@/lib/appwrite";
-import { Query } from 'node-appwrite';
+import { createAdminClient } from "lib/appwrite";
+import { Query } from 'appwrite';
 
 interface Document {
   $id: string;

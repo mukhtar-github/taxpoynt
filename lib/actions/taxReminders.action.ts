@@ -1,4 +1,4 @@
-import { createAdminClient } from '@/lib/appwrite';
+import { createAdminClient } from "lib/appwrite";
 
 // Add this interface at the top of the file
 interface TaxReminder {

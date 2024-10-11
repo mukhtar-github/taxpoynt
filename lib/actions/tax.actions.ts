@@ -1,7 +1,7 @@
 import { createAdminClient } from "../appwrite";
-import { ID } from 'node-appwrite';
+import { ID } from 'appwrite';
 import { getEnvVariable } from '../utils';
-import { TaxUpdate, TaxReminder, TaxType, TaxReturn, UserReminder, Transaction } from '@/types';
+import { TaxUpdate, TaxReminder, TaxType, TaxReturn, UserReminder, Transaction } from 'types/index';
 
 // Define types for our tax updates and reminders
 export async function getTaxUpdates(): Promise<TaxUpdate[]> {
